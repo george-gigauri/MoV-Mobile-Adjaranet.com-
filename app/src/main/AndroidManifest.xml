@@ -15,9 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="ge.mov.mobile.ui.activity.MainActivity"></activity>
-        <activity android:name="ge.mov.mobile.ui.activity.LoginActivity" />
-        <activity android:name="ge.mov.mobile.ui.activity.SplashActivity">
+        <activity android:name=".ui.activity.MovieActivity"></activity>
+        <activity android:name=".ui.activity.MainActivity" />
+        <activity android:name=".ui.activity.LoginActivity" />
+        <activity android:name=".ui.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

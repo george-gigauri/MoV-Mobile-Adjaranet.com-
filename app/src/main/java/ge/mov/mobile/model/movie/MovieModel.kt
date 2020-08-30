@@ -21,6 +21,7 @@ data class MovieModel (
     val watchCount: Int,
     val canBePlayed: Boolean,
     val cover: Cover,
+    val covers: Covers,
     val poster: String,
     val posters: Posters,
     val rating: Rating,

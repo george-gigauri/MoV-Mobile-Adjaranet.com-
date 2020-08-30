@@ -14,4 +14,16 @@
     <string name="top_movies">Top Movies</string>
     <string name="top_series">Top Series</string>
     <string name="new_movies">New Movies</string>
+    <string name="year">Year</string>
+    <string name="imdb">IMDB</string>
+    <string name="country">Country</string>
+    <string name="duration">Duration</string>
+    <string name="description">Description</string>
+    <string name="views">Views</string>
+    <string name="cast">Cast</string>
+    <string name="season">Season</string>
+    <string name="episode">Episode</string>
+    <string name="language">Language</string>
+    <string name="quality">Quality</string>
+    <string name="go_back">Go back</string>
 </resources>
