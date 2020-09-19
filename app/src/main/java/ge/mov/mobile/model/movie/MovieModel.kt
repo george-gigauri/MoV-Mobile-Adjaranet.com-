@@ -27,7 +27,23 @@ data class MovieModel (
     val rating: Rating,
     val languages: Languages,
     val plots: Plots,
+    val seasons: Seasons,
     val genres: Genres,
     val trailers: Trailers,
-    val countries: Countries
+    val countries: Countries,
+    val primaryDescription: String,
+    val secondaryDescription: String,
+    val tertiaryDescription: String,
+    val type: String
+)
+
+data class Seasons (
+    val data: List<Season>
+)
+
+data class Season (
+    val episodesCount: Int,
+    val movieId: Long,
+    val name: String,
+    val number: Int
 )

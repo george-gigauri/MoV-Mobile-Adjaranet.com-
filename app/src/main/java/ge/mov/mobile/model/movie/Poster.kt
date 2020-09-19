@@ -8,5 +8,5 @@ data class Posters (
 
 data class Poster (
     @SerializedName("240")
-    val poster: String
+    val _240: String
 )

@@ -11,11 +11,14 @@ import ge.mov.mobile.R
 import ge.mov.mobile.adapter.GenreAdapter
 import ge.mov.mobile.adapter.PersonAdapter
 import ge.mov.mobile.databinding.ActivityMovieBinding
+import ge.mov.mobile.ui.activity.dialog.showMovieDialog
 import ge.mov.mobile.ui.viewmodel.MovieDetailViewModel
+import ge.mov.mobile.util.Constants
 import kotlin.properties.Delegates
 
 class MovieActivity : AppCompatActivity() {
     private var id: Long? = null
+    private var adjaraId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +27,7 @@ class MovieActivity : AppCompatActivity() {
         dataBinding.lifecycleOwner = this
 
         id = intent?.getLongExtra("id", 0)
+        adjaraId = intent?.getLongExtra("adjaraId", 0)
 
         val vm = ViewModelProviders.of(this).get(MovieDetailViewModel::class.java)
         dataBinding.details = vm
@@ -46,7 +50,11 @@ class MovieActivity : AppCompatActivity() {
                     .load(cover)
                     .into(dataBinding.poster)
 
-                dataBinding.genresRv.adapter = GenreAdapter(it.genres.data, this)
+                dataBinding.genresRv.adapter = GenreAdapter(it.genres.data, this, 2)
+
+                dataBinding.playButton.setOnClickListener { i ->
+                   showMovieDialog(this, it.id)
+                }
             }
         })
 
@@ -57,5 +65,11 @@ class MovieActivity : AppCompatActivity() {
                 if (!it.data.isNullOrEmpty())
                     dataBinding.castRv.adapter = PersonAdapter(it.data, this)
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        Constants.current_movie_left_at = 0
     }
 }

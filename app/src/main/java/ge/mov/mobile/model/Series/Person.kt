@@ -1,6 +1,4 @@
-package ge.mov.mobile.model
-
-import java.util.*
+package ge.mov.mobile.model.Series
 
 data class Person (
     val data: List<PersonModel>

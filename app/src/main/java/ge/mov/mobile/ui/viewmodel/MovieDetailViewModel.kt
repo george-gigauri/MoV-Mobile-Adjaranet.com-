@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ge.mov.mobile.model.Person
+import ge.mov.mobile.model.Series.Person
 import ge.mov.mobile.model.movie.MovieItemModel
 import ge.mov.mobile.model.movie.MovieModel
 import ge.mov.mobile.service.APIService

@@ -20,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:paddingStart="@dimen/_15sdp"
         android:paddingEnd="@dimen/_15sdp"
-        android:paddingTop="@dimen/_5sdp"
-        android:paddingBottom="@dimen/_5sdp" />
+        android:paddingTop="@dimen/_7sdp"
+        android:paddingBottom="@dimen/_7sdp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

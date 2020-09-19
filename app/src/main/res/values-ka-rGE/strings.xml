@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MoV Mobile</string>
+    <string name="skip">გამოტოვება</string>
+    <string name="e_mail">ელ. ფოსტა</string>
+    <string name="password">პაროლი</string>
+    <string name="log_in">შესვლა</string>
+    <string name="or">ან</string>
+    <string name="sign_up">რეგისტრაცია</string>
+    <string name="by_continuing_to_use_our_app_you_agree_to_our">აპლიკაციის მოხმარებით, თქვენ ავტომატურად ეთანხმებით</string>
+    <string name="terms_and_conditions">წესებსა და პირობებს</string>
+    <string name="movies">ფილმები</string>
+    <string name="series">სერიალები</string>
+    <string name="top_movies">ტოპ ფილმები</string>
+    <string name="top_series">ტოპ სერიალები</string>
+    <string name="new_movies">ახალი ფილმები</string>
+    <string name="year">წელი</string>
+    <string name="country">ქვეყანა</string>
+    <string name="duration">ხანგრძლივობა</string>
+    <string name="description">აღწერა</string>
+    <string name="views">ნახვები</string>
+    <string name="cast">მსახიობები</string>
+    <string name="season">სეზონი</string>
+    <string name="episode">სერია</string>
+    <string name="language">ენა</string>
+    <string name="quality">ხარისხი</string>
+    <string name="go_back">უკან</string>
+    <string name="search_here">მოძებნე აქ</string>
+    <string name="categories">კატეგორიები</string>
+</resources>

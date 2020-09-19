@@ -1,4 +1,4 @@
-package ge.mov.mobile.model
+package ge.mov.mobile.model.Series
 
 import com.google.gson.annotations.SerializedName
 import ge.mov.mobile.model.movie.Covers
@@ -16,7 +16,7 @@ data class Episode(
     val rating: Double,
     val poster: String,
     val covers: Covers,
-    val file: List<File>
+    val files: List<File>
 )
 
 data class File(

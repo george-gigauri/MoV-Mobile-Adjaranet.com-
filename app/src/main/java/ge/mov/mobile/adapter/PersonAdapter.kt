@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ge.mov.mobile.R
-import ge.mov.mobile.model.PersonModel
+import ge.mov.mobile.model.Series.PersonModel
 import kotlinx.android.synthetic.main.cast_model.view.*
 
 class PersonAdapter (

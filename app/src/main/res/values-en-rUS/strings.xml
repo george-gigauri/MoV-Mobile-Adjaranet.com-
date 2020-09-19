@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MoV Mobile</string>
+    <string name="skip">skip</string>
+    <string name="e_mail">E-Mail</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log in</string>
+    <string name="or">OR</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="by_continuing_to_use_our_app_you_agree_to_our">By continuing to use our app, you agree to our</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="movies">Movies</string>
+    <string name="series">Series</string>
+    <string name="top_movies">Top Movies</string>
+    <string name="top_series">Top Series</string>
+    <string name="new_movies">New Movies</string>
+    <string name="year">Year</string>
+    <string name="imdb" translatable="false">IMDB</string>
+    <string name="country">Country</string>
+    <string name="duration">Duration</string>
+    <string name="description">Description</string>
+    <string name="views">Views</string>
+    <string name="cast">Cast</string>
+    <string name="season">Season</string>
+    <string name="episode">Episode</string>
+    <string name="language">Language</string>
+    <string name="quality">Quality</string>
+    <string name="go_back">Go back</string>
+    <string name="search_here">Search here…</string>
+    <string name="categories">Categories</string>
+</resources>

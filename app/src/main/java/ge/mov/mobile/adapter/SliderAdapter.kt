@@ -2,7 +2,6 @@ package ge.mov.mobile.adapter
 
 import android.content.Context
 import android.content.Intent
-import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,15 +31,23 @@ class SliderAdapter (
         val view = inflater.inflate(R.layout.slider_item, container, false)
 
         val image: ImageView = view.findViewById(R.id.slider_image)
+        val i = slides[position]
+
+        val poster = if (i.cover.large != "") {
+            i.cover.large
+        } else {
+            i.poster
+        }
 
         Glide.with(context)
             .asDrawable()
-            .load(slides[position].cover.large)
+            .load(poster)
             .into(image)
 
         view.setOnClickListener {
             val intent = Intent(context, MovieActivity::class.java)
-            intent.putExtra("id", slides[position].adjaraId)
+            intent.putExtra("id", slides[position].id)
+            intent.putExtra("adjaraId", slides[position].adjaraId)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
         }

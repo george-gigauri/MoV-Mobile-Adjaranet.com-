@@ -2,47 +2,78 @@ package ge.mov.mobile.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
+import android.view.View
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import ge.mov.mobile.R
+import ge.mov.mobile.adapter.GenreAdapter
 import ge.mov.mobile.adapter.MovieAdapter
 import ge.mov.mobile.adapter.SliderAdapter
+import ge.mov.mobile.databinding.ActivityMainBinding
+import ge.mov.mobile.model.movie.MovieModel
+import ge.mov.mobile.ui.fragment.SearchFragment
 import ge.mov.mobile.ui.activity.viewmodel.MainActivityViewModel
-import ge.mov.mobile.util.toast
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     lateinit var viewPager: ViewPager
     lateinit var sliderAdapter: SliderAdapter
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
 
+      //  App().onCreate()
+
+        //(applicationContext as App).changeLanguage("ka-rGE")
         viewPager = findViewById(R.id.slider)
 
         val vm = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
+        binding.main = vm
+
+        binding.btnSearchMovie.setOnClickListener {
+            supportFragmentManager.beginTransaction().add(R.id.root_main, SearchFragment(), "null").addToBackStack("search").commit()
+        }
+
+        vm.getGenresFull().observe(this, Observer {
+            binding.progress.visibility = View.VISIBLE
+            binding.categories.adapter = GenreAdapter(it.data, this, 1)
+            binding.categories.post {
+                binding.progress.visibility = View.GONE
+            }
+        })
+
         vm.getMovies().observe(this, Observer {
-            movies.adapter = MovieAdapter(applicationContext, it)
+            binding.progress.visibility = View.VISIBLE
+            binding.movies.adapter = MovieAdapter(applicationContext, it as ArrayList<MovieModel>)
+
+            binding.movies.post {
+                binding.progress.visibility = View.GONE
+            }
         })
 
         vm.getSeries().observe(this, Observer {
-            series.adapter = MovieAdapter(applicationContext, it)
+            binding.progress.visibility = View.VISIBLE
+            binding.series.adapter = MovieAdapter(applicationContext, it as ArrayList<MovieModel>)
+
+            binding.series.post {
+                binding.progress.visibility = View.GONE
+            }
         })
 
         vm.getSlides().observe(this, Observer {
             sliderAdapter = SliderAdapter(this, it)
-            viewPager.adapter = sliderAdapter
+            binding.slider.adapter = sliderAdapter
 
             val timer = Timer()
-            timer.scheduleAtFixedRate(SliderTimerTask(), 1500, 2000)
+            timer.scheduleAtFixedRate(SliderTimerTask(), 3500, 4000)
         })
+
     }
 
     inner class SliderTimerTask : TimerTask()
@@ -55,6 +86,15 @@ class MainActivity : AppCompatActivity() {
                     viewPager.currentItem++
             }
         }
+    }
 
+    override fun onBackPressed() {
+        val count = supportFragmentManager.backStackEntryCount
+
+        if (count == 0) {
+            super.onBackPressed()
+        } else {
+            supportFragmentManager.popBackStack()
+        }
     }
 }
