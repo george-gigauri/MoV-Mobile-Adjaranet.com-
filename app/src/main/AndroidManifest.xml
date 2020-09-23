@@ -14,11 +14,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:name=".App"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.WatchActivity" android:screenOrientation="landscape" android:theme="@style/Fullscreen"/>
-        <activity android:name=".ui.activity.MovieActivity" />
-        <activity android:name=".ui.activity.MainActivity" />
+        <activity android:name=".ui.fragment.SavedMoviesFragment" />
+        <activity android:name=".ui.activity.SettingsActivity" android:configChanges="layoutDirection|locale" />
+        <activity
+            android:name=".ui.activity.WatchActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Fullscreen" />
+        <activity android:name=".ui.activity.MovieActivity" android:configChanges="layoutDirection|locale" />
+        <activity android:name=".ui.activity.MainActivity" android:configChanges="layoutDirection|locale" />
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.SplashActivity">
             <intent-filter>

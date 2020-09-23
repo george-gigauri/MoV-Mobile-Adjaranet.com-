@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ge.mov.mobile.R
 import ge.mov.mobile.model.Series.PersonModel
+import ge.mov.mobile.util.Utils
 import kotlinx.android.synthetic.main.cast_model.view.*
+import kotlinx.android.synthetic.main.fragment_movies.view.*
 
 class PersonAdapter (
     private val arr: List<PersonModel>,
@@ -29,7 +31,16 @@ class PersonAdapter (
         val i = arr[position]
         val role = i.personRole.data
 
-        holder.itemView.person_name.text = if (i.primaryName != "") i.primaryName else i.secondaryName
+        val language = Utils.loadLanguage(context)
+        val lang_code = if (language?.id == "ka") "GEO" else "ENG"
+        holder.itemView.person_name.text = if (lang_code == "GEO")
+            if (i.primaryName != "")
+                i.primaryName
+            else
+                i.secondaryName
+        else
+            i.secondaryName
+
         holder.itemView.person_role.text = if (role.character != "") role.character else role.role
 
         Glide.with(context)

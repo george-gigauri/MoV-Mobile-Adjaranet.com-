@@ -27,4 +27,10 @@
     <string name="go_back">უკან</string>
     <string name="search_here">მოძებნე აქ</string>
     <string name="categories">კატეგორიები</string>
+    <string name="settings">პარამეტრები</string>
+    <string name="play">ჩართვა</string>
+    <string name="next_page">შემდეგი</string>
+    <string name="previous">წინა გვერდი</string>
+    <string name="favorites">შენახული ფილმები</string>
+    <string name="saved">Saved</string>
 </resources>

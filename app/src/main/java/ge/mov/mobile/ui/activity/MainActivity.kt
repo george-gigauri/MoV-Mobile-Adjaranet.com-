@@ -1,8 +1,12 @@
 package ge.mov.mobile.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.VmPolicy
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -13,10 +17,11 @@ import ge.mov.mobile.adapter.MovieAdapter
 import ge.mov.mobile.adapter.SliderAdapter
 import ge.mov.mobile.databinding.ActivityMainBinding
 import ge.mov.mobile.model.movie.MovieModel
-import ge.mov.mobile.ui.fragment.SearchFragment
 import ge.mov.mobile.ui.activity.viewmodel.MainActivityViewModel
+import ge.mov.mobile.ui.fragment.SearchFragment
+import ge.mov.mobile.util.Utils
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var viewPager: ViewPager
@@ -25,19 +30,38 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val myLang = Utils.loadLanguage(this)
+        if (myLang != null) {
+            Utils.saveLanguage(this, myLang)
+        }
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
 
-      //  App().onCreate()
-
-        //(applicationContext as App).changeLanguage("ka-rGE")
         viewPager = findViewById(R.id.slider)
 
         val vm = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
         binding.main = vm
 
+        binding.nestedScrollViewMain.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (scrollY > oldScrollY) {
+                //   binding.fabMore.hide();
+            } else {
+                //   binding.fabMore.show();
+            }
+        })
+
+        binding.btnProfilePic.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+            this.finish()
+        }
+
         binding.btnSearchMovie.setOnClickListener {
-            supportFragmentManager.beginTransaction().add(R.id.root_main, SearchFragment(), "null").addToBackStack("search").commit()
+            supportFragmentManager.beginTransaction().add(R.id.root_main, SearchFragment(), "null").addToBackStack(
+                "search"
+            ).commit()
         }
 
         vm.getGenresFull().observe(this, Observer {

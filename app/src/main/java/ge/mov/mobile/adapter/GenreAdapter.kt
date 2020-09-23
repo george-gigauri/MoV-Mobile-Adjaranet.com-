@@ -11,7 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import ge.mov.mobile.R
 import ge.mov.mobile.model.movie.Genre
 import ge.mov.mobile.ui.activity.MainActivity
+import ge.mov.mobile.ui.activity.MovieActivity
 import ge.mov.mobile.ui.fragment.MoviesFragment
+import ge.mov.mobile.util.Utils
+import kotlinx.android.synthetic.main.fragment_movies.view.*
 import kotlinx.android.synthetic.main.genre_model.view.*
 
 class GenreAdapter (
@@ -36,15 +39,30 @@ class GenreAdapter (
             holder.itemView.genre.setTextColor(Color.WHITE)
         }
 
-        holder.itemView.genre.text = i.primaryName
+        val language = Utils.loadLanguage(context)
+        val lang_code = if (language?.id == "ka") "GEO" else "ENG"
+        holder.itemView.genre.text = if (lang_code == "GEO")
+            if (i.primaryName != "")
+                i.primaryName
+            else
+                i.secondaryName
+        else
+            i.secondaryName
 
         holder.itemView.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt("genre", i.id)
+            bundle.putString("genreName", holder.itemView.genre.text.toString())
             val fragmentMovies = MoviesFragment()
             fragmentMovies.arguments = bundle
 
-            (context as MainActivity).supportFragmentManager.beginTransaction().add(R.id.root_main, fragmentMovies, "movies").addToBackStack("movies").commit()
+            if (type == 1) {
+                (context as MainActivity).supportFragmentManager.beginTransaction()
+                    .add(R.id.root_main, fragmentMovies, "movies").addToBackStack("movies").commit()
+            } else {
+                (context as MovieActivity).supportFragmentManager.beginTransaction()
+                    .add(R.id.rootMovie, fragmentMovies, "movies").addToBackStack("movies").commit()
+            }
         }
 
     }

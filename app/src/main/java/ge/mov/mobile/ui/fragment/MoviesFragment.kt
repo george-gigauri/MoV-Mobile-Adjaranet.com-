@@ -1,17 +1,21 @@
 package ge.mov.mobile.ui.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import ge.mov.mobile.R
 import ge.mov.mobile.adapter.MovieAdapter
+import ge.mov.mobile.adapter.paging.EndlessRecyclerViewScrollListener
+import ge.mov.mobile.adapter.paging.PagedMovieListAdapter
 import ge.mov.mobile.databinding.FragmentMoviesBinding
 import ge.mov.mobile.model.movie.MovieModel
 import ge.mov.mobile.ui.viewmodel.FragmentMoviesViewModel
@@ -20,68 +24,96 @@ class MoviesFragment : Fragment() {
     private lateinit var binding: FragmentMoviesBinding
     private lateinit var vm: FragmentMoviesViewModel
     private lateinit var gridLayoutManager: GridLayoutManager
-    private lateinit var adapter: MovieAdapter
-
+    private var genre: Int? = null
+    private var genreName: String = ""
     private var page = 1
 
-    private var isLoading = false
-    private var isLastPage = false
-    private var isScrolling = false
+    private lateinit var adapter: MovieAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val genre: Int? = arguments?.getInt("genre", 0)
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movies, container, false)
-        vm = ViewModelProviders.of(this).get(FragmentMoviesViewModel::class.java)
-
+    ): View?
+    {
+        globalInit(inflater, container)
         val view = binding.root
-
         initRecyclerView()
 
-        adapter = MovieAdapter(activity!!, emptyList())
+        //progressVisible(true)
+        binding.prevPageButton.visibility = View.GONE
 
-        vm.getMovies(genre = genre, page = page).observe(this, Observer {
-            adapter.addAll(it)
-            binding.allmoviesRv.adapter = adapter
-            binding.allmoviesRv.post { binding.progressbar.visibility = View.GONE }
+        binding.goback.setOnClickListener {
+            activity?.supportFragmentManager?.popBackStack()
+        }
+
+        vm.isLoading().observe(this, Observer {
+            progressVisible(it)
         })
 
-        binding.allmoviesRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
 
-                val lm = recyclerView.layoutManager as GridLayoutManager
-
-                if (!binding.allmoviesRv.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        page++
-                        binding.progressbar.visibility = View.VISIBLE
-                        vm.getMovies(genre, perPage = 10, page = page).observe(this@MoviesFragment, Observer {
-
-                            adapter = MovieAdapter(activity!!, it)
-                            binding.allmoviesRv.adapter = adapter
-                            //adapter.addAll(it)
-
-                          //  binding.allmoviesRv.post {
-                                binding.progressbar.visibility = View.GONE
-                         //   }
-                        })
-                    }
+        vm.getMovies(genre=genre, page=page, perPage = 50).observe(this, Observer {
+            if (it.meta.pagination.currentPage == 1)
+                if (it.meta.pagination.totalPages - 1 == it.meta.pagination.currentPage) {
+                    prevButtonVisible(false)
+                    nextButtonVisible(false)
+                } else {
+                    prevButtonVisible(false)
+                    nextButtonVisible(true)
+                }
+            else {
+                if (it.meta.pagination.totalPages - 1 == it.meta.pagination.currentPage)
+                    nextButtonVisible(false)
+                else
+                    nextButtonVisible(true)
+                prevButtonVisible(true)
             }
 
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as GridLayoutManager
-//                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-//                val visibleItemCount = layoutManager.childCount
-//                val totalItemCount = layoutManager.itemCount
-//
-//                val isNotLoadingAndIsNotALastPage = !isLoading && !isLastPage
-//                val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
-//                val isNotAtTop = firstVisibleItemPosition >= 0
-//                val shouldPaginate = isNotLoadingAndIsNotALastPage && isAtLastItem && isNotAtTop && isScrolling
+            binding.allmoviesRv.adapter = MovieAdapter(activity!!, it.data)
+            binding.allmoviesRv.post { progressVisible(false) }
 
-                super.onScrolled(recyclerView, dx, dy)
+            binding.nextPageButton.setOnClickListener {
+                page++
+                binding.pageCount.text = page.toString()
+
+                vm.getMovies(genre=genre, page=page, perPage = 50).observe(this, Observer {movieRes ->
+                   // progressVisible(true)
+                    if (movieRes.meta.pagination.currentPage == 1)
+                        if (movieRes.meta.pagination.totalPages - 1 == movieRes.meta.pagination.currentPage) {
+                            prevButtonVisible(false)
+                            nextButtonVisible(false)
+                        } else {
+                            prevButtonVisible(false)
+                            nextButtonVisible(true)
+                        }
+                    else {
+                        if (movieRes.meta.pagination.totalPages - 1 == movieRes.meta.pagination.currentPage)
+                            nextButtonVisible(false)
+                        else
+                            nextButtonVisible(true)
+                        prevButtonVisible(true)
+                    }
+
+                    binding.allmoviesRv.adapter = MovieAdapter(activity!!, movieRes.data)
+                    recyclerViewToTop()
+                   // binding.allmoviesRv.post { progressVisible(false) }
+                })
+            }
+
+            binding.prevPageButton.setOnClickListener {
+                page--
+                binding.pageCount.text = page.toString()
+
+                vm.getMovies(genre=genre, page=page, perPage = 50).observe(this, Observer {movieRes ->
+                   // progressVisible(true)
+                    if (movieRes.meta.pagination.totalPages == page)
+                        nextButtonVisible(false)
+                    else
+                        nextButtonVisible(true)
+
+                    binding.allmoviesRv.adapter = MovieAdapter(activity!!, movieRes.data)
+                    recyclerViewToTop()
+                   // binding.allmoviesRv.post { progressVisible(false) }
+                })
             }
         })
 
@@ -91,5 +123,50 @@ class MoviesFragment : Fragment() {
     private fun initRecyclerView() {
         gridLayoutManager = GridLayoutManager(activity, 2)
         binding.allmoviesRv.layoutManager = gridLayoutManager
+    }
+
+    private fun globalInit(inflater: LayoutInflater, container: ViewGroup?) {
+        genre = arguments?.getInt("genre")
+        genreName = arguments!!.getString("genreName", "")
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movies, container, false)
+        vm = ViewModelProviders.of(this).get(FragmentMoviesViewModel::class.java)
+
+        binding.genreTitle.text = genreName
+    }
+
+    private fun prevButtonVisible(isVisible: Boolean) {
+        if (isVisible)
+            binding.prevPageButton.visibility = View.VISIBLE
+        else
+            binding.prevPageButton.visibility = View.GONE
+    }
+
+    private fun nextButtonVisible(isVisible: Boolean) {
+        if (isVisible)
+            binding.nextPageButton.visibility = View.VISIBLE
+        else
+            binding.nextPageButton.visibility = View.GONE
+    }
+
+    private fun progressVisible(visible: Boolean) {
+        if (visible)
+            binding.progress.visibility = View.VISIBLE
+        else
+            binding.progress.visibility = View.GONE
+    }
+
+    private fun recyclerViewToTop() {
+        binding.allmoviesRv.scrollToPosition(0)
+        //binding.allmoviesRv.smoothSnapToPosition(0)
+        binding.scrollview.smoothScrollTo(0, 0)
+    }
+
+    fun RecyclerView.smoothSnapToPosition(position: Int, snapMode: Int = LinearSmoothScroller.SNAP_TO_START) {
+        val smoothScroller = object : LinearSmoothScroller(this.context) {
+            override fun getVerticalSnapPreference(): Int = snapMode
+            override fun getHorizontalSnapPreference(): Int = snapMode
+        }
+        smoothScroller.targetPosition = position
+        layoutManager?.startSmoothScroll(smoothScroller)
     }
 }

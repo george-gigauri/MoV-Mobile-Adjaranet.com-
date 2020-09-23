@@ -1,23 +1,34 @@
 package ge.mov.mobile.ui.viewmodel
 
+import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.view.View
+import androidx.lifecycle.*
+import ge.mov.mobile.database.DBService
+import ge.mov.mobile.database.MovieEntity
 import ge.mov.mobile.model.Series.Person
 import ge.mov.mobile.model.movie.MovieItemModel
 import ge.mov.mobile.model.movie.MovieModel
 import ge.mov.mobile.service.APIService
+import ge.mov.mobile.util.Utils
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MovieDetailViewModel: ViewModel() {
-    var movieDetails: MutableLiveData<MovieModel> = MutableLiveData()
-    private var movieName = MutableLiveData<String>()
+    private val visible = View.VISIBLE
+    private val gone = View.GONE
 
-    fun getMovieDetails(id: Long) : LiveData<MovieModel>
-    {
+    var movieDetails: MutableLiveData<MovieModel> = MutableLiveData()
+    var movieName = MutableLiveData<String>()
+    var movieDescription = MutableLiveData<String>()
+    var movieCountry = MutableLiveData<String>()
+
+    var isLoading: MutableLiveData<Int> = MutableLiveData()
+
+    fun getMovieDetails(context: Context, id: Long) : LiveData<MovieModel> {
+        isLoading.postValue(visible)
         val movie = APIService.invoke().getMovie(id)
         movie.enqueue(object : Callback<MovieItemModel>
         {
@@ -26,42 +37,58 @@ class MovieDetailViewModel: ViewModel() {
                 response: Response<MovieItemModel>
             ) {
                 movieDetails.value = response.body()?.data
+                getMovieName(context)
+                getMovieDescription(context)
+                getCountry(context)
 
-                //Log.i("Movieresponse", response.body()?.data.toString())
-                Log.i("Movieresponse", movieDetails.value.toString())
+                isLoading.postValue(gone)
             }
 
             override fun onFailure(call: Call<MovieItemModel>, t: Throwable) {
+                isLoading.postValue(gone)
                 Log.i("Movieresponse", t.message.toString())
             }
         })
         return movieDetails
     }
 
-    fun getMovieName() : LiveData<String>
-    {
+    private fun getMovieName(context: Context) : LiveData<String> {
         val i = movieDetails.value
-        movieName.value = if (i != null)
-        {
-            if (i.primaryName != "" && i.secondaryName != "")
-                if (i.primaryName == "")
-                    if (i.secondaryName == "")
-                        if (i.tertiaryName  == "")
-                            i.tertiaryName
-                        else
-                            i.tertiaryName
-                    else
-                        i.primaryName
-                else
-                    i.primaryName
+
+        val language = Utils.loadLanguage(context)
+        val lang_code = if (language?.id == "ka") "GEO" else "ENG"
+
+        movieName.value = if (lang_code == "GEO")
+            if (i?.primaryName != "")
+                i?.primaryName
             else
-                i.primaryName
-        } else
-        {
-            "NULL"
-        }
+                i.secondaryName
+        else
+            i?.secondaryName
 
         return movieName
+    }
+
+    private fun getCountry(context: Context) : LiveData<String> {
+        val i = movieDetails.value?.countries?.data
+
+        val language = Utils.loadLanguage(context)
+        val lang_code = if (language?.id == "ka") "GEO" else "ENG"
+
+
+        for (j in i!!) {
+            if (lang_code == "GEO") {
+                movieCountry.postValue(j.primaryName)
+                break
+            }
+
+            if (lang_code == "ENG") {
+                movieCountry.postValue(j.secondaryName)
+                break
+            }
+        }
+
+        return movieCountry
     }
 
     fun getCast(id: Long) : LiveData<Person> {
@@ -80,5 +107,50 @@ class MovieDetailViewModel: ViewModel() {
             })
 
         return castArr
+    }
+
+    private fun getMovieDescription(context: Context) : LiveData<String> {
+        val i = movieDetails.value
+        val language = Utils.loadLanguage(context)
+        val lang_code = if (language?.id == "ka") "GEO" else "ENG"
+
+        var description: String = ""
+        for (j in i!!.plots.data)
+            if (j.language == "ENG") {
+                description = j.description
+                break
+            }
+
+        for (j in i.plots.data) {
+            if (j.language == lang_code) {
+                description = j.description
+                break
+            }
+        }
+
+        movieDescription.postValue(description)
+        return movieDescription
+    }
+
+    fun insertMovieToDatabase(context: Context, movie: MovieEntity) {
+        viewModelScope.launch {
+            DBService.getInstance(context)
+                .movieDao()
+                .insert(movie)
+        }
+    }
+
+    fun deleteFromDatabase(context: Context, movie: MovieEntity) {
+        viewModelScope.launch {
+            DBService.getInstance(context)
+                .movieDao()
+                .delete(movie)
+        }
+    }
+
+    fun isMovieSaved(context: Context, id: Long) : Boolean = runBlocking {
+            DBService.getInstance(context)
+                .movieDao()
+                .isMovieSaved(id)
     }
 }
