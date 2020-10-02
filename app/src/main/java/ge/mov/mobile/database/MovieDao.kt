@@ -7,8 +7,8 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg movie: MovieEntity)
 
-    @Delete
-    suspend fun delete(movie: MovieEntity)
+    @Query("DELETE FROM SAVED_MOVIES WHERE id = :id AND adjaraId = :adjaraId")
+    suspend fun delete(id: Long, adjaraId: Long)
 
     @Query("SELECT * FROM saved_movies WHERE id = :id")
     suspend fun getMovie(id: Long) : MovieEntity
@@ -19,6 +19,6 @@ interface MovieDao {
     @Query("SELECT COUNT(*) FROM SAVED_MOVIES")
     suspend fun getSavedMoviesCount() : Int
 
-    @Query("SELECT * FROM SAVED_MOVIES")
+    @Query("SELECT * FROM SAVED_MOVIES ORDER BY uid DESC")
     suspend fun getAllMovies() : List<MovieEntity>
 }

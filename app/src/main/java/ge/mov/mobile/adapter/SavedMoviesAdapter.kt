@@ -28,7 +28,7 @@ import retrofit2.Response
 
 class SavedMoviesAdapter (
     private val context: Context,
-    private val arr: List<MovieEntity>
+    private val arr: ArrayList<MovieEntity>
 ) : RecyclerView.Adapter<SavedMoviesAdapter.ViewHolder>() {
     class ViewHolder (i: View) : RecyclerView.ViewHolder(i)
 
@@ -118,7 +118,6 @@ class SavedMoviesAdapter (
                         target: Target<Bitmap>?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        Log.i("SavedMoviesAdapter", e?.message.toString())
                         holder.itemView.progress.visibility = View.GONE
                         return true
                     }
@@ -138,7 +137,12 @@ class SavedMoviesAdapter (
 
         } catch (e: Exception) {
             holder.itemView.progress.visibility = View.GONE
-            Log.i("SavedMoviesAdapter", e.message.toString())
         }
+    }
+
+    fun addAll(list: List<MovieEntity>) {
+        val count = arr.size
+        arr.addAll(list)
+        notifyItemInserted(count)
     }
 }

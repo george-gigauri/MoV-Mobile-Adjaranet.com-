@@ -10,25 +10,20 @@ import ge.mov.mobile.util.Constants.SHARED_PREFERENCES_LANG_LANGNAME
 import ge.mov.mobile.util.Constants.SHARED_PREFERENCES_USER
 import java.util.*
 
-class Utils {
-    companion object {
-        fun getCurrentLanguage(): String {
-            return Locale.getDefault().displayLanguage
-        }
+object Utils {
+    fun saveLanguage(context: Context, language: LocaleModel) {
+        val sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_USER, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
 
-        fun saveLanguage(context: Context, language: LocaleModel) {
-            val sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_USER, MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
+        editor.putString(SHARED_PREFERENCES_LANG_LANGID, language.id)
+        editor.putString(SHARED_PREFERENCES_LANG_LANGCODE, language.code)
+        editor.putString(SHARED_PREFERENCES_LANG_LANGNAME, language.name)
+        editor.apply()
 
-            editor.putString(SHARED_PREFERENCES_LANG_LANGID, language.id)
-            editor.putString(SHARED_PREFERENCES_LANG_LANGCODE, language.code)
-            editor.putString(SHARED_PREFERENCES_LANG_LANGNAME, language.name)
-            editor.apply()
+        setLanguage(context, language)
+    }
 
-            setLanguage(context, language)
-        }
-
-        fun loadLanguage(context: Context): LocaleModel? {
+    fun loadLanguage(context: Context): LocaleModel? {
             val sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_USER, MODE_PRIVATE)
 
             val localeModel = LocaleModel()
@@ -51,5 +46,16 @@ class Utils {
 
             context.resources.updateConfiguration(config, context.resources.displayMetrics)
         }
+
+    fun saveSetup(context: Context) {
+        val sharedPreferences = context.getSharedPreferences("AppPreferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("first_use", false)
+        editor.apply()
+    }
+
+    fun isFirstUse(context: Context) : Boolean {
+        val sharedPreferences = context.getSharedPreferences("AppPreferences", MODE_PRIVATE)
+        return sharedPreferences.getBoolean("first_use", true)
     }
 }

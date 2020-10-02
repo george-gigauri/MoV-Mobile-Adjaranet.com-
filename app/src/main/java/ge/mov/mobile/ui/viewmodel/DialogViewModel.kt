@@ -4,11 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ge.mov.mobile.model.Series.Episode
 import ge.mov.mobile.model.Series.EpisodeFiles
-import ge.mov.mobile.model.movie.Movie
 import ge.mov.mobile.model.movie.MovieItemModel
-import ge.mov.mobile.model.movie.Season
 import ge.mov.mobile.model.movie.Seasons
 import ge.mov.mobile.service.APIService
 import retrofit2.Call
@@ -18,7 +15,6 @@ import retrofit2.Response
 class DialogViewModel : ViewModel() {
     private val files = MutableLiveData<EpisodeFiles>()
     private val seasons = MutableLiveData<Seasons>()
-    private val languages = MutableLiveData<MovieItemModel>()
 
     fun loadFiles(id: Long, season: Int) : LiveData<EpisodeFiles> {
         APIService.invoke().getMovieFile(id, season)
@@ -59,9 +55,6 @@ class DialogViewModel : ViewModel() {
             }
 
         })
-
         return seasons
     }
-
-
 }

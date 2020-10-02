@@ -82,7 +82,7 @@
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/slider"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_175sdp"
+                    android:layout_height="@dimen/_170sdp"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_10sdp"
@@ -149,14 +149,14 @@
                 <!-- END Series -->
 
                 <!-- Top Movies  -->
-                <!--                <TextView
+      <!--                          <TextView
                                     android:id="@+id/txtTopMovies"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="@dimen/_10sdp"
                                     android:fontFamily="@font/quicksand_bold"
                                     android:text="@string/top_movies"
-                                    android:textSize="24sp"
+                                    android:textSize="20sp"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@id/series" />
 
@@ -171,14 +171,14 @@
                 <!-- END Top Movies -->
 
                 <!-- Top Series  -->
-                <!--              <TextView
+                          <!--    <TextView
                                   android:id="@+id/txtTopSeries"
                                   android:layout_width="wrap_content"
                                   android:layout_height="wrap_content"
                                   android:layout_margin="@dimen/_10sdp"
                                   android:fontFamily="@font/quicksand_bold"
                                   android:text="@string/top_series"
-                                  android:textSize="24sp"
+                                  android:textSize="20sp"
                                   app:layout_constraintStart_toStartOf="parent"
                                   app:layout_constraintTop_toBottomOf="@id/topMovies" />
 
@@ -191,28 +191,6 @@
                                   app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                   app:layout_constraintTop_toBottomOf="@id/txtTopSeries" /> -->
                 <!-- END Top Series -->
-
-                <!-- New Movies  -->
-                <!--               <TextView
-                                   android:id="@+id/txtNewMovies"
-                                   android:layout_width="wrap_content"
-                                   android:layout_height="wrap_content"
-                                   android:layout_margin="@dimen/_10sdp"
-                                   android:fontFamily="@font/quicksand_bold"
-                                   android:text="@string/new_movies"
-                                   android:textSize="24sp"
-                                   app:layout_constraintStart_toStartOf="parent"
-                                   app:layout_constraintTop_toBottomOf="@id/topSeries" />
-
-                               <androidx.recyclerview.widget.RecyclerView
-                                   android:id="@+id/newMovies"
-                                   android:layout_width="match_parent"
-                                   android:layout_height="wrap_content"
-                                   android:layout_margin="@dimen/_10sdp"
-                                   android:orientation="horizontal"
-                                   app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                   app:layout_constraintTop_toBottomOf="@id/txtNewMovies" /> -->
-                <!-- END New Movies -->
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
@@ -227,7 +205,6 @@
             <ProgressBar
                 android:layout_width="@dimen/_45sdp"
                 android:layout_height="@dimen/_45sdp"
-                android:src="@drawable/progressbar_circle"
                 android:layout_gravity="center" />
 
         </FrameLayout>

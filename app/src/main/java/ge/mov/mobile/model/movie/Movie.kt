@@ -3,7 +3,7 @@ package ge.mov.mobile.model.movie
 import com.google.gson.annotations.SerializedName
 
 data class Movie (
-    val data: MutableList<MovieModel>,
+    val data: List<MovieModel>,
     val meta: MetaInfo
 )
 

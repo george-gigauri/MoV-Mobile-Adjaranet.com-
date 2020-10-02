@@ -43,8 +43,8 @@
 
                 <!--  GO BACK BUTTON -->
                 <ImageView
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_30sdp"
+                    android:layout_width="@dimen/_26sdp"
+                    android:layout_height="@dimen/_26sdp"
                     android:id="@+id/go_back"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
@@ -55,8 +55,8 @@
 
                 <!--  SAVE BUTTON -->
                 <ImageView
-                    android:layout_width="@dimen/_32sdp"
-                    android:layout_height="@dimen/_32sdp"
+                    android:layout_width="@dimen/_28sdp"
+                    android:layout_height="@dimen/_28sdp"
                     android:id="@+id/save_button"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"

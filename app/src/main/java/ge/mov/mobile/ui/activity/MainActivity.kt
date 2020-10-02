@@ -1,6 +1,8 @@
 package ge.mov.mobile.ui.activity
 
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
@@ -27,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewPager: ViewPager
     lateinit var sliderAdapter: SliderAdapter
     private lateinit var binding: ActivityMainBinding
+    private lateinit var timer: Timer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,21 +42,24 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
 
+        if (Utils.isFirstUse(this)) {
+            startActivity(
+                Intent(
+                    applicationContext,
+                    ApplicationSetupActivity::class.java
+                ).addFlags(
+                    FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
+                )
+            )
+        }
+
         viewPager = findViewById(R.id.slider)
 
         val vm = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
         binding.main = vm
 
-        binding.nestedScrollViewMain.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            if (scrollY > oldScrollY) {
-                //   binding.fabMore.hide();
-            } else {
-                //   binding.fabMore.show();
-            }
-        })
-
         binding.btnProfilePic.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
+            val intent = Intent(applicationContext, SettingsActivity::class.java)
             startActivity(intent)
             this.finish()
         }
@@ -91,10 +97,10 @@ class MainActivity : AppCompatActivity() {
         })
 
         vm.getSlides().observe(this, Observer {
-            sliderAdapter = SliderAdapter(this, it)
+            sliderAdapter = SliderAdapter(applicationContext, it)
             binding.slider.adapter = sliderAdapter
 
-            val timer = Timer()
+            timer = Timer()
             timer.scheduleAtFixedRate(SliderTimerTask(), 3500, 4000)
         })
 
@@ -104,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     {
         override fun run() {
             runOnUiThread {
-                if (viewPager.currentItem == sliderAdapter.getListCount() - 1)
+                if (viewPager.currentItem == sliderAdapter.count - 1)
                     viewPager.currentItem = 0
                 else
                     viewPager.currentItem++
@@ -119,6 +125,7 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         } else {
             supportFragmentManager.popBackStack()
+            supportFragmentManager.beginTransaction().remove(supportFragmentManager.fragments[0])
         }
     }
 }

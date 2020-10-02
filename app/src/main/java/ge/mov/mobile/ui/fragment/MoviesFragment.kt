@@ -1,10 +1,12 @@
 package ge.mov.mobile.ui.fragment
 
+import android.content.Context.WINDOW_SERVICE
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,10 +16,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import ge.mov.mobile.R
 import ge.mov.mobile.adapter.MovieAdapter
-import ge.mov.mobile.adapter.paging.EndlessRecyclerViewScrollListener
-import ge.mov.mobile.adapter.paging.PagedMovieListAdapter
 import ge.mov.mobile.databinding.FragmentMoviesBinding
-import ge.mov.mobile.model.movie.MovieModel
 import ge.mov.mobile.ui.viewmodel.FragmentMoviesViewModel
 
 class MoviesFragment : Fragment() {
@@ -27,6 +26,7 @@ class MoviesFragment : Fragment() {
     private var genre: Int? = null
     private var genreName: String = ""
     private var page = 1
+    private var perPage = 30
 
     private lateinit var adapter: MovieAdapter
 
@@ -51,7 +51,7 @@ class MoviesFragment : Fragment() {
         })
 
 
-        vm.getMovies(genre=genre, page=page, perPage = 50).observe(this, Observer {
+        vm.getMovies(genre=genre, page=page, perPage = perPage).observe(this, Observer {
             if (it.meta.pagination.currentPage == 1)
                 if (it.meta.pagination.totalPages - 1 == it.meta.pagination.currentPage) {
                     prevButtonVisible(false)
@@ -75,7 +75,7 @@ class MoviesFragment : Fragment() {
                 page++
                 binding.pageCount.text = page.toString()
 
-                vm.getMovies(genre=genre, page=page, perPage = 50).observe(this, Observer {movieRes ->
+                vm.getMovies(genre=genre, page=page, perPage = perPage).observe(this, Observer {movieRes ->
                    // progressVisible(true)
                     if (movieRes.meta.pagination.currentPage == 1)
                         if (movieRes.meta.pagination.totalPages - 1 == movieRes.meta.pagination.currentPage) {
@@ -103,8 +103,7 @@ class MoviesFragment : Fragment() {
                 page--
                 binding.pageCount.text = page.toString()
 
-                vm.getMovies(genre=genre, page=page, perPage = 50).observe(this, Observer {movieRes ->
-                   // progressVisible(true)
+                vm.getMovies(genre=genre, page=page, perPage = perPage).observe(this, Observer {movieRes ->
                     if (movieRes.meta.pagination.totalPages == page)
                         nextButtonVisible(false)
                     else
@@ -112,7 +111,6 @@ class MoviesFragment : Fragment() {
 
                     binding.allmoviesRv.adapter = MovieAdapter(activity!!, movieRes.data)
                     recyclerViewToTop()
-                   // binding.allmoviesRv.post { progressVisible(false) }
                 })
             }
         })
@@ -121,7 +119,13 @@ class MoviesFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        gridLayoutManager = GridLayoutManager(activity, 2)
+        val orientation = resources.configuration.orientation
+        gridLayoutManager = if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            perPage = 32
+            GridLayoutManager(activity?.applicationContext, 4)
+        } else {
+            GridLayoutManager(activity?.applicationContext, 2)
+        }
         binding.allmoviesRv.layoutManager = gridLayoutManager
     }
 
@@ -156,17 +160,6 @@ class MoviesFragment : Fragment() {
     }
 
     private fun recyclerViewToTop() {
-        binding.allmoviesRv.scrollToPosition(0)
-        //binding.allmoviesRv.smoothSnapToPosition(0)
-        binding.scrollview.smoothScrollTo(0, 0)
-    }
-
-    fun RecyclerView.smoothSnapToPosition(position: Int, snapMode: Int = LinearSmoothScroller.SNAP_TO_START) {
-        val smoothScroller = object : LinearSmoothScroller(this.context) {
-            override fun getVerticalSnapPreference(): Int = snapMode
-            override fun getHorizontalSnapPreference(): Int = snapMode
-        }
-        smoothScroller.targetPosition = position
-        layoutManager?.startSmoothScroll(smoothScroller)
+        binding.scrollview.smoothScrollTo(0, 0, 1400)
     }
 }

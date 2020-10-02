@@ -15,7 +15,7 @@ import ge.mov.mobile.ui.activity.MovieActivity
 
 class SliderAdapter (
     private val context: Context,
-    val slides: List<FeaturedModel>
+    private val slides: List<FeaturedModel>
 ): PagerAdapter() {
     private lateinit var inflater: LayoutInflater
     override fun getCount(): Int {
@@ -58,9 +58,5 @@ class SliderAdapter (
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.removeView(`object` as ConstraintLayout)
-    }
-
-    fun getListCount() : Int {
-        return slides.size
     }
 }

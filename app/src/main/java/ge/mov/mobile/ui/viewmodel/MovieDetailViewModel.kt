@@ -102,7 +102,7 @@ class MovieDetailViewModel: ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Person>, t: Throwable) {
-                    Log.i("Cast", t.cause!!.message.toString())
+
                 }
             })
 
@@ -134,22 +134,21 @@ class MovieDetailViewModel: ViewModel() {
 
     fun insertMovieToDatabase(context: Context, movie: MovieEntity) {
         viewModelScope.launch {
-            DBService.getInstance(context)
-                .movieDao()
-                .insert(movie)
+            val db = DBService.getInstance(context)
+            db.movieDao().insert(movie)
         }
     }
 
     fun deleteFromDatabase(context: Context, movie: MovieEntity) {
         viewModelScope.launch {
-            DBService.getInstance(context)
-                .movieDao()
-                .delete(movie)
+            val db = DBService.getInstance(context)
+            db.movieDao()
+                .delete(movie.id, movie.adjaraId)
         }
     }
 
     fun isMovieSaved(context: Context, id: Long) : Boolean = runBlocking {
-            DBService.getInstance(context)
+        DBService.getInstance(context)
                 .movieDao()
                 .isMovieSaved(id)
     }

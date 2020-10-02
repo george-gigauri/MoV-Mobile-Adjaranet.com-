@@ -32,5 +32,21 @@
     <string name="next_page">შემდეგი</string>
     <string name="previous">წინა გვერდი</string>
     <string name="favorites">შენახული ფილმები</string>
-    <string name="saved">Saved</string>
+    <string name="saved">შენახული</string>
+    <string name="no_movies_saved_for_later">შენახული ფილმები არ არის...</string>
+    <string name="next">შემდეგ</string>
+    <string name="you_are_done">მორჩა!</string>
+    <string name="you_are_now_ready_to_use_the_app_please_enjoy_and_don_t_forget_to_rate_it_later">შენ უკვე მზად ხარ აპლიკაციის გამოსაყენებლად!</string>
+    <string name="finish">დასრულება</string>
+    <string name="get_started">დაწყება</string>
+    <string name="welcome">მოგესალმებით!</string>
+    <string name="app_greeting">გმადლობ, რომ გადმოწერე MoV Mobile! ახლა კი, გაეცანი აპლიკაციის მოხმარების ინსტრუქციას,</string>
+    <string name="movies_and_series">ფილმები და სერიალები</string>
+    <string name="movies_and_series_intro_text">ფილმებისა და სერიალების სექცია მოიცავს პოპულალური და უახლესი ფილმების ნაკრებს, ფილმის დეტალების სანახავად დააკლიკე ფილმზე.</string>
+    <string name="play_movie">ფილმის ჩართვა</string>
+    <string name="play_movie_intro_text">ფილმის ჩასართავად დააჭირე მრგვალ ვარდისფერ ღილაკს, სათაურის მარჯვნივ. ამის შემდეგ, დაინახავ პარამეტრებს, საიდანაც აირჩევ სეზონს, სერიას, ენას, ხარისხს და დააჭერ ჩართვას.</string>
+    <string name="saving_movie">ფილმის შენახვა</string>
+    <string name="saving_movie_intro_text">იმ შემთხვევაში, თუ ფილმი იპოვე, მაგრამ კონკრეტულ მომენტში ვერ ახერხებ ყურებას, თან კი გარანტია არ გაქვს რომ სახელს დაიმახსოვრებ, შეგიძლია ფილმი შეინახო ფილმის დეტალებში ზედა მარჯვენა კუთხეში გულზე დაკლიკებით.</string>
+    <string name="settings_intro_text">აპლიკაციის პარამეტრებში შესასვლელად უნდა დაბრუნდე მთავარ გვერდზე და დააჭირო პარამეტრების ღილაკს, ზედა მარჯვენა კუთხეში. პარამეტრებიდან შენ შეძლებ შეცვალო აპლიკაციის ენა და ნახო შენ მიერ შენახული ფოლმები.</string>
+    <string name="about_developer">დეველოპერის შესახებ</string>
 </resources>

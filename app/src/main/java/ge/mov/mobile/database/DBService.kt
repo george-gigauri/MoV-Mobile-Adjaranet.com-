@@ -13,7 +13,7 @@ object DBService {
                     context,
                     AppDatabase::class.java,
                     "saved_movies"
-                ).build()
+                ).allowMainThreadQueries().build()
             }
         }
 

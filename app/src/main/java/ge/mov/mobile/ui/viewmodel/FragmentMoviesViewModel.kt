@@ -1,26 +1,17 @@
 package ge.mov.mobile.ui.viewmodel
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
-import ge.mov.mobile.adapter.paging.MovieDataSource
-import ge.mov.mobile.adapter.paging.MovieDataSourceFactory
-import ge.mov.mobile.adapter.paging.MoviePagedListRepository
 import ge.mov.mobile.model.movie.Movie
-import ge.mov.mobile.model.movie.MovieModel
 import ge.mov.mobile.service.APIService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.await
 
 class FragmentMoviesViewModel : ViewModel() {
     private val movies: MutableLiveData<Movie> = MutableLiveData()
-    private val page: MutableLiveData<Int> = MutableLiveData()
     private var isLoading = MutableLiveData<Boolean>()
 
     fun isLoading() : LiveData<Boolean> {
@@ -42,13 +33,8 @@ class FragmentMoviesViewModel : ViewModel() {
                     if (response.code() == 200) {
                         response.body().let {
                             if (it != null) {
-                             //   if (movies.value.isNullOrEmpty())
-                                    movies.postValue(it)
+                                movies.postValue(it)
                                 isLoading.postValue(false)
-                            //    else
-                            //        movies.value!!.addAll(it.data)
-
-                             //   Log.i("Refresh", "YES")
                             }
                         }
                     }

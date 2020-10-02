@@ -1,17 +1,17 @@
 package ge.mov.mobile.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.room.Database
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.bumptech.glide.Glide
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import ge.mov.mobile.R
 import ge.mov.mobile.adapter.GenreAdapter
 import ge.mov.mobile.adapter.PersonAdapter
@@ -23,8 +23,8 @@ import ge.mov.mobile.ui.activity.dialog.showMovieDialog
 import ge.mov.mobile.ui.viewmodel.MovieDetailViewModel
 import ge.mov.mobile.util.Constants
 import ge.mov.mobile.util.toast
-import kotlinx.coroutines.*
-import kotlin.properties.Delegates
+import kotlinx.coroutines.delay
+import kotlin.math.min
 
 class MovieActivity : AppCompatActivity() {
     private lateinit var dataBinding: ActivityMovieBinding
@@ -32,6 +32,8 @@ class MovieActivity : AppCompatActivity() {
     private lateinit var db: MovieDao
     private var id: Long? = null
     private var adjaraId: Long? = null
+
+    private lateinit var mIntestitialAd: InterstitialAd
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,20 +56,19 @@ class MovieActivity : AppCompatActivity() {
         dataBinding.details = vm
 
         db = Room.databaseBuilder (
-            this,
+            applicationContext,
             AppDatabase::class.java,
             "saved_movies"
         ).build().movieDao()
 
-        val gridLayoutManager = GridLayoutManager(this, 2)
+        val gridLayoutManager = GridLayoutManager(applicationContext, 2)
         dataBinding.castRv.layoutManager = gridLayoutManager
     }
 
     private fun loadInfo() {
         vm.getMovieDetails(this, id!!).observe(this, Observer {
-            if (it != null)
-            {
-                var isSaved = vm.isMovieSaved(applicationContext, it.id)
+            if (it != null) {
+                var saved = vm.isMovieSaved(applicationContext, it.id)
 
                 val cover: String = when {
                     it.covers.data._1920 != "" -> it.covers.data._1920
@@ -76,31 +77,41 @@ class MovieActivity : AppCompatActivity() {
                     else -> it.covers.data._145
                 }
 
-                Glide.with(this)
+                Glide.with(applicationContext)
                     .asDrawable()
                     .load(cover)
                     .into(dataBinding.poster)
 
                 dataBinding.genresRv.adapter = GenreAdapter(it.genres.data, this, 2)
 
-                if (isSaved) {
-                    dataBinding.saveButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_heart_filled))
-                } else {
-                    dataBinding.saveButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_heart_outline))
-                }
+                    if (saved) {
+                        dataBinding.saveButton.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                applicationContext,
+                                R.drawable.ic_heart_filled
+                            )
+                        )
+                    } else {
+                        dataBinding.saveButton.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                applicationContext,
+                                R.drawable.ic_heart_outline
+                            )
+                        )
+                    }
+
+                    dataBinding.saveButton.setOnClickListener { v ->
+                        saved = vm.isMovieSaved(applicationContext, it.id)
+                        val movie = MovieEntity(id = it.id, adjaraId = it.adjaraId)
+
+                        if (saved)
+                            unsaveMovie(movie)
+                        else
+                            saveMovie(movie)
+                    }
 
                 dataBinding.playButton.setOnClickListener { i ->
                     showMovieDialog(this, it.id)
-                }
-
-                dataBinding.saveButton.setOnClickListener {v ->
-                    isSaved = vm.isMovieSaved(applicationContext, it.id)
-                    val movie = MovieEntity(id = it.id, adjaraId = it.adjaraId)
-
-                    if (isSaved)
-                        unsaveMovie(movie)
-                    else
-                        saveMovie(movie)
                 }
             }
         })
@@ -108,21 +119,21 @@ class MovieActivity : AppCompatActivity() {
         vm.getCast(id!!).observe(this, Observer {
             if (it != null)
                 if (!it.data.isNullOrEmpty())
-                    dataBinding.castRv.adapter = PersonAdapter(it.data, this)
+                    dataBinding.castRv.adapter = PersonAdapter(it.data, applicationContext)
         })
     }
 
     private fun unsaveMovie(movie: MovieEntity) {
-        vm.deleteFromDatabase(this, movie)
+        vm.deleteFromDatabase(applicationContext, movie)
 
-        dataBinding.saveButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_heart_outline))
+        dataBinding.saveButton.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_heart_outline))
         toast("Movie removed from saved list.")
     }
 
     private fun saveMovie(movie: MovieEntity) {
-        vm.insertMovieToDatabase(this, movie)
+        vm.insertMovieToDatabase(applicationContext, movie)
 
-        dataBinding.saveButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_heart_filled))
+        dataBinding.saveButton.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_heart_filled))
         toast("Movie has been saved for later.")
     }
 
@@ -130,5 +141,10 @@ class MovieActivity : AppCompatActivity() {
         super.onResume()
 
         Constants.current_movie_left_at = 0
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

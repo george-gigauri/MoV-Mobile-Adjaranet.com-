@@ -35,4 +35,20 @@
     <string name="next_page">Next Page</string>
     <string name="favorites">Saved for later</string>
     <string name="saved">Saved</string>
+    <string name="no_movies_saved_for_later">No movies saved for later...</string>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+    <string name="you_are_done">You are done!</string>
+    <string name="you_are_now_ready_to_use_the_app_please_enjoy_and_don_t_forget_to_rate_it_later">You are now ready to use the app, please enjoy and don\'t forget to rate it later!</string>
+    <string name="get_started">Get Started</string>
+    <string name="welcome">Welcome!</string>
+    <string name="app_greeting">Thank You, for downloading MoV Mobile. Please click on \'Get Started\' to learn how to use the app.</string>
+    <string name="movies_and_series">Movies and Series</string>
+    <string name="movies_and_series_intro_text">In the Movies and Series Section, You can watch most popular movies around the world. Just click on them for details.</string>
+    <string name="play_movie">Playing Movie</string>
+    <string name="play_movie_intro_text">To play a movie, you just have to click on the pink circular button right next to the title of the movie, then you will see the dialog box where you select the Season, Episode, Language and Quality of the movie and start PLAY.</string>
+    <string name="saving_movie">Saving Movie</string>
+    <string name="saving_movie_intro_text">In order to save a movie for later, you just have to click on the heart icon at the right top corner.</string>
+    <string name="settings_intro_text">To enter settings, go back to the main screen and click on the settings icon at the right top corner. There, you can change application language and view your \'Saved for later\' movies.</string>
+    <string name="about_developer">About Developer</string>
 </resources>

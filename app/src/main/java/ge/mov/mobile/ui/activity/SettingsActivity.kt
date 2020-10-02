@@ -7,16 +7,14 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import ge.mov.mobile.R
 import ge.mov.mobile.databinding.ActivitySettingsBinding
-import ge.mov.mobile.model.LocaleModel
+import ge.mov.mobile.ui.fragment.FragmentDeveloper
 import ge.mov.mobile.ui.fragment.SavedMoviesFragment
 import ge.mov.mobile.ui.viewmodel.ActivitySettingsViewModel
 import ge.mov.mobile.util.Constants.AVAILABLE_LANGUAGES
 import ge.mov.mobile.util.Utils
-import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -35,10 +33,9 @@ class SettingsActivity : AppCompatActivity() {
             langs.add(it.name)
         }
 
-        binding.languageSpinner.adapter = ArrayAdapter(this, R.layout.spinner_white_text, langs)
+        binding.languageSpinner.adapter = ArrayAdapter(applicationContext, R.layout.spinner_white_text, langs)
 
         val currentLanguage = Utils.loadLanguage(this)
-        //val position: Int
         for (i in 0 until langs.size) {
             if (currentLanguage?.name == langs[i]) {
                 binding.languageSpinner.setSelection(i)
@@ -47,18 +44,19 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.goback.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            binding.languageSpinner.onItemSelectedListener = null
+            val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
-            this.finish()
+            finish()
         }
 
         binding.favs.setOnClickListener {
-         /*   supportFragmentManager.beginTransaction().add(
-                R.id.settings_root,
-                SavedMoviesFragment(),
-                "null").addToBackStack("Saved").commit() */
-            val intent = Intent(this, SavedMoviesFragment::class.java)
+            val intent = Intent(applicationContext, SavedMoviesFragment::class.java)
             startActivity(intent)
+        }
+
+        binding.developerInfo.setOnClickListener {
+            supportFragmentManager.beginTransaction().replace(R.id.settings_root, FragmentDeveloper(), "dev").addToBackStack("dev").commit()
         }
 
         binding.languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -79,13 +77,20 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val count = supportFragmentManager.backStackEntryCount
+        binding.languageSpinner.onItemSelectedListener = null
 
         if (count == 0) {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
-            this.finish()
+            finish()
         } else {
             supportFragmentManager.popBackStack()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.savedMoviesCount.text = vm.getMoviesCount(this)
     }
 }

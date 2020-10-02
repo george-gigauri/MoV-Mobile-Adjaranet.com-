@@ -1,6 +1,7 @@
 package ge.mov.mobile.ui.viewmodel
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.*
 import ge.mov.mobile.database.DBService
 import ge.mov.mobile.database.MovieEntity
@@ -24,6 +25,10 @@ class FragmentSavedMoviesViewModel : ViewModel() {
             movies.postValue(m)
         }
         return movies
+    }
+
+    fun noMoviesTextIsVisible() : LiveData<Int> = liveData {
+        emit(if (movies.value.isNullOrEmpty()) View.VISIBLE else View.GONE)
     }
 
     override fun onCleared() {

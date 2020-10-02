@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import ge.mov.mobile.R
 import ge.mov.mobile.adapter.SavedMoviesAdapter
+import ge.mov.mobile.database.MovieEntity
 import ge.mov.mobile.databinding.FragmentSavedMoviesBinding
 import ge.mov.mobile.ui.activity.SettingsActivity
 import ge.mov.mobile.ui.viewmodel.FragmentSavedMoviesViewModel
@@ -33,46 +34,39 @@ class SavedMoviesFragment : AppCompatActivity() {
             finish()
         }
 
-        binding.savedMoviesRefresher.isRefreshing = true
-        vm.getAllSavedMovies(this).observe(this, Observer {
-            binding.savedMoviesRv.adapter = SavedMoviesAdapter(this, it)
-            binding.savedMoviesRv.post { binding.savedMoviesRefresher.isRefreshing = false }
-        })
+        loadData()
 
         binding.savedMoviesRefresher.setOnRefreshListener {
-            if (binding.savedMoviesRefresher.isRefreshing)
-                binding.savedMoviesRefresher.isRefreshing = false
+            loadData()
         }
     }
-  /*  override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_saved_movies, container, false)
-        binding.lifecycleOwner = this
-        vm = ViewModelProviders.of(this).get(FragmentSavedMoviesViewModel::class.java)
-
-        init()
-        binding.goBack.setOnClickListener {
-            (activity!! as SettingsActivity).supportFragmentManager.popBackStack()
-        }
-
-        binding.savedMoviesRefresher.isRefreshing = true
-        vm.getAllSavedMovies(activity!!).observe(this, Observer {
-            binding.savedMoviesRv.adapter = SavedMoviesAdapter(activity!!, it)
-            binding.savedMoviesRv.post { binding.savedMoviesRefresher.isRefreshing = false }
-        })
-
-        binding.savedMoviesRefresher.setOnRefreshListener {
-            if (binding.savedMoviesRefresher.isRefreshing)
-                binding.savedMoviesRefresher.isRefreshing = false
-        }
-
-        return binding.root
-    } */
 
     private fun init() {
-        val gridLayoutManager = GridLayoutManager(this, 2)
+        val gridLayoutManager = GridLayoutManager(applicationContext, 2)
         binding.savedMoviesRv.layoutManager = gridLayoutManager
+    }
+
+    private fun loadData() {
+        binding.savedMoviesRefresher.isRefreshing = true
+        vm.getAllSavedMovies(applicationContext).observe(this, Observer {
+            binding.savedMoviesRv.adapter = SavedMoviesAdapter(applicationContext,
+                it as ArrayList<MovieEntity>
+            )
+            binding.savedMoviesRv.post {
+                if (it.isNullOrEmpty()) {
+                    binding.noMoviesTxt.visibility = View.VISIBLE
+                } else {
+                    binding.noMoviesTxt.visibility = View.GONE
+                }
+
+                binding.savedMoviesRefresher.isRefreshing = false
+            }
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        loadData()
     }
 }

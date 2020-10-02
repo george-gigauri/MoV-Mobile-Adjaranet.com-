@@ -19,7 +19,7 @@ interface APIService {
     @GET("movies")
     fun getMovies(
         @Query("page") page: Int,
-        @Query("per_page") per_page: Int = 35,
+        @Query("per_page") per_page: Int = 30,
         @Query("filters[language]") language: String = "GEO",
         @Query("filters[type]") type: String = "movie",
         @Query("filters[only_public") public: String = "yes",
@@ -29,6 +29,17 @@ interface APIService {
         @Query("filters[genre]") genre: Int? = null,
         @Query("filters[year_range]") yearsRange: String? = null,
         @Query("sort") sort: String = "-upload_date",
+        @Query("source") source: String = "adjaranet"
+    ) : Call<Movie>
+
+    @GET("movies/top")
+    fun getTop (
+        @Query("type") type: String = "movie",
+        @Query("period") period: String,
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = 30,
+        @Query("filters[with_actors]") actors: Int = 3,
+        @Query("filters[with_directors]") directors: Int = 1,
         @Query("source") source: String = "adjaranet"
     ) : Call<Movie>
 
@@ -48,6 +59,7 @@ interface APIService {
         @Query("filters[type]") filtersType: String = "movie,cast",
         @Query("keywords") keywords: String,
         @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = 35,
         @Query("source") source: String = "adjaranet"
     ): Call<Movie>
 

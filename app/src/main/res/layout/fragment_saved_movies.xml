@@ -4,64 +4,84 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <import type="android.view.View"/>
+        <import type="android.content.Context"/>
+        <variable
+            name="saved"
+            type="ge.mov.mobile.ui.viewmodel.FragmentSavedMoviesViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/saved_movies_refresher">
+        android:id="@+id/saved_movies_refresher"
+        tools:context=".ui.fragment.SavedMoviesFragment">
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ui.fragment.SavedMoviesFragment"
-            android:background="@color/colorPrimaryDark">
+            android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/_18sdp">
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark">
 
-                <RelativeLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginStart="@dimen/_12sdp"
-                    android:layout_marginEnd="@dimen/_12sdp"
-                    android:layout_marginBottom="@dimen/_14sdp"
-                    android:layout_marginTop="@dimen/_28sdp"
-                    android:id="@+id/header">
-
-                    <ImageView
-                        android:layout_width="@dimen/_30sdp"
-                        android:layout_height="@dimen/_30sdp"
-                        android:src="@drawable/ic_baseline_arrow_back_24"
-                        android:id="@+id/go_back"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/saved"
-                        android:textStyle="bold"
-                        android:textSize="20sp"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true" />
-                </RelativeLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:id="@+id/saved_movies_rv"
-                    app:layout_constraintTop_toBottomOf="@id/header"
-                    android:layout_marginTop="@dimen/_18sdp"
-                    android:layout_marginStart="@dimen/_28sdp"
-                    android:layout_marginEnd="@dimen/_10sdp" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
+                    android:paddingBottom="@dimen/_18sdp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:layout_marginBottom="@dimen/_14sdp"
+                        android:layout_marginTop="@dimen/_28sdp"
+                        android:id="@+id/header">
+
+                        <ImageView
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:src="@drawable/ic_baseline_arrow_back_24"
+                            android:id="@+id/go_back"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/saved"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true" />
+                    </RelativeLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:id="@+id/saved_movies_rv"
+                        app:layout_constraintTop_toBottomOf="@id/header"
+                        android:layout_marginTop="@dimen/_18sdp"
+                        android:layout_marginStart="@dimen/_28sdp"
+                        android:layout_marginEnd="@dimen/_10sdp" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/noMoviesTxt"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="18sp"
+                android:text="@string/no_movies_saved_for_later" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>
