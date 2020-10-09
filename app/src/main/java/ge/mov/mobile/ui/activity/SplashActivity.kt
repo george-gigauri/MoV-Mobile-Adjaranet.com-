@@ -4,15 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import ge.mov.mobile.R
-import ge.mov.mobile.util.RemoteConfigUtils
 import ge.mov.mobile.util.Utils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
     private val mAuth = FirebaseAuth.getInstance()
@@ -21,7 +15,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
             Handler().postDelayed({
-                if (RemoteConfigUtils.getRemoteConfig().getString("isAppEnabled") == "yes") {
+          //      if (runBlocking { RemoteConfigUtils.isEnabled() }) {
                     val intent =
                         if (mAuth.currentUser != null) {
                             Intent(this, MainActivity::class.java)
@@ -34,17 +28,16 @@ class SplashActivity : AppCompatActivity() {
                         }
                     this.startActivity(intent)
                     this.finish()
-                } else {
-                        AlertDialog.Builder(this@SplashActivity)
-                            .setTitle("შეცდომა")
+     /*           } else {
+                    val alertDialog = AlertDialog.Builder(this@SplashActivity)
+                            .setTitle(getString(R.string.warning))
                             .setCancelable(false)
-                            .setMessage("აპლიკაცია დროებით გამორთულია.")
-                            .setPositiveButton("გასვლა") { _, _ ->
+                            .setMessage(getString(R.string.app_temporarily_disabled))
+                            .setPositiveButton("OK") { _, _ ->
                                 finish()
                             }.create()
-                            .show()
-                }
+                    alertDialog.show()
+                } */
             }, 1500)
-
     }
 }

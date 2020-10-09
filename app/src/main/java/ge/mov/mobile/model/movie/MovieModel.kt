@@ -29,6 +29,7 @@ data class MovieModel (
     val plots: Plots,
     val seasons: Seasons,
     val genres: Genres,
+    val regionAllowed: Boolean,
    // val trailers: Trailers,
     val countries: Countries,
     val primaryDescription: String,

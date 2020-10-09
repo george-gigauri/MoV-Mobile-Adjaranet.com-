@@ -7,21 +7,26 @@ import ge.mov.mobile.model.movie.Genres
 import ge.mov.mobile.model.movie.Movie
 import ge.mov.mobile.model.movie.MovieItemModel
 import ge.mov.mobile.util.Constants
+import io.reactivex.Single
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 interface APIService {
-    @GET("movies/featured?source=adjaranet")
+   // @GET("movies/featured?source=adjaranet")
+    @GET("movies/movie-day")
     fun getFeatured(): Call<Featured>
 
+   // @GET("movies")
     @GET("movies")
     fun getMovies(
         @Query("page") page: Int,
         @Query("per_page") per_page: Int = 30,
         @Query("filters[language]") language: String = "GEO",
-        @Query("filters[type]") type: String = "movie",
+        @Query("filters[type]") type: String = "movie", // adjaranet
+     //   @Query("type") type: String = "movie",  // imovies
         @Query("filters[only_public") public: String = "yes",
         @Query("filters[with_actors]") actors: Int = 3,
         @Query("filters[with_directors]") directors: Int = 1,
@@ -29,7 +34,7 @@ interface APIService {
         @Query("filters[genre]") genre: Int? = null,
         @Query("filters[year_range]") yearsRange: String? = null,
         @Query("sort") sort: String = "-upload_date",
-        @Query("source") source: String = "adjaranet"
+      //  @Query("source") source: String = "adjaranet"
     ) : Call<Movie>
 
     @GET("movies/top")
@@ -60,12 +65,12 @@ interface APIService {
         @Query("keywords") keywords: String,
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = 35,
-        @Query("source") source: String = "adjaranet"
+       // @Query("source") source: String = "adjaranet"
     ): Call<Movie>
 
     @GET("genres")
     fun getGenres(
-        @Query("per_page") perPage: Int = 30
+        @Query("per_page") perPage: Int = 50
     ) : Call<Genres>
 
     companion object {

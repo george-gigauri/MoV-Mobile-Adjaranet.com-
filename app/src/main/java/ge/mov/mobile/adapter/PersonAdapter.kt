@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import ge.mov.mobile.R
 import ge.mov.mobile.model.Series.PersonModel
 import ge.mov.mobile.util.Utils
@@ -48,6 +49,8 @@ class PersonAdapter (
             .placeholder(R.color.colorAccent)
             .error(R.color.colorAccent)
             .load(i.poster)
+            .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(holder.itemView.person_img)
     }
 

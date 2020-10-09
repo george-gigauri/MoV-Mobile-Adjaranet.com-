@@ -4,11 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.room.Room
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
@@ -21,10 +21,7 @@ import ge.mov.mobile.database.MovieEntity
 import ge.mov.mobile.databinding.ActivityMovieBinding
 import ge.mov.mobile.ui.activity.dialog.showMovieDialog
 import ge.mov.mobile.ui.viewmodel.MovieDetailViewModel
-import ge.mov.mobile.util.Constants
 import ge.mov.mobile.util.toast
-import kotlinx.coroutines.delay
-import kotlin.math.min
 
 class MovieActivity : AppCompatActivity() {
     private lateinit var dataBinding: ActivityMovieBinding
@@ -32,7 +29,6 @@ class MovieActivity : AppCompatActivity() {
     private lateinit var db: MovieDao
     private var id: Long? = null
     private var adjaraId: Long? = null
-
     private lateinit var mIntestitialAd: InterstitialAd
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,10 +36,16 @@ class MovieActivity : AppCompatActivity() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie)
         dataBinding.lifecycleOwner = this
 
+        mIntestitialAd = InterstitialAd(this)
+        mIntestitialAd.adUnitId = "ca-app-pub-2337439332290274/2854996575"
+        mIntestitialAd.loadAd(AdRequest.Builder().build())
+
         init()
         loadInfo()
 
         dataBinding.goBack.setOnClickListener {
+            if (mIntestitialAd.isLoaded)
+                mIntestitialAd.show()
             finish()
         }
     }
@@ -66,7 +68,7 @@ class MovieActivity : AppCompatActivity() {
     }
 
     private fun loadInfo() {
-        vm.getMovieDetails(this, id!!).observe(this, Observer {
+        vm.getMovieDetails(this, id!!).observe(this, {
             if (it != null) {
                 var saved = vm.isMovieSaved(applicationContext, it.id)
 
@@ -80,6 +82,8 @@ class MovieActivity : AppCompatActivity() {
                 Glide.with(applicationContext)
                     .asDrawable()
                     .load(cover)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .skipMemoryCache(true)
                     .into(dataBinding.poster)
 
                 dataBinding.genresRv.adapter = GenreAdapter(it.genres.data, this, 2)
@@ -100,7 +104,7 @@ class MovieActivity : AppCompatActivity() {
                         )
                     }
 
-                    dataBinding.saveButton.setOnClickListener { v ->
+                    dataBinding.saveButton.setOnClickListener { _ ->
                         saved = vm.isMovieSaved(applicationContext, it.id)
                         val movie = MovieEntity(id = it.id, adjaraId = it.adjaraId)
 
@@ -110,13 +114,13 @@ class MovieActivity : AppCompatActivity() {
                             saveMovie(movie)
                     }
 
-                dataBinding.playButton.setOnClickListener { i ->
+                dataBinding.playButton.setOnClickListener { _ ->
                     showMovieDialog(this, it.id)
                 }
             }
         })
 
-        vm.getCast(id!!).observe(this, Observer {
+        vm.getCast(id!!).observe(this, {
             if (it != null)
                 if (!it.data.isNullOrEmpty())
                     dataBinding.castRv.adapter = PersonAdapter(it.data, applicationContext)
@@ -137,14 +141,10 @@ class MovieActivity : AppCompatActivity() {
         toast("Movie has been saved for later.")
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        Constants.current_movie_left_at = 0
-    }
-
     override fun onBackPressed() {
         super.onBackPressed()
+        if (mIntestitialAd.isLoaded)
+            mIntestitialAd.show()
         finish()
     }
 }

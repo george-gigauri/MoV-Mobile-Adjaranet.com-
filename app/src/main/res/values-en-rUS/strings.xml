@@ -49,4 +49,7 @@
     <string name="saving_movie_intro_text">In order to save a movie for later, you just have to click on the heart icon at the right top corner.</string>
     <string name="settings_intro_text">To enter settings, go back to the main screen and click on the settings icon at the right top corner. There, you can change application language and view your \'Saved for later\' movies.</string>
     <string name="about_developer">About Developer</string>
+    <string name="attention">Attention!</string>
+    <string name="warning">Warning</string>
+    <string name="app_temporarily_disabled">App is temporarily disabled. Please try again later...</string>
 </resources>

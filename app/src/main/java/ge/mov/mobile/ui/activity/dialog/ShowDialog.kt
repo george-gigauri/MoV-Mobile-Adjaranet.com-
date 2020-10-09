@@ -6,13 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import android.view.View
 import android.view.Window
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
-import androidx.databinding.ObservableList
+import android.widget.*
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import ge.mov.mobile.R
 import ge.mov.mobile.database.MovieSubscriptionEntity
@@ -20,12 +15,7 @@ import ge.mov.mobile.model.Series.EpisodeFiles
 import ge.mov.mobile.model.movie.Seasons
 import ge.mov.mobile.ui.viewmodel.DialogViewModel
 import ge.mov.mobile.util.toast
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.collections.ArrayList
+import kotlinx.coroutines.runBlocking
 
 
 fun Activity.showMovieDialog(activity: FragmentActivity, id: Long) {
@@ -50,128 +40,79 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Long) {
     val quality: Spinner = dialog.findViewById(R.id.quality_spinner)
     val goBack: Button = dialog.findViewById(R.id.go_back)
     val playMovie: Button = dialog.findViewById(R.id.play_movie)
-
-    var click = 0
+    val progressbar: ProgressBar = dialog.findViewById(R.id.progressbar_settings)
 
     goBack.setOnClickListener {
         season.onItemSelectedListener = null
         language.onItemSelectedListener = null
         quality.onItemSelectedListener = null
-        click = 0
+        progressbar.visibility = View.GONE
         dialog.cancel()
         dialog.dismiss()
     }
 
-    vm.loadSeasons(id).observe(activity, Observer {
-        click = 0
-        if (it != null) {
-            val seasons = getSeasonsArray(it)
-            var episodesArray: List<String>?
-            season.adapter = ArrayAdapter(applicationContext, R.layout.spinner_item_view, seasons)
+    var seasons: List<String>
+    var episodesArray: List<String>
+    vm.loadSeasons(id).observe(activity, { loadedSeasons ->
+        seasons = getSeasonsArray(loadedSeasons)
+        season.adapter = ArrayAdapter(applicationContext, R.layout.spinner_item_view, seasons)
 
-            season.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                    click++
-                    vm.loadFiles(id, p2 + 1).observe(activity, Observer { episodeFiles ->
-                        s = p2 + 1
+        season.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                progressbar.visibility = View.VISIBLE
+                vm.loadFiles(id, seasons[position].toInt())
+                    .observe(activity, { episodeFiles ->
+                        s = season.selectedItemPosition + 1
 
-                        episodesArray = getEpisodesArray(episodeFiles)
-                        episode.adapter =
-                            ArrayAdapter(activity, R.layout.spinner_item_view, episodesArray!!)
-
-                        episode.onItemSelectedListener =
-                            object : AdapterView.OnItemSelectedListener {
-                                override fun onItemSelected(
-                                    p0: AdapterView<*>?,
-                                    p1: View?,
-                                    p2: Int,
-                                    p3: Long
-                                ) {
-                                    e = p2 + 1
-                                }
-
-                                override fun onNothingSelected(p0: AdapterView<*>?) {}
-                            }
-
+                        episodesArray = runBlocking {  getEpisodesArray(episodeFiles) }
                         val languages = getLanguagesArray(episodeFiles)
                         val qualities = getQualityArray(episodeFiles)
+
+                        episode.adapter = ArrayAdapter(
+                            activity,
+                            R.layout.spinner_item_view,
+                            episodesArray
+                        )
 
                         language.adapter = ArrayAdapter(
                             activity,
                             R.layout.spinner_item_view,
                             languages
                         )
+                        
                         quality.adapter = ArrayAdapter(
                             activity,
                             R.layout.spinner_item_view,
                             qualities
                         )
 
-                        language.onItemSelectedListener =
-                            object : AdapterView.OnItemSelectedListener {
-                                override fun onItemSelected(
-                                    p0: AdapterView<*>?,
-                                    p1: View?,
-                                    p2: Int,
-                                    p3: Long
-                                ) {
-                                    lang = language.getItemAtPosition(p2) as String
-                                }
-
-                                override fun onNothingSelected(p0: AdapterView<*>?) {
-                                }
-                            }
-
-                        quality.onItemSelectedListener =
-                            object : AdapterView.OnItemSelectedListener {
-                                override fun onItemSelected(
-                                    p0: AdapterView<*>?,
-                                    p1: View?,
-                                    p2: Int,
-                                    p3: Long
-                                ) {
-                                    qual = quality.getItemAtPosition(p2) as String
-                                }
-
-                                override fun onNothingSelected(p0: AdapterView<*>?) {
-                                }
-                            }
-
-                        if (click == 1) {
                             if (subscribed != null) {
-                                if (!seasons.isNullOrEmpty() && !episodesArray.isNullOrEmpty()) {
-                                    if (subscribed.season != 0 && subscribed.episode != 0) {
-                                        season.setSelection(subscribed.season - 1)
-                                        episode.setSelection(subscribed.episode - 1)
-                                    }
+                                if (subscribed.season > 0 && subscribed.episode > 0) {
+                                  //  season.setSelection(subscribed.season - 1)
+                                   // episode.setSelection(subscribed.episode - 1)
                                 }
                             }
-                        }
+                        progressbar.visibility = View.GONE
                     })
-                }
+            }
 
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                }
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
             }
         }
     })
 
     var url = ""
     playMovie.setOnClickListener {
-        if (subscribed != null) {
-            if (subscribed.season != 0 && subscribed.episode != 0) {
-                s = subscribed.season - 1
-                e = subscribed.episode - 1
-            }
-        } else {
-            s -= 1
-            e -= 1
-        }
+        s = season.selectedItemPosition + 1
+        e = episode.selectedItemPosition
+        qual = quality.selectedItem as String
+        lang = language.selectedItem as String
 
         var l1 = true
         var l2 = true
-        vm.loadFiles(id, s).observe(activity, Observer {
-            for (i in it.data[e].files) {
+        vm.loadFiles(id, s).observe(activity, { files ->
+            for (i in files.data[e].files) {
                 if (i.lang == lang) {
                     l1 = false
 
@@ -200,7 +141,6 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Long) {
         intent.setDataAndType(Uri.parse(url), "video/*")
         startActivity(intent)
 
-        click = 0
         season.onItemSelectedListener = null
         language.onItemSelectedListener = null
         quality.onItemSelectedListener = null

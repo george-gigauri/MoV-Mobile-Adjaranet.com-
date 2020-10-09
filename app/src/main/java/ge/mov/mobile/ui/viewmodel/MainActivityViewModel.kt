@@ -1,4 +1,4 @@
-package ge.mov.mobile.ui.activity.viewmodel
+package ge.mov.mobile.ui.viewmodel
 
 import android.util.Log
 import android.view.View.VISIBLE
@@ -26,6 +26,7 @@ class MainActivityViewModel : ViewModel() {
     fun getMovies(): LiveData<List<MovieModel>> {
         this.isLoading.value = VISIBLE
         this.page++
+
         val call = APIService.invoke().getMovies(page)
         call.enqueue(object : Callback<Movie> {
             override fun onFailure(call: Call<Movie>, t: Throwable) {
@@ -36,12 +37,8 @@ class MainActivityViewModel : ViewModel() {
                 call: Call<Movie>,
                 response: Response<Movie>
             ) {
-                //isLoading.value = GONE
-
-                if (movies.value != null)
-                    movies.value = movies.value?.plus(response.body()?.data!!)
-                else
-                    movies.value = response.body()?.data
+                isLoading.value = GONE
+                movies.value = response.body()?.data
             }
         })
         return movies
@@ -50,17 +47,13 @@ class MainActivityViewModel : ViewModel() {
     fun getSeries(): LiveData<List<MovieModel>> {
         isLoading.value = VISIBLE
         this.page++
+
         APIService.invoke().getMovies(page = page, type = "series")
             .enqueue(object : Callback<Movie> {
                 override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
 
-                    if (series.value == null) {
-                        series.value = response.body()?.data
-                    } else {
-                        series.value = series.value?.plus(response.body()!!.data)
-                    }
-
-                    //isLoading.value = GONE
+                    series.value = response.body()?.data
+                    isLoading.value = GONE
                 }
 
                 override fun onFailure(call: Call<Movie>, t: Throwable) {
@@ -83,7 +76,7 @@ class MainActivityViewModel : ViewModel() {
                     if (response.body() != null)
                         if (slides.value.isNullOrEmpty())
                             slides.value = response.body()?.data
-                   // isLoading.value = GONE
+                    isLoading.value = GONE
                 }
 
                 override fun onFailure(call: Call<Featured>, t: Throwable) {

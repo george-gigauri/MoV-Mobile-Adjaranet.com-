@@ -6,7 +6,7 @@
     <data>
         <variable
             name="main"
-            type="ge.mov.mobile.ui.activity.viewmodel.MainActivityViewModel" />
+            type="ge.mov.mobile.ui.viewmodel.MainActivityViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_25sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
                     android:fontFamily="@font/galada"
                     android:text="@string/appname"
                     android:textSize="42sp"
@@ -44,7 +44,7 @@
                     android:id="@+id/lltop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_25sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
                     android:layout_marginEnd="@dimen/_15sdp"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"

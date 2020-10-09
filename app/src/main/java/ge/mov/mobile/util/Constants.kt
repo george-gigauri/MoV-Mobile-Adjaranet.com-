@@ -3,14 +3,14 @@ package ge.mov.mobile.util
 import ge.mov.mobile.model.LocaleModel
 
 object Constants {
-    const val BASE_URL = "https://api.adjaranet.com/api/v1/"
+    const val BASE_URL = "https://api.imovies.cc/api/v1/"
     const val SHARED_PREFERENCES_USER = "UserPreferences"
 
     const val SHARED_PREFERENCES_LANG_LANGID = "ID"
     const val SHARED_PREFERENCES_LANG_LANGNAME = "NAME"
     const val SHARED_PREFERENCES_LANG_LANGCODE = "CODE"
 
-    val AVAILABLE_LANGUAGES = arrayListOf(
+    val AVAILABLE_LANGUAGES = arrayListOf (
         LocaleModel("English", "en", "US"),
         LocaleModel("ქართული", "ka", "GE")
     )

@@ -18,6 +18,7 @@ import ge.mov.mobile.adapter.MovieAdapter
 import ge.mov.mobile.databinding.FragmentSearchBinding
 import ge.mov.mobile.model.movie.MovieModel
 import ge.mov.mobile.ui.viewmodel.FragmentSearchViewModel
+import ge.mov.mobile.util.KeyboardUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -37,6 +38,9 @@ class SearchFragment : Fragment() {
         val view = binding.root
         viewModel = ViewModelProviders.of(this).get(FragmentSearchViewModel::class.java)
 
+        binding.inputSearchKeyword.requestFocus()
+        KeyboardUtils.open(activity!!.applicationContext)
+
         val orientation = resources.configuration.orientation
         gridLayoutManager = if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             GridLayoutManager(activity?.applicationContext, 4)
@@ -49,11 +53,11 @@ class SearchFragment : Fragment() {
 
         binding.inputSearchKeyword.addTextChangedListener {
             GlobalScope.launch(Dispatchers.Main) {
-                delay(500)
+                delay(600)
                 binding.progressbar.visibility = View.VISIBLE
                 viewModel.search(
                     binding.inputSearchKeyword.text.toString(),
-                    page).observe(this@SearchFragment, Observer {
+                    page).observe(this@SearchFragment, {
 
                     binding.searchResultsRv.adapter = MovieAdapter(activity!!.applicationContext, it.data)
 
@@ -66,6 +70,7 @@ class SearchFragment : Fragment() {
 
         binding.goBack.setOnClickListener {
             activity!!.supportFragmentManager.popBackStack()
+            KeyboardUtils.close(activity!!.applicationContext)
         }
 
         return view

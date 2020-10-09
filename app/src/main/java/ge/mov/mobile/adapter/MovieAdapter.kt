@@ -11,15 +11,21 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.request.CachePolicy
+import coil.request.ImageRequest
+import coil.request.ImageResult
 import com.bumptech.glide.Glide
 import com.bumptech.glide.annotation.GlideType
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import ge.mov.mobile.R
 import ge.mov.mobile.model.movie.MovieModel
 import ge.mov.mobile.ui.activity.MovieActivity
+import ge.mov.mobile.util.CoilUtils
 import ge.mov.mobile.util.Utils
 import kotlinx.android.synthetic.main.movie_item.view.*
 import okhttp3.internal.Util
@@ -58,13 +64,23 @@ class MovieAdapter(
         else
             i.secondaryName
 
-        holder.itemView.progress.visibility = View.VISIBLE
-        try {
+        /**  USING COIL LIBRARY **/
+   /*     CoilUtils.loadWithAnimationAndProgressBar(
+            holder.itemView.poster,
+            holder.itemView.progress,
+            i.posters.data._240,
+            450
+        ) */
+        /** =================== **/
+
+       try {
             Glide.with(context)
                 .asBitmap()
                 .placeholder(R.color.colorPrimaryDark)
                 .error(R.color.colorPrimaryDark)
                 .load(i.posters.data._240)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .listener(object : RequestListener<Bitmap> {
                     override fun onLoadFailed(
                         e: GlideException?,

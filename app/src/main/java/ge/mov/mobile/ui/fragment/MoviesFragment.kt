@@ -69,7 +69,10 @@ class MoviesFragment : Fragment() {
             }
 
             binding.allmoviesRv.adapter = MovieAdapter(activity!!, it.data)
-            binding.allmoviesRv.post { progressVisible(false) }
+            binding.allmoviesRv.post {
+                progressVisible(false)
+                recyclerViewToTop()
+            }
 
             binding.nextPageButton.setOnClickListener {
                 page++
@@ -93,9 +96,13 @@ class MoviesFragment : Fragment() {
                         prevButtonVisible(true)
                     }
 
+                    binding.allmoviesRv.adapter = null
                     binding.allmoviesRv.adapter = MovieAdapter(activity!!, movieRes.data)
-                    recyclerViewToTop()
-                   // binding.allmoviesRv.post { progressVisible(false) }
+
+                    binding.allmoviesRv.post {
+                        progressVisible(false)
+                        recyclerViewToTop()
+                    }
                 })
             }
 
@@ -130,7 +137,7 @@ class MoviesFragment : Fragment() {
     }
 
     private fun globalInit(inflater: LayoutInflater, container: ViewGroup?) {
-        genre = arguments?.getInt("genre")
+        genre = arguments!!.getInt("genre")
         genreName = arguments!!.getString("genreName", "")
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movies, container, false)
         vm = ViewModelProviders.of(this).get(FragmentMoviesViewModel::class.java)

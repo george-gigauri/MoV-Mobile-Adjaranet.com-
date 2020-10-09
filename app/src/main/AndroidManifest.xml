@@ -3,8 +3,6 @@
     package="ge.mov.mobile">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -16,12 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.IntroActivity"></activity>
-        <activity android:name=".ui.activity.ApplicationSetupActivity" />
 
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-2337439332290274~5627471905" />
+        <activity android:name=".ui.activity.IntroActivity" />
+
+        <activity android:name=".ui.activity.ApplicationSetupActivity" />
 
         <activity android:name=".ui.fragment.SavedMoviesFragment" />
         <activity
@@ -45,6 +41,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2337439332290274~5627471905" />
     </application>
 
 </manifest>

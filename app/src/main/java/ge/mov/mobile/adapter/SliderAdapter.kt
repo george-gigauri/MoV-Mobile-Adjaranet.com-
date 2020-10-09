@@ -9,6 +9,7 @@ import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import ge.mov.mobile.R
 import ge.mov.mobile.model.featured.FeaturedModel
 import ge.mov.mobile.ui.activity.MovieActivity
@@ -42,9 +43,12 @@ class SliderAdapter (
         Glide.with(context)
             .asDrawable()
             .load(poster)
+            .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(image)
 
         view.setOnClickListener {
+            Glide.get(context).clearMemory()
             val intent = Intent(context, MovieActivity::class.java)
             intent.putExtra("id", slides[position].id)
             intent.putExtra("adjaraId", slides[position].adjaraId)
