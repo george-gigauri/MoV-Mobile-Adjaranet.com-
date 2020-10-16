@@ -51,7 +51,7 @@ class MoviesFragment : Fragment() {
         })
 
 
-        vm.getMovies(genre=genre, page=page, perPage = perPage).observe(this, Observer {
+        vm.getMovies(genre=genre, perPage = perPage).observe(this, Observer {
             if (it.meta.pagination.currentPage == 1)
                 if (it.meta.pagination.totalPages - 1 == it.meta.pagination.currentPage) {
                     prevButtonVisible(false)
@@ -78,8 +78,8 @@ class MoviesFragment : Fragment() {
                 page++
                 binding.pageCount.text = page.toString()
 
-                vm.getMovies(genre=genre, page=page, perPage = perPage).observe(this, Observer {movieRes ->
-                   // progressVisible(true)
+                vm.getMovies(genre=genre, perPage = perPage).observe(this, Observer {movieRes ->
+                    progressVisible(true)
                     if (movieRes.meta.pagination.currentPage == 1)
                         if (movieRes.meta.pagination.totalPages - 1 == movieRes.meta.pagination.currentPage) {
                             prevButtonVisible(false)
@@ -110,8 +110,8 @@ class MoviesFragment : Fragment() {
                 page--
                 binding.pageCount.text = page.toString()
 
-                vm.getMovies(genre=genre, page=page, perPage = perPage).observe(this, Observer {movieRes ->
-                    if (movieRes.meta.pagination.totalPages == page)
+                vm.getMovies(genre=genre, perPage = perPage).observe(this, { movieRes ->
+                    if (movieRes.meta.pagination.totalPages == vm.page)
                         nextButtonVisible(false)
                     else
                         nextButtonVisible(true)

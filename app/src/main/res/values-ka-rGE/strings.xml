@@ -52,4 +52,8 @@
     <string name="attention">ყურადღება</string>
     <string name="app_temporarily_disabled">აპლიკაცია დროებით გათიშულია, სცადეთ მოგვიანებით...</string>
     <string name="warning">გაფრთხილება</string>
+    <string name="retry">ახლიდან</string>
+    <string name="no_internet_connection_offline">ინტერნეტთან კავშირი არ არის.</string>
+    <string name="exit">გასვლა</string>
+    <string name="search">ძიება</string>
 </resources>

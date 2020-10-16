@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ge.mov.mobile">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+        android:uiOptions="splitActionBarWhenNarrow"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:roundIcon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".ui.activity.NoConnectionActivity" android:theme="@style/Fullscreen" />
         <activity android:name=".ui.activity.IntroActivity" />
-
         <activity android:name=".ui.activity.ApplicationSetupActivity" />
-
         <activity android:name=".ui.fragment.SavedMoviesFragment" />
         <activity
             android:name=".ui.activity.SettingsActivity"
@@ -34,7 +33,7 @@
             android:name=".ui.activity.MainActivity"
             android:configChanges="layoutDirection|locale" />
         <activity android:name=".ui.activity.LoginActivity" />
-        <activity android:name=".ui.activity.SplashActivity">
+        <activity android:name=".ui.activity.SplashActivity" android:theme="@style/Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -26,7 +26,7 @@ class DialogViewModel : ViewModel() {
                 ) {
                     if (response.code() == 200)
                     {
-                        Log.i("DialogRequestUrl", response.raw().request().url().toString())
+                      //  Log.i("DialogRequestUrl", response.raw().request().url().toString())
                         files.value = response.body()
                     }
                 }

@@ -7,9 +7,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.room.Room
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.android.gms.ads.AdListener
+import coil.load
+import coil.request.CachePolicy
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import ge.mov.mobile.R
@@ -79,12 +78,7 @@ class MovieActivity : AppCompatActivity() {
                     else -> it.covers.data._145
                 }
 
-                Glide.with(applicationContext)
-                    .asDrawable()
-                    .load(cover)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .skipMemoryCache(true)
-                    .into(dataBinding.poster)
+                dataBinding.poster.load(cover) { diskCachePolicy(CachePolicy.DISABLED); memoryCachePolicy(CachePolicy.DISABLED) }
 
                 dataBinding.genresRv.adapter = GenreAdapter(it.genres.data, this, 2)
 

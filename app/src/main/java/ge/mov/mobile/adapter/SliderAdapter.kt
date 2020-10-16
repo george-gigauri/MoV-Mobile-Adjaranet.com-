@@ -6,13 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.PagerAdapter
+import coil.load
+import coil.request.CachePolicy
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import ge.mov.mobile.R
 import ge.mov.mobile.model.featured.FeaturedModel
 import ge.mov.mobile.ui.activity.MovieActivity
+import ge.mov.mobile.util.Utils
 
 class SliderAdapter (
     private val context: Context,
@@ -32,7 +36,20 @@ class SliderAdapter (
         val view = inflater.inflate(R.layout.slider_item, container, false)
 
         val image: ImageView = view.findViewById(R.id.slider_image)
+        val title: TextView = view.findViewById(R.id.slider_title)
+
         val i = slides[position]
+
+        val language = Utils.loadLanguage(context)
+        val lang_code = if (language?.id == "ka") "GEO" else "ENG"
+
+        title.text = if (lang_code == "GEO")
+            if (i.primaryName != "")
+                i.primaryName
+            else
+                i.secondaryName
+        else
+            i.originalName
 
         val poster = if (i.cover.large != "") {
             i.cover.large
@@ -40,12 +57,11 @@ class SliderAdapter (
             i.poster
         }
 
-        Glide.with(context)
-            .asDrawable()
-            .load(poster)
-            .skipMemoryCache(true)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(image)
+        image.load(poster) {
+            crossfade(true); crossfade(420);
+            memoryCachePolicy(CachePolicy.DISABLED);
+            diskCachePolicy(CachePolicy.DISABLED)
+        }
 
         view.setOnClickListener {
             Glide.get(context).clearMemory()

@@ -7,12 +7,12 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_170sdp"
+        android:layout_height="@dimen/_175sdp"
         android:id="@+id/cardViewSliderRoot"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:cardElevation="0dp"
-        app:cardCornerRadius="@dimen/_20sdp"
+        app:cardCornerRadius="@dimen/_14sdp"
         app:cardBackgroundColor="@color/colorAccent">
 
         <ImageView
@@ -21,5 +21,17 @@
             android:id="@+id/slider_image"
             android:scaleType="centerCrop" />
 
+        <TextView
+            android:layout_width="@dimen/_168sdp"
+            android:layout_height="wrap_content"
+            android:id="@+id/slider_title"
+            android:maxLines="2"
+            android:text="Title"
+            android:textColor="@android:color/white"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="@dimen/_14sdp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/quicksand_bold" />
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

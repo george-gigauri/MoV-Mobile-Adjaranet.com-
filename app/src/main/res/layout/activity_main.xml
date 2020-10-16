@@ -27,13 +27,15 @@
                 android:paddingBottom="@dimen/_14sdp">
 
                 <!-- TOP BAR -->
-                <TextView
+                <ImageView
                     android:id="@+id/title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_32sdp"
+                    android:layout_height="@dimen/_32sdp"
+                    android:transitionName="logo"
                     android:layout_marginStart="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_30sdp"
                     android:fontFamily="@font/galada"
+                    android:src="@drawable/logo"
                     android:text="@string/appname"
                     android:textSize="42sp"
                     app:layout_constraintBottom_toBottomOf="@id/lltop"
@@ -45,12 +47,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_30sdp"
-                    android:layout_marginEnd="@dimen/_15sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageView
+           <!--         <ImageView
                         android:id="@+id/btn_search_movie"
                         android:layout_width="@dimen/_30sdp"
                         android:layout_height="@dimen/_30sdp"
@@ -73,7 +75,37 @@
                             android:padding="@dimen/_5sdp"
                             android:src="@drawable/ic_settings"
                             app:tint="#fff" />
-                    </androidx.cardview.widget.CardView>
+                    </androidx.cardview.widget.CardView> -->
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search"
+                        android:id="@+id/btn_search_movie"
+                        android:textColor="@color/textMain"
+                        android:background="@drawable/button_bg_transparent"
+                        android:paddingStart="@dimen/_10sdp"
+                        android:paddingEnd="@dimen/_10sdp"
+                        android:paddingTop="@dimen/_5sdp"
+                        android:paddingBottom="@dimen/_7sdp"
+                        android:textStyle="bold"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:fontFamily="@font/quicksand_bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings"
+                        android:id="@+id/btn_profile_pic"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:textColor="@color/colorAccent"
+                        android:background="@drawable/accent_bg_transparent"
+                        android:paddingStart="@dimen/_10sdp"
+                        android:paddingEnd="@dimen/_10sdp"
+                        android:paddingTop="@dimen/_5sdp"
+                        android:paddingBottom="@dimen/_7sdp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/quicksand_bold" />
 
                 </LinearLayout>
                 <!-- END TOP BAR -->
@@ -82,9 +114,9 @@
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/slider"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_170sdp"
+                    android:layout_height="@dimen/_175sdp"
                     android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_18sdp"
                     android:layout_marginEnd="@dimen/_10sdp"
                     app:layout_constraintTop_toBottomOf="@id/title" />
                 <!-- END slider -->
@@ -107,8 +139,10 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_12sdp"
                     android:fontFamily="@font/quicksand_bold"
+                    android:textStyle="bold"
                     android:text="@string/movies"
                     android:textSize="20sp"
+                    android:textColor="@color/colorAccent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/categories" />
 
@@ -132,7 +166,9 @@
                     android:layout_margin="@dimen/_12sdp"
                     android:fontFamily="@font/quicksand_bold"
                     android:text="@string/series"
+                    android:textColor="@color/colorAccent"
                     android:textSize="20sp"
+                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/movies" />
 
@@ -140,6 +176,7 @@
                     android:id="@+id/series"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
@@ -199,7 +236,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/progress"
-            android:visibility="@{ main.isLoading }"
+            android:visibility="gone"
             android:background="#CB000000">
 
             <ProgressBar

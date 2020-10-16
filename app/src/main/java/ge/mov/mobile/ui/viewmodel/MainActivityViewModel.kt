@@ -6,12 +6,15 @@ import android.view.View.GONE
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ge.mov.mobile.model.basic.BasicMovie
+import ge.mov.mobile.model.basic.Data
 import ge.mov.mobile.model.featured.Featured
 import ge.mov.mobile.model.featured.FeaturedModel
 import ge.mov.mobile.model.movie.Genres
 import ge.mov.mobile.model.movie.Movie
 import ge.mov.mobile.model.movie.MovieModel
 import ge.mov.mobile.service.APIService
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,23 +22,23 @@ import retrofit2.Response
 class MainActivityViewModel : ViewModel() {
     var isLoading = MutableLiveData<Int>()
     private var page: Int = 0
-    private val movies: MutableLiveData<List<MovieModel>> = MutableLiveData()
-    private val series = MutableLiveData<List<MovieModel>>()
+    private val movies: MutableLiveData<List<Data>> = MutableLiveData()
+    private val series = MutableLiveData<List<Data>>()
     private val genres = MutableLiveData<Genres>()
 
-    fun getMovies(): LiveData<List<MovieModel>> {
+    fun getMovies(): LiveData<List<Data>> {
         this.isLoading.value = VISIBLE
         this.page++
 
         val call = APIService.invoke().getMovies(page)
-        call.enqueue(object : Callback<Movie> {
-            override fun onFailure(call: Call<Movie>, t: Throwable) {
+        call.enqueue(object : Callback<BasicMovie> {
+            override fun onFailure(call: Call<BasicMovie>, t: Throwable) {
 
             }
 
             override fun onResponse(
-                call: Call<Movie>,
-                response: Response<Movie>
+                call: Call<BasicMovie>,
+                response: Response<BasicMovie>
             ) {
                 isLoading.value = GONE
                 movies.value = response.body()?.data
@@ -44,19 +47,19 @@ class MainActivityViewModel : ViewModel() {
         return movies
     }
 
-    fun getSeries(): LiveData<List<MovieModel>> {
+    fun getSeries(): LiveData<List<Data>> {
         isLoading.value = VISIBLE
         this.page++
 
         APIService.invoke().getMovies(page = page, type = "series")
-            .enqueue(object : Callback<Movie> {
-                override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
+            .enqueue(object : Callback<BasicMovie> {
+                override fun onResponse(call: Call<BasicMovie>, response: Response<BasicMovie>) {
 
                     series.value = response.body()?.data
                     isLoading.value = GONE
                 }
 
-                override fun onFailure(call: Call<Movie>, t: Throwable) {
+                override fun onFailure(call: Call<BasicMovie>, t: Throwable) {
                     isLoading.value = GONE
                     Log.i("MainActivity", t.message.toString())
                 }
@@ -69,7 +72,8 @@ class MainActivityViewModel : ViewModel() {
         isLoading.value = VISIBLE
         val slides = MutableLiveData<List<FeaturedModel>>()
 
-        APIService.invoke().getFeatured()
+        slides.value = runBlocking { APIService.invoke().getFeatured().body()?.data }
+  /*      APIService.invoke().getFeatured()
             .enqueue(object : Callback<Featured>
             {
                 override fun onResponse(call: Call<Featured>, response: Response<Featured>) {
@@ -83,7 +87,7 @@ class MainActivityViewModel : ViewModel() {
                     isLoading.value = GONE
                     Log.i("MainActivity", t.message.toString())
                 }
-            })
+            }) */
         return slides
     }
 

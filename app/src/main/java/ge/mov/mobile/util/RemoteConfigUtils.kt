@@ -16,8 +16,4 @@ object RemoteConfigUtils {
         remoteConfig.activate()
         remoteConfig
     }
-
-    fun isEnabled() : Boolean = runBlocking {
-        getRemoteConfig().getString("isAppEnabled").toUpperCase(Locale.ROOT) == "YES"
-    }
 }

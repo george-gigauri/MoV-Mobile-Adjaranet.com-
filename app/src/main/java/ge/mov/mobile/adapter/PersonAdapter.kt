@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.request.CachePolicy
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import ge.mov.mobile.R
@@ -43,15 +45,10 @@ class PersonAdapter (
             i.secondaryName
 
         holder.itemView.person_role.text = if (role.character != "") role.character else role.role
-
-        Glide.with(context)
-            .asDrawable()
-            .placeholder(R.color.colorAccent)
-            .error(R.color.colorAccent)
-            .load(i.poster)
-            .skipMemoryCache(true)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(holder.itemView.person_img)
+        holder.itemView.person_img.load(i.poster) {
+            crossfade(true); crossfade(480);
+            memoryCachePolicy(CachePolicy.DISABLED);
+            diskCachePolicy(CachePolicy.DISABLED) }
     }
 
     override fun getItemCount(): Int {
