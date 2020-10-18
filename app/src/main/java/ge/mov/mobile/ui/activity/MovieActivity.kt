@@ -1,5 +1,6 @@
 package ge.mov.mobile.ui.activity
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -29,6 +30,7 @@ class MovieActivity : AppCompatActivity() {
     private var id: Long? = null
     private var adjaraId: Long? = null
     private lateinit var mIntestitialAd: InterstitialAd
+    private lateinit var gridLayoutManager: GridLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +64,12 @@ class MovieActivity : AppCompatActivity() {
             "saved_movies"
         ).build().movieDao()
 
-        val gridLayoutManager = GridLayoutManager(applicationContext, 2)
+        val orientation = resources.configuration.orientation
+        gridLayoutManager = if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            GridLayoutManager(applicationContext, 4)
+        } else {
+            GridLayoutManager(applicationContext, 2)
+        }
         dataBinding.castRv.layoutManager = gridLayoutManager
     }
 

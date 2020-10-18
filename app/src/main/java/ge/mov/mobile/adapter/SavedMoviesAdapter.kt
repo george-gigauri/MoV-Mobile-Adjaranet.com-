@@ -23,6 +23,7 @@ import ge.mov.mobile.service.APIService
 import ge.mov.mobile.ui.activity.MovieActivity
 import ge.mov.mobile.util.Utils
 import ge.mov.mobile.util.loadWithAnimationAndProgressBar
+import ge.mov.mobile.util.loadWithProgressBar
 import kotlinx.android.synthetic.main.movie_item.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -84,7 +85,7 @@ class SavedMoviesAdapter (
         val lang_code = if (language?.id == "ka") "GEO" else "ENG"
 
         setMovieName(holder, i, lang_code)
-        setMoviePoster(holder, i.posters.data._240)
+        setMoviePoster(holder, if (i.posters.data != null) i.posters.data._240 else "")
 
         holder.itemView.setOnClickListener {
             val intent = Intent(context, MovieActivity::class.java)
@@ -106,43 +107,7 @@ class SavedMoviesAdapter (
     }
 
     private fun setMoviePoster(holder: ViewHolder, poster: String) {
-        holder.itemView.poster.loadWithAnimationAndProgressBar(holder.itemView.progress, poster, 480)
-//        try {
-//            holder.itemView.progress.visibility = View.VISIBLE
-//            Glide.with(context)
-//                .asBitmap()
-//                .placeholder(R.color.colorPrimaryDark)
-//                .error(R.color.colorPrimaryDark)
-//                .load(poster)
-//                .skipMemoryCache(true)
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .listener(object : RequestListener<Bitmap> {
-//                    override fun onLoadFailed(
-//                        e: GlideException?,
-//                        model: Any?,
-//                        target: Target<Bitmap>?,
-//                        isFirstResource: Boolean
-//                    ): Boolean {
-//                        holder.itemView.progress.visibility = View.GONE
-//                        return true
-//                    }
-//
-//                    override fun onResourceReady(
-//                        resource: Bitmap?,
-//                        model: Any?,
-//                        target: Target<Bitmap>?,
-//                        dataSource: DataSource?,
-//                        isFirstResource: Boolean
-//                    ): Boolean {
-//                        holder.itemView.poster.setImageBitmap(resource)
-//                        holder.itemView.progress.visibility = View.GONE
-//                        return true
-//                    }
-//                }).submit()
-//
-//        } catch (e: Exception) {
-//            holder.itemView.progress.visibility = View.GONE
-//        }
+        holder.itemView.poster.loadWithProgressBar(holder.itemView.progress, poster)
     }
 
     fun addAll(list: List<MovieEntity>) {

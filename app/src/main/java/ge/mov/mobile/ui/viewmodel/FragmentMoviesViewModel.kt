@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ge.mov.mobile.model.basic.BasicMovie
-import ge.mov.mobile.model.movie.Movie
 import ge.mov.mobile.service.APIService
 import retrofit2.Call
 import retrofit2.Callback

@@ -14,6 +14,7 @@ import ge.mov.mobile.model.basic.Data
 import ge.mov.mobile.ui.activity.MovieActivity
 import ge.mov.mobile.util.Utils
 import ge.mov.mobile.util.loadWithAnimationAndProgressBar
+import ge.mov.mobile.util.loadWithProgressBar
 import kotlinx.android.synthetic.main.movie_item.view.*
 
 class MovieAdapter(
@@ -21,7 +22,6 @@ class MovieAdapter(
     private var arr: List<Data>
 ) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
     inner class ViewHolder(i: View) : RecyclerView.ViewHolder(i) {
-       // val photo: ImageView = i.findViewById(R.id.poster)
         val text: TextView = i.findViewById(R.id.name)
     }
 
@@ -49,11 +49,12 @@ class MovieAdapter(
         else
             i.secondaryName
 
-        holder.itemView.poster.loadWithAnimationAndProgressBar (
-            holder.itemView.progress,
-            i.posters.data._240,
-            480
-        )
+        if (i.posters?.data != null) {
+            holder.itemView.poster.loadWithProgressBar(
+                holder.itemView.progress,
+                i.posters.data._240
+            )
+        }
 
         holder.itemView.setOnClickListener {
             val intent = Intent(context, MovieActivity::class.java)

@@ -1,19 +1,19 @@
 package ge.mov.mobile.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.CachePolicy
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import ge.mov.mobile.R
 import ge.mov.mobile.model.Series.PersonModel
+import ge.mov.mobile.ui.activity.PersonMoviesActivity
 import ge.mov.mobile.util.Utils
 import kotlinx.android.synthetic.main.cast_model.view.*
-import kotlinx.android.synthetic.main.fragment_movies.view.*
 
 class PersonAdapter (
     private val arr: List<PersonModel>,
@@ -46,9 +46,21 @@ class PersonAdapter (
 
         holder.itemView.person_role.text = if (role.character != "") role.character else role.role
         holder.itemView.person_img.load(i.poster) {
-            crossfade(true); crossfade(480);
+            placeholder(R.color.colorPrimary)
+            error(R.color.colorAccent)
             memoryCachePolicy(CachePolicy.DISABLED);
-            diskCachePolicy(CachePolicy.DISABLED) }
+            diskCachePolicy(CachePolicy.DISABLED)
+        }
+
+        holder.itemView.setOnClickListener {
+            val name = holder.itemView.person_name.text.toString()
+            val intent = Intent(context, PersonMoviesActivity::class.java)
+            intent.putExtra("actorId", i.id)
+            intent.putExtra("actorName", name)
+            intent.putExtra("actorImage", i.poster)
+            intent.flags = FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {

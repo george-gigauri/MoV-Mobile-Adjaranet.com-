@@ -14,6 +14,6 @@ data class Data (
     val primaryName: String,
     val secondaryName: String,
     val originalName: String,
-    val posters: Posters
+    val posters: Posters?
 )
 

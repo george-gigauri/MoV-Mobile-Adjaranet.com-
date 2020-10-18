@@ -58,7 +58,7 @@ class SliderAdapter (
         }
 
         image.load(poster) {
-            crossfade(true); crossfade(420);
+          //  crossfade(true); crossfade(420);
             memoryCachePolicy(CachePolicy.DISABLED);
             diskCachePolicy(CachePolicy.DISABLED)
         }

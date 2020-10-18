@@ -41,6 +41,7 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Long) {
     val goBack: Button = dialog.findViewById(R.id.go_back)
     val playMovie: Button = dialog.findViewById(R.id.play_movie)
     val progressbar: ProgressBar = dialog.findViewById(R.id.progressbar_settings)
+    val episodesContainer: LinearLayout = dialog.findViewById(R.id.episodes_spinners)
 
     goBack.setOnClickListener {
         season.onItemSelectedListener = null
@@ -73,6 +74,11 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Long) {
                             R.layout.spinner_item_view,
                             episodesArray
                         )
+
+                        if (seasons[0] == "0")
+                            episodesContainer.visibility = View.GONE
+                        else
+                            episodesContainer.visibility = View.VISIBLE
 
                         language.adapter = ArrayAdapter(
                             activity,

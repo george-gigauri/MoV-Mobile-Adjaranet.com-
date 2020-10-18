@@ -58,10 +58,10 @@ class GenreAdapter (
 
             if (type == 1) {
                 (context as MainActivity).supportFragmentManager.beginTransaction()
-                    .add(R.id.root_main, fragmentMovies, "movies").addToBackStack("movies").commit()
+                    .replace(R.id.root_main, fragmentMovies, "movies").addToBackStack("movies").commit()
             } else {
                 (context as MovieActivity).supportFragmentManager.beginTransaction()
-                    .add(R.id.rootMovie, fragmentMovies, "movies").addToBackStack("movies").commit()
+                    .replace(R.id.rootMovie, fragmentMovies, "movies").addToBackStack("movies").commit()
             }
         }
 

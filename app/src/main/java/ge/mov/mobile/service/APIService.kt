@@ -3,6 +3,7 @@ package ge.mov.mobile.service
 import android.content.Context
 import ge.mov.mobile.model.Series.EpisodeFiles
 import ge.mov.mobile.model.Series.Person
+import ge.mov.mobile.model.Series.PersonModel
 import ge.mov.mobile.model.basic.BasicMovie
 import ge.mov.mobile.model.featured.Featured
 import ge.mov.mobile.model.movie.Genres
@@ -75,6 +76,17 @@ interface APIService {
     fun getGenres(
         @Query("per_page") perPage: Int = 50
     ) : Call<Genres>
+
+    @GET("casts/{id}/movies")
+    fun getMoviesByPerson(
+        @Path("id") id: Long,
+        @Query("per_page") perPage: Int = 100
+    ) : Call<BasicMovie>
+
+    @GET("casts/{id}")
+    suspend fun getPerson(
+        @Path("id") id: Long
+    ) : PersonModel
 
     companion object {
         operator fun invoke(): APIService

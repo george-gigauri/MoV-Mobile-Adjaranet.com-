@@ -49,16 +49,16 @@ class SplashActivity : AppCompatActivity() {
                         }
                     }
 
-                runOnUiThread {
+       /*         runOnUiThread {
                     val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this@SplashActivity,
                         splash_title,
                         "logo"
-                    )
+                    ) */
 
                     intent.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent, options.toBundle())
-                }
+                    startActivity(intent)//, options.toBundle())
+         //       }
             }
         }, 1000)
     }

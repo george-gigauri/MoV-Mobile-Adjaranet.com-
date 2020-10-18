@@ -9,13 +9,16 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:uiOptions="splitActionBarWhenNarrow"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.NoConnectionActivity" android:theme="@style/Fullscreen" />
+        android:theme="@style/AppTheme"
+        android:uiOptions="splitActionBarWhenNarrow">
+        <activity android:name=".ui.activity.PersonMoviesActivity"></activity>
+        <activity
+            android:name=".ui.activity.NoConnectionActivity"
+            android:theme="@style/Fullscreen" />
         <activity android:name=".ui.activity.IntroActivity" />
         <activity android:name=".ui.activity.ApplicationSetupActivity" />
         <activity android:name=".ui.fragment.SavedMoviesFragment" />
@@ -33,7 +36,9 @@
             android:name=".ui.activity.MainActivity"
             android:configChanges="layoutDirection|locale" />
         <activity android:name=".ui.activity.LoginActivity" />
-        <activity android:name=".ui.activity.SplashActivity" android:theme="@style/Fullscreen">
+        <activity
+            android:name=".ui.activity.SplashActivity"
+            android:theme="@style/Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

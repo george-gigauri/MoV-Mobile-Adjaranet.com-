@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnSearchMovie.setOnClickListener {
-            supportFragmentManager.beginTransaction().add(R.id.root_main, SearchFragment(), "null").addToBackStack(
+            supportFragmentManager.beginTransaction().replace(R.id.root_main, SearchFragment(), "null").addToBackStack(
                 "search"
             ).commit()
         }
@@ -212,13 +212,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        Glide.get(this)
-            .clearMemory()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PLAY_STORE_FLEXIBE_UPDATE_REQUEST) {
@@ -227,5 +220,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 }
