@@ -21,6 +21,8 @@ import ge.mov.mobile.database.MovieEntity
 import ge.mov.mobile.databinding.ActivityMovieBinding
 import ge.mov.mobile.ui.activity.dialog.showMovieDialog
 import ge.mov.mobile.ui.viewmodel.MovieDetailViewModel
+import ge.mov.mobile.util.Constants
+import ge.mov.mobile.util.Constants.approved
 import ge.mov.mobile.util.toast
 
 class MovieActivity : AppCompatActivity() {
@@ -37,16 +39,21 @@ class MovieActivity : AppCompatActivity() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie)
         dataBinding.lifecycleOwner = this
 
-        mIntestitialAd = InterstitialAd(this)
-        mIntestitialAd.adUnitId = "ca-app-pub-2337439332290274/2854996575"
-        mIntestitialAd.loadAd(AdRequest.Builder().build())
+        if (!approved) {
+            mIntestitialAd = InterstitialAd(this)
+            mIntestitialAd.adUnitId = "ca-app-pub-2337439332290274/2854996575"
+            mIntestitialAd.loadAd(AdRequest.Builder().build())
+        } else {
+            toast("User Approved for Non-Ads service.")
+        }
 
         init()
         loadInfo()
 
         dataBinding.goBack.setOnClickListener {
-            if (mIntestitialAd.isLoaded)
-                mIntestitialAd.show()
+            if (!Constants.approved)
+                if (mIntestitialAd.isLoaded)
+                    mIntestitialAd.show()
             finish()
         }
     }
@@ -144,8 +151,9 @@ class MovieActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        if (mIntestitialAd.isLoaded)
-            mIntestitialAd.show()
+        if (!approved)
+            if (mIntestitialAd.isLoaded)
+                mIntestitialAd.show()
         finish()
     }
 }

@@ -58,6 +58,9 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Long) {
         seasons = getSeasonsArray(loadedSeasons)
         season.adapter = ArrayAdapter(applicationContext, R.layout.spinner_item_view, seasons)
 
+        if (subscribed != null && subscribed.season > 0)
+            season.setSelection(subscribed.season - 1)
+
         season.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
                 progressbar.visibility = View.VISIBLE
@@ -74,6 +77,9 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Long) {
                             R.layout.spinner_item_view,
                             episodesArray
                         )
+
+                        if (subscribed != null && subscribed.episode > 0)
+                            episode.setSelection(subscribed.episode - 1)
 
                         if (seasons[0] == "0")
                             episodesContainer.visibility = View.GONE
@@ -92,12 +98,6 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Long) {
                             qualities
                         )
 
-                            if (subscribed != null) {
-                                if (subscribed.season > 0 && subscribed.episode > 0) {
-                                  //  season.setSelection(subscribed.season - 1)
-                                   // episode.setSelection(subscribed.episode - 1)
-                                }
-                            }
                         progressbar.visibility = View.GONE
                     })
             }

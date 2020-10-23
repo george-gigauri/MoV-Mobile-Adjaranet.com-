@@ -112,33 +112,14 @@
                         android:textStyle="bold"
                         android:textSize="16sp" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center">
+                   <androidx.recyclerview.widget.RecyclerView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/developer_social_list"
+                       android:orientation="horizontal"
+                       app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                       android:layout_margin="@dimen/_5sdp" />
 
-                        <ImageView
-                            android:layout_width="@dimen/_36sdp"
-                            android:layout_height="@dimen/_36sdp"
-                            android:id="@+id/contact_facebook"
-                            android:src="@drawable/ic_facebook"
-                            android:layout_margin="@dimen/_14sdp" />
-
-                        <ImageView
-                            android:layout_width="@dimen/_40sdp"
-                            android:layout_height="@dimen/_40sdp"
-                            android:id="@+id/contact_instagram"
-                            android:src="@drawable/ic_instagram"
-                            android:layout_margin="@dimen/_14sdp" />
-
-                        <ImageView
-                            android:layout_width="@dimen/_40sdp"
-                            android:layout_height="@dimen/_40sdp"
-                            android:id="@+id/contact_linkedin"
-                            android:src="@drawable/ic_linkedin"
-                            android:layout_margin="@dimen/_14sdp"/>
-                    </LinearLayout>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

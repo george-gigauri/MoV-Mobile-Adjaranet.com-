@@ -6,25 +6,21 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.observe
 import androidx.viewpager.widget.ViewPager
-import com.bumptech.glide.Glide
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.android.play.core.listener.StateUpdatedListener
 import com.google.android.ump.*
+import ge.mov.mobile.MovApplication
 import ge.mov.mobile.R
 import ge.mov.mobile.adapter.GenreAdapter
 import ge.mov.mobile.adapter.MovieAdapter
 import ge.mov.mobile.adapter.SliderAdapter
 import ge.mov.mobile.databinding.ActivityMainBinding
 import ge.mov.mobile.model.basic.Data
-import ge.mov.mobile.model.movie.MovieModel
 import ge.mov.mobile.ui.viewmodel.MainActivityViewModel
 import ge.mov.mobile.ui.fragment.SearchFragment
 import ge.mov.mobile.util.Utils
@@ -53,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
 
-      //  loadConsentInfo()
+        val mov = MovApplication()
 
         viewPager = findViewById(R.id.slider)
 
@@ -74,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             ).commit()
         }
 
-        vm.getGenresFull().observe(this, Observer {
+        vm.getGenresFull().observe(this,  {
             binding.progress.visibility = View.VISIBLE
 
             if(!it.data.isNullOrEmpty())
@@ -111,12 +107,13 @@ class MainActivity : AppCompatActivity() {
         vm.getSlides().observe(this) {
             sliderAdapter = SliderAdapter(applicationContext, it)
             binding.slider.pageMargin = 85
-            binding.slider.adapter = sliderAdapter
+
+            if (!it.isNullOrEmpty())
+                binding.slider.adapter = sliderAdapter
 
             timer = Timer()
             timer.scheduleAtFixedRate(SliderTimerTask(), 3500, 4000)
         }
-
     }
 
     inner class SliderTimerTask : TimerTask()

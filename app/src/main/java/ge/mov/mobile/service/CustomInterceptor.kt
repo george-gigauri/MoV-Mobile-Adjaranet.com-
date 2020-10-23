@@ -1,13 +1,10 @@
 package ge.mov.mobile.service
 
-import android.content.Context
-import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.util.concurrent.TimeUnit
 import kotlin.jvm.Throws
 
-class CustomInterceptor () : Interceptor {
+class CustomInterceptor : Interceptor {
     @Throws(Exception::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()

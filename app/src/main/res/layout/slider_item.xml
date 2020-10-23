@@ -31,7 +31,6 @@
             android:layout_gravity="bottom|start"
             android:layout_margin="@dimen/_14sdp"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/quicksand_bold" />
+            android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

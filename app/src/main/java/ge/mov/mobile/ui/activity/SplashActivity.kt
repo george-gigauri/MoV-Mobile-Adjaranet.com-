@@ -6,14 +6,12 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityOptionsCompat
 import com.google.firebase.auth.FirebaseAuth
 import ge.mov.mobile.R
 import ge.mov.mobile.util.NetworkUtils
 import ge.mov.mobile.util.Utils
 import kotlinx.android.synthetic.main.activity_splash.*
 import java.util.*
-
 
 class SplashActivity : AppCompatActivity() {
     private val mAuth = FirebaseAuth.getInstance()
@@ -28,6 +26,11 @@ class SplashActivity : AppCompatActivity() {
                 R.anim.fade_in
             )
         )
+
+        val myLang = Utils.loadLanguage(this)
+        if (myLang != null) {
+            Utils.saveLanguage(this, myLang)
+        }
 
         timer.schedule(object : TimerTask() {
             override fun run() {
@@ -49,16 +52,8 @@ class SplashActivity : AppCompatActivity() {
                         }
                     }
 
-       /*         runOnUiThread {
-                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        this@SplashActivity,
-                        splash_title,
-                        "logo"
-                    ) */
-
-                    intent.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)//, options.toBundle())
-         //       }
+                intent.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
             }
         }, 1000)
     }

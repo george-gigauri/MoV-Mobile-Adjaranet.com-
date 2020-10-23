@@ -6,7 +6,6 @@ import ge.mov.mobile.model.Series.EpisodeFiles
 import ge.mov.mobile.model.movie.MovieItemModel
 import ge.mov.mobile.model.movie.Seasons
 import ge.mov.mobile.service.APIService
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,7 +25,6 @@ class DialogViewModel : ViewModel() {
                 ) {
                     if (response.code() == 200)
                     {
-                      //  Log.i("DialogRequestUrl", response.raw().request().url().toString())
                         files.value = response.body()
                     }
                 }

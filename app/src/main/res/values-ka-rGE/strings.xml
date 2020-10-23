@@ -50,10 +50,11 @@
     <string name="settings_intro_text">აპლიკაციის პარამეტრებში შესასვლელად უნდა დაბრუნდე მთავარ გვერდზე და დააჭირო პარამეტრების ღილაკს, ზედა მარჯვენა კუთხეში. პარამეტრებიდან შენ შეძლებ შეცვალო აპლიკაციის ენა და ნახო შენ მიერ შენახული ფოლმები.</string>
     <string name="about_developer">დეველოპერის შესახებ</string>
     <string name="attention">ყურადღება</string>
-    <string name="app_temporarily_disabled">აპლიკაცია დროებით გათიშულია, სცადეთ მოგვიანებით...</string>
+    <string name="app_temporarily_disabled">აპლიკაცია გამორთულია, გთხოვთ სცადოთ მოგვიანებით. დამატებითი ინფორმაციისთვის: giorgigigauri7@gmail.com</string>
     <string name="warning">გაფრთხილება</string>
     <string name="retry">ახლიდან</string>
     <string name="no_internet_connection_offline">ინტერნეტთან კავშირი არ არის.</string>
     <string name="exit">გასვლა</string>
     <string name="search">ძიება</string>
+    <string name="error">შეცდომა</string>
 </resources>

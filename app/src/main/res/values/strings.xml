@@ -53,9 +53,10 @@
     <string name="about_developer">About Developer</string>
     <string name="attention">Attention</string>
     <string name="warning">Warning</string>
-    <string name="app_temporarily_disabled">App is temporarily disabled. Please try again later...</string>
+    <string name="app_temporarily_disabled">App is temporarily disabled, please try again later. For more information:  giorgigigauri7@gmail.com</string>
     <string name="retry">Retry</string>
     <string name="no_internet_connection_offline">No internet connection (Offline)</string>
     <string name="exit">Exit</string>
     <string name="search">Search</string>
+    <string name="error">Error</string>
 </resources>

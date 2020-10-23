@@ -1,24 +1,16 @@
 package ge.mov.mobile.ui.viewmodel
 
-import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import com.bumptech.glide.Glide
-import ge.mov.mobile.R
-import ge.mov.mobile.util.RemoteConfigUtils
+import ge.mov.mobile.util.RemoteSettingsUtil
 
 class DeveloperViewModel: ViewModel() {
-    private val remoteConfig = RemoteConfigUtils.getRemoteConfig()
+    private val remoteConfig = RemoteSettingsUtil.getRemoteSettings()
 
-    fun loadImage() = remoteConfig.getString("developer_profile_picture")
+    fun getDeveloperInfo() = remoteConfig?.developer
 
-    fun loadEmail() = remoteConfig.getString("developer_email")
+    fun loadImage() = remoteConfig?.developer?.photo
 
-    fun getFacebook() = remoteConfig.getString("developer_facebook")
+    fun loadEmail() = remoteConfig?.developer?.email
 
-    fun getInstagram() = remoteConfig.getString("developer_instagram")
-
-    fun getLinkedIn() = remoteConfig.getString("developer_linkedin")
+    fun getSocial() = remoteConfig?.developer?.social
 }

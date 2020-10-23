@@ -10,7 +10,6 @@ import coil.load
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.request.ImageResult
-import com.bumptech.glide.Glide
 import ge.mov.mobile.R
 
 fun Context.toast(msg: String) {

@@ -1,18 +1,16 @@
 package ge.mov.mobile.ui.fragment
 
-import android.content.Intent
-import android.content.Intent.ACTION_VIEW
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.Glide
+import coil.load
+import coil.request.CachePolicy
 import ge.mov.mobile.R
+import ge.mov.mobile.adapter.user.DeveloperSocialAdapter
 import ge.mov.mobile.databinding.FragmentDeveloperBinding
 import ge.mov.mobile.ui.viewmodel.DeveloperViewModel
 
@@ -29,24 +27,7 @@ class FragmentDeveloper : Fragment() {
         binding.developer = vm
         val view = binding.root
 
-        Glide.with(activity!!.applicationContext)
-            .asDrawable()
-            .error(R.color.colorAccent)
-            .placeholder(R.color.colorPrimary)
-            .load(vm.loadImage())
-            .into(binding.developerImage)
-
-        binding.contactFacebook.setOnClickListener {
-            openUrl(vm.getFacebook())
-        }
-
-        binding.contactInstagram.setOnClickListener {
-            openUrl(vm.getInstagram())
-        }
-
-        binding.contactLinkedin.setOnClickListener {
-            openUrl(vm.getLinkedIn())
-        }
+        setDeveloperInfo()
 
         binding.goBack.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
@@ -56,11 +37,18 @@ class FragmentDeveloper : Fragment() {
         return view
     }
 
-    private fun openUrl(url: String) {
-        val intent = Intent(ACTION_VIEW)
-        intent.action = Intent.ACTION_VIEW
-        intent.data = Uri.parse(url)
-        startActivity(intent)
+    private fun setDeveloperInfo() {
+        binding.developerName.text = vm.getDeveloperInfo()?.name
+        binding.developerEmail.text = vm.getDeveloperInfo()?.email
+        binding.developerImage.load(vm.loadImage())
+        {
+            memoryCachePolicy(CachePolicy.DISABLED)
+            diskCachePolicy(CachePolicy.DISABLED)
+        }
+
+        val social = vm.getSocial()
+        if (!social.isNullOrEmpty())
+            binding.developerSocialList.adapter = DeveloperSocialAdapter(requireContext(), social)
     }
 
     override fun onDestroy() {
