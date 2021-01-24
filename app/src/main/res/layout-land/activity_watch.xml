@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.activity.movie.WatchActivity">
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:resize_mode="fit"
+            app:hide_on_touch="true"
+            app:show_timeout="3000"
+            app:rewind_increment="10000"
+            app:fastforward_increment="10000"
+            app:use_controller="true"
+            android:id="@+id/movieView"
+            android:keepScreenOn="true"
+            app:controller_layout_id="@layout/player_custom_controller"
+            app:use_artwork="true"
+            app:show_buffering="when_playing"/>
+
+        <ProgressBar
+            android:layout_width="@dimen/_52sdp"
+            android:layout_height="@dimen/_52sdp"
+            android:id="@+id/progress"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="visible"/>
+
+        <LinearLayout
+            android:layout_width="@dimen/_224sdp"
+            android:layout_height="match_parent"
+            android:id="@+id/seek_forward"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/seek_forward_background"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                app:srcCompat="@drawable/ic_forward"
+                app:tint="#fff" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/seek_forward_by_seconds"
+                android:text="N/A Seconds"
+                android:textColor="#fff"
+                android:textSize="16sp"
+                android:layout_marginTop="@dimen/_12sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/_224sdp"
+            android:layout_height="match_parent"
+            android:id="@+id/seek_backward"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/seek_backward_background"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                app:srcCompat="@drawable/ic_backward"
+                app:tint="#fff" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/seek_backward_by_seconds"
+                android:text="N/A Seconds"
+                android:textColor="#fff"
+                android:textSize="16sp"
+                android:layout_marginTop="@dimen/_12sdp" />
+        </LinearLayout>
+
+        <com.google.android.exoplayer2.ui.SubtitleView
+            android:id="@+id/exo_subtitles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="visible"
+            android:layout_marginBottom="@dimen/_24sdp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

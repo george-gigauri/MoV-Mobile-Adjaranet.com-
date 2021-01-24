@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.content.Context" />
+        <import type="ge.mov.mobile.BuildConfig" />
+        <variable
+            name="settings"
+            type="ge.mov.mobile.ui.activity.settings.ActivitySettingsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/settings_root">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.activity.settings.SettingsActivity"
+            android:background="@color/colorPrimaryDark">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/header"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_margin="@dimen/_10sdp">
+
+                    <ImageView
+                        android:layout_width="@dimen/_25sdp"
+                        android:layout_height="@dimen/_25sdp"
+                        android:id="@+id/goback"
+                        android:src="@drawable/ic_baseline_arrow_back_24"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
+                        app:layout_constraintTop_toTopOf="@id/goback"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@id/goback" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/header"
+                    android:layout_marginTop="@dimen/_12sdp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lang_selector"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/colorAccent"
+                            android:text="@string/language"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignTop="@id/language_spinner"
+                            android:layout_alignBottom="@id/language_spinner"
+                            android:textSize="16sp" />
+
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/language_spinner"
+                            android:paddingTop="@dimen/_14sdp"
+                            android:paddingBottom="@dimen/_14sdp"
+                            android:background="@android:color/transparent"
+                            android:layout_alignParentEnd="true"
+                            android:popupBackground="@color/colorPrimary"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/popup_selector"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/colorAccent"
+                            android:text="@string/pop_up_style"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignTop="@id/popup_spinner"
+                            android:layout_alignBottom="@id/popup_spinner"
+                            android:textSize="16sp" />
+
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/popup_spinner"
+                            android:paddingTop="@dimen/_14sdp"
+                            android:paddingBottom="@dimen/_14sdp"
+                            android:background="@android:color/transparent"
+                            android:layout_alignParentEnd="true"
+                            android:popupBackground="@color/colorPrimary"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/exo_forward_time_cont"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/colorAccent"
+                            android:text="@string/forward_interval"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignTop="@id/edit_text_forward_interval"
+                            android:layout_alignBottom="@id/edit_text_forward_interval"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/edit_text_forward_interval"
+                            android:paddingTop="@dimen/_14sdp"
+                            android:paddingBottom="@dimen/_14sdp"
+                            android:background="@android:color/transparent"
+                            android:layout_toStartOf="@id/secondtxt"
+                            android:layout_marginEnd="@dimen/_8sdp"
+                            android:text="5"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorAccent"
+                            android:inputType="numberDecimal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/secondtxt"
+                            android:text="@string/second"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#fff"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/favs"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/colorAccent"
+                            android:text="@string/favorites"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignTop="@id/saved_movies_count"
+                            android:layout_alignBottom="@id/saved_movies_count"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/saved_movies_count"
+                            android:gravity="center"
+                            android:background="@drawable/button_bg_login"
+                            android:paddingTop="@dimen/_2sdp"
+                            android:paddingBottom="@dimen/_2sdp"
+                            android:paddingStart="@dimen/_8sdp"
+                            android:paddingEnd="@dimen/_8sdp"
+                            android:textColor="@android:color/white"
+                            android:layout_alignParentEnd="true"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="@dimen/_10sdp"/>
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:background="@android:drawable/divider_horizontal_textfield"
+                        android:backgroundTint="#fff"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/developer_info"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/textMain"
+                            android:text="@string/about_developer"
+                            android:textStyle="bold"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignTop="@id/go_to_developer_page"
+                            android:layout_alignBottom="@id/go_to_developer_page"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_25sdp"
+                            android:layout_height="@dimen/_25sdp"
+                            android:id="@+id/go_to_developer_page"
+                            android:src="@drawable/ic_baseline_arrow_forward_24"
+                            android:background="@drawable/button_bg_transparent"
+                            android:padding="@dimen/_5sdp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_margin="@dimen/_5sdp" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="@dimen/_10sdp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/app_version"
+                android:textSize="18sp"
+                android:textColor="@color/colorAccent"
+                android:text="@{ BuildConfig.VERSION_NAME }" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

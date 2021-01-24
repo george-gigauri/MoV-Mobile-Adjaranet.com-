@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:behavior_hideable="true"
+        android:orientation="vertical"
+        android:background="#00000000"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        app:behavior_peekHeight="0dp"
+        tools:context=".ui.fragment.bottom.BottomFragment">
+
+        <View
+            android:layout_width="@dimen/_64sdp"
+            android:layout_height="@dimen/_7sdp"
+            android:background="@drawable/bottom_sheet_top_icon"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_3sdp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/top_rounded"
+            android:paddingTop="@dimen/_14sdp"
+            android:paddingStart="@dimen/_8sdp"
+            android:paddingEnd="@dimen/_8sdp"
+            android:layout_margin="@dimen/_10sdp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/_20sdp"
+                android:paddingBottom="@dimen/_24sdp"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/img_cont"
+                    app:cardCornerRadius="@dimen/_12sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:layout_width="@dimen/_136sdp"
+                        android:layout_height="@dimen/_102sdp"
+                        android:scaleType="centerCrop"
+                        android:id="@+id/episode_thumbnail"
+                        android:src="@color/colorAccent" />
+                </androidx.cardview.widget.CardView>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/season_c"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toEndOf="@id/img_cont"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/seasonstxt"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/spinner_seasons"
+                        android:text="@string/season"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
+                        android:textSize="16sp"/>
+
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
+                        android:id="@+id/spinner_seasons"
+                        android:gravity="start"
+                        app:layout_constraintTop_toBottomOf="@id/seasonstxt"
+                        app:layout_constraintStart_toStartOf="parent"
+                        tools:listitem="@layout/spinner_item_view"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/episode_c"
+                    android:orientation="vertical"
+                    android:gravity="end"
+                    android:layout_marginStart="@dimen/_14sdp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/season_c"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/episodestxt"
+                        android:text="@string/episode"
+                        android:singleLine="true"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
+                        android:textSize="16sp"/>
+
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
+                        android:id="@+id/spinner_episodes"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:gravity="end"
+                        app:layout_constraintTop_toBottomOf="@id/episodestxt"
+                        tools:listitem="@layout/spinner_item_view" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/language_c"
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    app:layout_constraintTop_toBottomOf="@id/season_c"
+                    app:layout_constraintStart_toEndOf="@id/img_cont">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/langstxt"
+                        android:text="@string/language"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
+                        android:textSize="16sp"/>
+
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
+                        android:gravity="start"
+                        android:id="@+id/spinner_languages"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/episodestxt"
+                        tools:listitem="@layout/spinner_item_view"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/quality_c"
+                    android:orientation="vertical"
+                    android:gravity="end"
+                    android:layout_marginStart="@dimen/_14sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    app:layout_constraintTop_toBottomOf="@id/episode_c"
+                    app:layout_constraintStart_toEndOf="@id/language_c"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/qualitytxt"
+                        android:text="@string/quality"
+                        android:singleLine="true"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
+                        android:textSize="16sp"/>
+
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
+                        android:id="@+id/quality_spinner"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:gravity="end"
+                        app:layout_constraintTop_toBottomOf="@id/qualitytxt"
+                        tools:listitem="@layout/spinner_item_view" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toTopOf="@id/play_button"
+                    app:layout_constraintBottom_toBottomOf="@id/play_button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="@dimen/_38sdp"
+                        android:layout_height="@dimen/_38sdp"
+                        android:src="@mipmap/ic_launcher_foreground"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:textColor="#000"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/play_button"
+                    app:layout_constraintTop_toBottomOf="@id/quality_c"
+                    android:layout_marginTop="@dimen/_24sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/button_bg_transparent"
+                    android:text="@string/play"
+                    android:textColor="@color/textMain"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:paddingTop="@dimen/_10sdp"
+                    android:paddingBottom="@dimen/_10sdp"
+                    android:paddingStart="@dimen/_18sdp"
+                    android:paddingEnd="@dimen/_12sdp"
+                    android:textAlignment="center"
+                    app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_24"
+                    android:drawablePadding="@dimen/_8sdp"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

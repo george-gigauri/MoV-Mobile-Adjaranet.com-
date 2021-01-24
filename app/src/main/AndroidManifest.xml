@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ge.mov.mobile">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+
+    <application
+        android:name=".MovApplication"
+        android:allowBackup="true"
+        android:banner="@drawable/mov_tv_banner"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:uiOptions="splitActionBarWhenNarrow">
+        <activity android:name=".ui.activity.main.SearchActivity"></activity>
+        <activity android:name=".ui.activity.main.SearchActivityERR" />
+        <activity android:name=".ui.activity.movie.all.AllMoviesActivity" />
+        <activity
+            android:name=".TvActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.activity.setup.SetupBirthdayActivity" />
+        <activity android:name=".ui.activity.movie.PersonMoviesActivity" />
+        <activity
+            android:name=".ui.activity.other.NoConnectionActivity"
+            android:theme="@style/Fullscreen" />
+        <activity android:name=".ui.activity.setup.IntroActivity" />
+        <activity android:name=".ui.activity.setup.ApplicationSetupActivity" />
+        <activity android:name=".ui.activity.settings.SavedMoviesFragment" />
+        <activity
+            android:name=".ui.activity.settings.SettingsActivity"
+            android:configChanges="layoutDirection|locale|orientation|screenSize" />
+        <activity
+            android:name=".ui.activity.movie.WatchActivity"
+            android:configChanges="locale"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Fullscreen" />
+        <activity
+            android:name=".ui.activity.movie.MovieActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".ui.activity.main.MainActivity"
+            android:configChanges="locale"
+            android:theme="@style/Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <data
+                    android:host="www.adjaranet.com"
+                    android:scheme="https" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.activity.LoginActivity" />
+        <activity
+            android:name=".ui.activity.other.SplashActivity"
+            android:theme="@style/Fullscreen" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2337439332290274~5627471905" />
+
+        <service
+            android:name=".service.firebase.MoVFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.google.android.exoplayer2.ext.cast.DefaultCastOptionsProvider" />
+    </application>
+
+</manifest>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.activity.other.NoConnectionActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/exit"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="@dimen/_12sdp"
+        android:text="@string/exit"
+        android:gravity="center"
+        android:textColor="@color/textRedMain"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:background="@drawable/button_bg_red_transparent"
+        android:paddingStart="@dimen/_10sdp"
+        android:paddingEnd="@dimen/_10sdp"
+        android:paddingTop="@dimen/_5sdp"
+        android:paddingBottom="@dimen/_7sdp"
+        android:fontFamily="@font/quicksand_semibold"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_38sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="@dimen/_146sdp"
+            android:layout_height="@dimen/_146sdp"
+            android:src="@drawable/internet_illustration"
+            android:layout_margin="@dimen/_10sdp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textNoConnection"
+            android:text="@string/no_internet_connection_offline"
+            android:textSize="16sp"
+            android:fontFamily="@font/quicksand_semibold"
+            android:textColor="@android:color/black"
+            android:layout_margin="@dimen/_12sdp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/retry_connect"
+            android:background="@drawable/button_bg_transparent"
+            android:textColor="@color/textMain"
+            android:text="@string/retry"
+            android:fontFamily="@font/quicksand_bold"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:paddingStart="@dimen/_12sdp"
+            android:paddingEnd="@dimen/_12sdp"
+            android:paddingTop="@dimen/_8sdp"
+            android:paddingBottom="@dimen/_8sdp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

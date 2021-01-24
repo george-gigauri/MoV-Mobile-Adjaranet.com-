@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.activity.setup.IntroActivity">
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_pager_intro"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/bottom_container"/>
+
+
+        <LinearLayout
+            android:id="@+id/greeting_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_16sdp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_18sdp"
+                android:layout_marginEnd="@dimen/_18sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/welcome"
+                android:textColor="@color/colorAccent"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_18sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_18sdp"
+                android:text="@string/app_greeting"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/button_get_started"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_18sdp"
+                android:background="@drawable/button_bg_transparent"
+                android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
+                android:drawablePadding="@dimen/_8sdp"
+                android:drawableTint="#0053E4"
+                android:paddingStart="@dimen/_18sdp"
+                android:paddingEnd="@dimen/_18sdp"
+                android:text="@string/get_started"
+                android:textAllCaps="false"
+                android:textColor="#0053E4"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/finished_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="@dimen/_42sdp"
+                android:layout_height="@dimen/_42sdp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_14sdp"
+                android:src="@drawable/ic_success_blue_xxhdpi" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_5sdp"
+                android:text="@string/you_are_done"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_5sdp"
+                android:paddingStart="@dimen/_12sdp"
+                android:paddingEnd="@dimen/_12sdp"
+                android:text="@string/you_are_now_ready_to_use_the_app_please_enjoy_and_don_t_forget_to_rate_it_later"
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/finish_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@drawable/button_bg_transparent"
+                android:drawableStart="@drawable/ic_done"
+                android:drawablePadding="@dimen/_12sdp"
+                android:paddingStart="@dimen/_16sdp"
+                android:paddingTop="@dimen/_5sdp"
+                android:paddingEnd="@dimen/_24sdp"
+                android:paddingBottom="@dimen/_5sdp"
+                android:text="@string/finish"
+                android:textAllCaps="false"
+                android:textColor="#0053E4"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottom_container"
+            android:layout_margin="@dimen/_14sdp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <Button
+                android:id="@+id/button_next_tutorial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg_transparent"
+                android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
+                android:drawablePadding="@dimen/_8sdp"
+                android:drawableTint="#0053E4"
+                android:paddingStart="@dimen/_18sdp"
+                android:paddingEnd="@dimen/_18sdp"
+                android:text="@string/next"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="#0053E4"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:tabBackground="@drawable/indicator_selector"
+                app:tabIndicatorColor="#fff"
+                app:tabIndicatorHeight="0dp"
+                app:tabIndicatorAnimationDuration="3000"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

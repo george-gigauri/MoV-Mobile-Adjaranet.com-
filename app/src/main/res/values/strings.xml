@@ -1,0 +1,97 @@
+<resources>
+    <string name="app_name">MoV Mobile</string>
+    <string name="appname" translatable="false">mov</string>
+    <string name="skip">skip</string>
+    <string name="e_mail">E-Mail</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log in</string>
+    <string name="or">OR</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="by_continuing_to_use_our_app_you_agree_to_our">By continuing to use our app, you agree to our</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="movies">Movies</string>
+    <string name="series">Series</string>
+    <string name="top_movies">Top Movies</string>
+    <string name="top_series">Top Series</string>
+    <string name="new_movies">New Movies</string>
+    <string name="year">Year</string>
+    <string name="imdb" translatable="false">IMDB</string>
+    <string name="country">Country</string>
+    <string name="duration">Duration</string>
+    <string name="description">Description</string>
+    <string name="views">Views</string>
+    <string name="cast">Cast</string>
+    <string name="season">Season</string>
+    <string name="episode">Episode</string>
+    <string name="quality">Quality</string>
+    <string name="go_back">Go back</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="search_here">Search here…</string>
+    <string name="categories">Categories</string>
+    <string name="settings">Settings</string>
+    <string name="language">Language</string>
+    <string name="play">Play</string>
+    <string name="previous">Previous</string>
+    <string name="next_page">Next Page</string>
+    <string name="favorites">Saved for later</string>
+    <string name="saved">Saved</string>
+    <string name="no_movies_saved_for_later">No movies saved for later...</string>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+    <string name="you_are_done">You are done!</string>
+    <string name="you_are_now_ready_to_use_the_app_please_enjoy_and_don_t_forget_to_rate_it_later">You are now ready to use the app, please enjoy and don\'t forget to rate it later!</string>
+    <string name="get_started">Get Started</string>
+    <string name="welcome">Welcome!</string>
+    <string name="app_greeting">Thank You, for downloading MoV Mobile. Please click on \'Get Started\' to learn how to use the app.</string>
+    <string name="movies_and_series">Movies and Series</string>
+    <string name="movies_and_series_intro_text">In the Movies and Series Section, You can watch most popular movies around the world. Just click on them for details.</string>
+    <string name="play_movie">Playing Movie</string>
+    <string name="play_movie_intro_text">To play a movie, you just have to click on the pink circular button right next to the title of the movie, then you will see the dialog box where you select the Season, Episode, Language and Quality of the movie and start PLAY.</string>
+    <string name="saving_movie">Saving Movie</string>
+    <string name="saving_movie_intro_text">In order to save a movie for later, you just have to click on the heart icon at the right top corner.</string>
+    <string name="settings_intro_text">To enter settings, go back to the main screen and click on the settings icon at the right top corner. There, you can change application language and view your \'Saved for later\' movies.</string>
+    <string name="about_developer">About Developer</string>
+    <string name="attention">Attention</string>
+    <string name="warning">Warning</string>
+    <string name="app_temporarily_disabled">App is temporarily disabled, please try again later. For more information:  giorgigigauri7@gmail.com</string>
+    <string name="retry">Retry</string>
+    <string name="no_internet_connection_offline">No internet connection (Offline)</string>
+    <string name="exit">Exit</string>
+    <string name="search">Search</string>
+    <string name="error">Error</string>
+    <string name="please_enter_your_birth_date_to_continue">Please enter your birth date to continue.</string>
+    <string name="continue_to_app">Continue</string>
+    <string name="player">Player</string>
+    <string name="device_player">Device Default Player</string>
+    <string name="app_player">Application Player</string>
+    <string name="day_top_movies">Popular Today</string>
+    <string name="press_again_to_exit">Press back button again to exit.</string>
+    <string name="pop_up_style">Pop-up Style</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="second">Second</string>
+    <string name="forward_interval">Video Seek Interval</string>
+    <string name="similar_movies">Similar Movies</string>
+    <string name="update_available">Update Available!</string>
+    <string name="update_available_message">A new update is available. Please update an app for better user experience!</string>
+    <string name="update_now">Update Now</string>
+    <string name="all">All</string>
+    <string name="select_genres">Select Genres</string>
+    <string name="select_language">Select Language</string>
+    <string name="release_period_years">Release Period (Years)</string>
+    <string name="filter_now">Filter Now</string>
+</resources>
