@@ -13,14 +13,19 @@ import coil.load
 import coil.request.CachePolicy
 import ge.mov.mobile.R
 import ge.mov.mobile.data.model.featured.FeaturedModel
+import ge.mov.mobile.databinding.SliderItemBinding
 import ge.mov.mobile.ui.activity.movie.MovieActivity
+import ge.mov.mobile.util.LanguageUtil
 import ge.mov.mobile.util.Utils
+import ge.mov.mobile.util.toast
 
 class SliderAdapter (
     private val context: Context,
-    private val slides: List<FeaturedModel>
+    private val slides: List<FeaturedModel>,
+    private val listener: OnClickListener
 ): PagerAdapter() {
     private lateinit var inflater: LayoutInflater
+    private lateinit var binding: SliderItemBinding
 
     override fun getCount() = slides.size
 
@@ -28,17 +33,15 @@ class SliderAdapter (
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val view = inflater.inflate(R.layout.slider_item, container, false)
-
-        val image: ImageView = view.findViewById(R.id.slider_image)
-        val title: TextView = view.findViewById(R.id.slider_title)
+        binding = SliderItemBinding.inflate(inflater, container, false)
+        val view = binding.root
 
         val i = slides[position]
 
-        val language = Utils.loadLanguage(context)
-        val lang_code = if (language.id == "ka") "GEO" else "ENG"
+        val language = LanguageUtil.language
+        val lang_code = if (language?.id == "ka") "GEO" else "ENG"
 
-        title.text = if (lang_code == "GEO")
+        binding.sliderTitle.text = if (lang_code == "GEO")
             if (i.primaryName != "")
                 i.primaryName
             else
@@ -52,22 +55,20 @@ class SliderAdapter (
             i.poster
         }
 
-        image.load(poster) {
+        binding.sliderImage.load(poster) {
             memoryCachePolicy(CachePolicy.DISABLED);
             diskCachePolicy(CachePolicy.DISABLED)
         }
 
-        view.setOnClickListener {
-            val intent = Intent(context, MovieActivity::class.java)
-            intent.putExtra("id", slides[position].id)
-            intent.putExtra("adjaraId", slides[position].adjaraId)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(intent)
-        }
+        binding.movieHover.setOnClickListener { listener.onSlideClick(i) }
 
         container.addView(view)
         return view
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) { container.removeView(`object` as ConstraintLayout) }
+
+    interface OnClickListener {
+        fun onSlideClick(item: FeaturedModel)
+    }
 }

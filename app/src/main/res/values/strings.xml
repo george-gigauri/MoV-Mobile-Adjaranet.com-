@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MoV Mobile</string>
+    <string name="app_name">MoV</string>
     <string name="appname" translatable="false">mov</string>
     <string name="skip">skip</string>
     <string name="e_mail">E-Mail</string>

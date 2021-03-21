@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import ge.mov.mobile.R
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.MovieItemBinding
 import ge.mov.mobile.util.LanguageUtil
@@ -17,7 +18,7 @@ class SearchMoviePagingAdapter(
 
     inner class VH(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.root.setOnClickListener {
+            binding.movieHover.setOnClickListener {
                 val position = bindingAdapterPosition
 
                 if (position != RecyclerView.NO_POSITION) {
@@ -25,6 +26,14 @@ class SearchMoviePagingAdapter(
                     if (item != null) {
                         listener.onItemClick(item)
                     }
+                }
+            }
+
+            binding.movieHover.setOnFocusChangeListener { _, hasFocus ->
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    if (hasFocus)
+                        binding.movieHover.setBackgroundResource(R.drawable.selected_stroke)
+                    else binding.movieHover.background = null
                 }
             }
         }

@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/select_genres"
                 android:textSize="16sp"
+                android:focusable="false"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -62,6 +63,7 @@
                 android:text="@string/select_language"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:focusable="false"
                 android:layout_marginTop="@dimen/_12sdp"/>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -80,6 +82,7 @@
                 android:layout_marginTop="@dimen/_14sdp"
                 android:text="@string/release_period_years"
                 android:textSize="16sp"
+                android:focusable="false"
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -149,6 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_24sdp"
                 android:background="@drawable/button_bg_transparent"
+                android:focusable="true"
                 android:drawablePadding="@dimen/_8sdp"
                 android:paddingStart="@dimen/_18sdp"
                 android:paddingTop="@dimen/_8sdp"

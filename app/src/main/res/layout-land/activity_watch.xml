@@ -18,13 +18,15 @@
             app:hide_on_touch="true"
             app:show_timeout="3000"
             app:rewind_increment="10000"
+            android:clickable="true"
+            android:focusable="true"
             app:fastforward_increment="10000"
             app:use_controller="true"
             android:id="@+id/movieView"
             android:keepScreenOn="true"
             app:controller_layout_id="@layout/player_custom_controller"
             app:use_artwork="true"
-            app:show_buffering="when_playing"/>
+            app:show_buffering="when_playing" />
 
         <ProgressBar
             android:layout_width="@dimen/_52sdp"
@@ -36,55 +38,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="visible"/>
 
-        <LinearLayout
-            android:layout_width="@dimen/_224sdp"
-            android:layout_height="match_parent"
-            android:id="@+id/seek_forward"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:background="@drawable/seek_forward_background"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <ImageView
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                app:srcCompat="@drawable/ic_forward"
-                app:tint="#fff" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/seek_forward_by_seconds"
-                android:text="N/A Seconds"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                android:layout_marginTop="@dimen/_12sdp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="@dimen/_224sdp"
-            android:layout_height="match_parent"
-            android:id="@+id/seek_backward"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:background="@drawable/seek_backward_background"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <ImageView
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                app:srcCompat="@drawable/ic_backward"
-                app:tint="#fff" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/seek_backward_by_seconds"
-                android:text="N/A Seconds"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                android:layout_marginTop="@dimen/_12sdp" />
-        </LinearLayout>
+        <ImageView
+            android:layout_width="@dimen/_64sdp"
+            android:layout_height="@dimen/_64sdp"
+            android:id="@+id/seek_indicator"
+            android:background="@drawable/ic_seek_right"
+            android:src="@drawable/ic_backward"
+            android:padding="@dimen/_20sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#fff" />
 
         <com.google.android.exoplayer2.ui.SubtitleView
             android:id="@+id/exo_subtitles"
@@ -94,6 +59,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:visibility="visible"
-            android:layout_marginBottom="@dimen/_24sdp"/>
+            android:layout_marginBottom="@dimen/_24sdp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

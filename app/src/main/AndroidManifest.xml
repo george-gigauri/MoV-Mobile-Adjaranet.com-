@@ -6,13 +6,13 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="com.android.vending.BILLING" />
+
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
-        android:required="false" />
-    <uses-feature
-        android:name="android.software.leanback"
         android:required="false" />
 
     <application
@@ -26,8 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:uiOptions="splitActionBarWhenNarrow">
-        <activity android:name=".ui.activity.main.SearchActivity"></activity>
-        <activity android:name=".ui.activity.main.SearchActivityERR" />
+        <activity android:name=".ui.activity.main.SearchActivity" />
         <activity android:name=".ui.activity.movie.all.AllMoviesActivity" />
         <activity
             android:name=".TvActivity"
@@ -35,7 +34,6 @@
             android:theme="@style/Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
@@ -55,9 +53,7 @@
             android:configChanges="locale"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Fullscreen" />
-        <activity
-            android:name=".ui.activity.movie.MovieActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity android:name=".ui.activity.movie.MovieActivity" />
         <activity
             android:name=".ui.activity.main.MainActivity"
             android:configChanges="locale"

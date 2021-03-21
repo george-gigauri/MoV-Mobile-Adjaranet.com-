@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.gms.ads.InterstitialAd
 import ge.mov.mobile.R
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.FragmentSimilarMoviesBinding
@@ -20,14 +19,33 @@ import ge.mov.mobile.ui.adapter.MovieAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.random.Random
 
 @SuppressLint("ValidFragment")
-class SimilarMoviesFragment(
-    private val _id: Int = 0,
-    private val adjaraId: Int = 0,
-    private val ad: InterstitialAd
-) : Fragment(), MovieAdapter.OnClickListener {
+class SimilarMoviesFragment : Fragment(), MovieAdapter.OnClickListener {
+
+    private var _id = 0
+    private var adjaraId = 0
+
+    fun putArguments(id: Int, adjaraId: Int): Bundle {
+        val bundle = Bundle()
+        bundle.putInt("id", id)
+        bundle.putInt("adjara_id", adjaraId)
+        return bundle
+    }
+
+    companion object {
+        fun getInstance(id: Int, adjaraId: Int): SimilarMoviesFragment {
+            val bundle = Bundle()
+            bundle.putInt("id", id)
+            bundle.putInt("adjara_id", adjaraId)
+
+            val fragment = SimilarMoviesFragment()
+            fragment.arguments = bundle
+
+            return fragment
+        }
+    }
+
     private lateinit var binding: FragmentSimilarMoviesBinding
 
     override fun onCreateView(
@@ -52,6 +70,9 @@ class SimilarMoviesFragment(
             GridLayoutManager(context, 2)
         }
         binding.similarMoviesList.layoutManager = gridLayoutManager
+
+        _id = requireArguments().getInt("id")
+        adjaraId = requireArguments().getInt("adjara_id")
     }
 
     private fun loadSimilarMovies() {
@@ -71,8 +92,5 @@ class SimilarMoviesFragment(
         intent.putExtra("id", item.id)
         intent.putExtra("adjaraId", item.adjaraId)
         startActivity(intent)
-
-        if (Random.nextBoolean() && ad.isLoaded)
-            ad.show()
     }
 }

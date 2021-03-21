@@ -1,20 +1,17 @@
 package ge.mov.mobile.ui.fragment.movie.bottom
 
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.TextView
-import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import coil.load
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.R
@@ -26,6 +23,7 @@ import ge.mov.mobile.ui.activity.dialog.DialogViewModel
 import ge.mov.mobile.ui.activity.movie.WatchActivity
 import ge.mov.mobile.util.Constants
 import ge.mov.mobile.util.adapt
+
 
 @AndroidEntryPoint
 class BottomFragment: BottomSheetDialogFragment() {
@@ -41,12 +39,20 @@ class BottomFragment: BottomSheetDialogFragment() {
     ): View? {
         _id = arguments?.getInt("id")
         subscribtion = DialogHelper.load(requireContext(), _id!!)
+
         return inflater.inflate(R.layout.bottom_sheet_view, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = BottomSheetViewBinding.bind(view)
+
+        dialog?.setOnShowListener {
+            val ds = (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            val behavior = BottomSheetBehavior.from(ds!!)
+            behavior.skipCollapsed = true
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
 
         val seasons = viewModel.loadSeasons(_id!!)
         binding.apply {
@@ -61,7 +67,10 @@ class BottomFragment: BottomSheetDialogFragment() {
                     position: Int,
                     id: Long
                 ) {
-                    val episodes = viewModel.loadFiles(_id!!, spinnerSeasons.selectedItemPosition + 1)
+                    val episodes = viewModel.loadFiles(
+                        _id!!,
+                        spinnerSeasons.selectedItemPosition + 1
+                    )
                     if (episodes != null) {
                         spinnerEpisodes.adapt(episodes)
 
@@ -70,7 +79,8 @@ class BottomFragment: BottomSheetDialogFragment() {
                                 spinnerEpisodes.setSelection(subscribtion!!.episode - 1)
 
                         spinnerEpisodes.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long
+                            override fun onItemSelected(
+                                parent: AdapterView<*>?, view: View?, position: Int, id: Long
                             ) {
                                 binding.episodeThumbnail.load(episodes.data[spinnerEpisodes.selectedItemPosition].poster) {
                                     placeholder(R.color.colorAccent)
@@ -145,7 +155,10 @@ class BottomFragment: BottomSheetDialogFragment() {
         intent.putExtra("def_lang", language)
         intent.putExtra("def_quality", quality)
         intent.putExtra("files", files)
-        intent.putExtra("movie_title", "S${binding.spinnerSeasons.selectedItem as String}, E${binding.spinnerEpisodes.selectedItem as String}")
+        intent.putExtra(
+            "movie_title",
+            "S${binding.spinnerSeasons.selectedItem as String}, E${binding.spinnerEpisodes.selectedItem as String}"
+        )
         intent.flags = FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
     }

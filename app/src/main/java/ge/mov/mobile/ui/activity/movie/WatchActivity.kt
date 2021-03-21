@@ -8,6 +8,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.GestureDetector
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
@@ -35,6 +36,7 @@ import ge.mov.mobile.util.*
 import kotlinx.android.synthetic.main.fragment_saved_movies.*
 import kotlinx.coroutines.*
 
+
 class WatchActivity : AppCompatActivity(), Player.EventListener {
     private var isScreenLocked = false
     private val TIME_INTERVAL = 2000
@@ -60,6 +62,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
+        FullScreencall()
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_watch)
         vm = ViewModelProvider(this)[WatchViewModel::class.java]
@@ -173,6 +176,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initPlayer() {
         exoPlayer = SimpleExoPlayer.Builder(this).build()
         if (subtitlesSrc != "")
@@ -205,14 +209,10 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
                     override fun onDoubleTap(e: MotionEvent?): Boolean {
                         if (e!!.x < screenWidth * 0.5) {
                             showSeekBackward(true)
-                            binding.seekBackwardBySeconds.text =
-                                "-${seconds / 1000} ${getString(R.string.second)}"
                             exoPlayer.seekTo(exoPlayer.currentPosition - seconds)
                             binding.movieView.hideController()
                         } else {
                             showSeekForward(true)
-                            binding.seekForwardBySeconds.text =
-                                "+${seconds / 1000} ${getString(R.string.second)}"
                             exoPlayer.seekTo(exoPlayer.currentPosition + seconds)
                             binding.movieView.hideController()
                         }
@@ -245,10 +245,17 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
         speed.setOnClickListener {
             when (speed.text) {
                 "1X" -> {
+                    speed.text = "1.15X"
+                    val params = PlaybackParameters(1.15f)
+                    exoPlayer.setPlaybackParameters(params)
+                }
+
+                "1.15X" -> {
                     speed.text = "1.25X"
                     val params = PlaybackParameters(1.25f)
                     exoPlayer.setPlaybackParameters(params)
                 }
+
                 "1.25X" -> {
                     speed.text = "1.5X"
                     val params = PlaybackParameters(1.5f)
@@ -334,14 +341,16 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
     override fun onPlaybackStateChanged(state: Int) {
         super.onPlaybackStateChanged(state)
 
-        when(state) {
+        when (state) {
             ExoPlayer.STATE_IDLE -> binding.progress.visible(true)
             ExoPlayer.STATE_BUFFERING -> binding.progress.visible(true)
             ExoPlayer.STATE_READY -> {
                 exoPlayer.play()
                 binding.progress.visible(false)
             }
-            ExoPlayer.STATE_ENDED -> { binding.progress.visible(false); getNextEpisodeIfExists() }
+            ExoPlayer.STATE_ENDED -> {
+                binding.progress.visible(false); getNextEpisodeIfExists()
+            }
             else -> binding.progress.visible(true)
         }
     }
@@ -349,11 +358,18 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
     private fun showSeekForward(isVisible: Boolean) {
         lifecycleScope.launch(Dispatchers.Main) {
             binding.apply {
-                if (!isVisible)
-                    seekForward.visibility = View.GONE
-                else {
-                    seekForward.visibility = View.VISIBLE
-                    delay(600)
+                seekIndicator.setImageResource(R.drawable.ic_forward)
+                if (!isVisible) {
+                    seekIndicator.animate()
+                        .scaleX(0f)
+                        .scaleY(0f)
+                        .start()
+                } else {
+                    seekIndicator.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .start()
+                    delay(500)
                     showSeekForward(false)
                 }
             }
@@ -363,11 +379,18 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
     private fun showSeekBackward(isVisible: Boolean) {
         lifecycleScope.launch(Dispatchers.Main) {
             binding.apply {
-                if (!isVisible)
-                    seekBackward.visibility = View.GONE
-                else {
-                    seekBackward.visibility = View.VISIBLE
-                    delay(600)
+                seekIndicator.setImageResource(R.drawable.ic_backward)
+                if (!isVisible) {
+                    seekIndicator.animate()
+                        .scaleX(0f)
+                        .scaleY(0f)
+                        .start()
+                } else {
+                    seekIndicator.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .start()
+                    delay(500)
                     showSeekBackward(false)
                 }
             }
@@ -545,5 +568,24 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
                 }
             }
         }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_BACK ->
+                if (Const.isTV) binding.movieView.showController()
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        FullScreencall()
+    }
+
+    private fun FullScreencall() {
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     }
 }

@@ -26,15 +26,7 @@ constructor(private val mainRepository: MainRepository) : ViewModel() {
         mainRepository.getMovies(type = "series")?.data
     }
 
-    fun getSlides(): LiveData<List<FeaturedModel>> {
-        isLoading.postValue(VISIBLE)
-        val slides = MutableLiveData<List<FeaturedModel>>()
-
-        slides.value = runBlocking { mainRepository.getSlides()?.data }
-
-        isLoading.postValue(GONE)
-        return slides
-    }
+    suspend fun getSlides(): List<FeaturedModel>? = withContext(Dispatchers.IO) { mainRepository.getSlides()?.data }
 
     fun getGenresFull(): Genres? {
         return runBlocking { mainRepository.getGenres() }

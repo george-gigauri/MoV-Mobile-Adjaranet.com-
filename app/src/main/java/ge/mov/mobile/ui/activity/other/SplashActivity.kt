@@ -5,11 +5,15 @@ import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.animation.AnimationUtils
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.R
+import ge.mov.mobile.databinding.ActivitySplashBinding
+import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.activity.main.MainActivity
 import ge.mov.mobile.ui.activity.movie.MovieActivity
 import ge.mov.mobile.ui.activity.setup.ApplicationSetupActivity

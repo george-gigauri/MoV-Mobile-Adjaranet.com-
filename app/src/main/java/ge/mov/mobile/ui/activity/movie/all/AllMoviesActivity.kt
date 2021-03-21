@@ -3,17 +3,16 @@ package ge.mov.mobile.ui.activity.movie.all
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.ads.InterstitialAd
 import dagger.hilt.android.AndroidEntryPoint
-import ge.mov.mobile.R
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.ActivityAllMoviesBinding
 import ge.mov.mobile.paging.movies.MoviePagingAdapter
+import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.activity.movie.MovieActivity
 import ge.mov.mobile.ui.activity.movie.all.filter.FilterBottomFragment
 import ge.mov.mobile.util.loadAd
@@ -22,10 +21,10 @@ import ge.mov.mobile.util.visible
 import kotlin.random.Random
 
 @AndroidEntryPoint
-class AllMoviesActivity : AppCompatActivity(), MoviePagingAdapter.MovieClickListener,
+class AllMoviesActivity : BaseActivity<ActivityAllMoviesBinding>(),
+    MoviePagingAdapter.MovieClickListener,
     FilterBottomFragment.OnFilterListener {
-    private var _binding: ActivityAllMoviesBinding? = null
-    private val binding: ActivityAllMoviesBinding get() = _binding!!
+
     private val viewModel: ViewModelAll by viewModels()
     private lateinit var adapter: MoviePagingAdapter
     private lateinit var ad: InterstitialAd
@@ -35,13 +34,14 @@ class AllMoviesActivity : AppCompatActivity(), MoviePagingAdapter.MovieClickList
 
     private val selectedGenres = ArrayList<Int>()
 
+    override val bindingFactory: (LayoutInflater) -> ActivityAllMoviesBinding
+        get() = { ActivityAllMoviesBinding.inflate(it) }
+
     companion object {
         private var type: String? = null
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = DataBindingUtil.setContentView(this, R.layout.activity_all_movies)
+    override fun setup(savedInstanceState: Bundle?) {
         adapter = MoviePagingAdapter(this)
 
         ad = loadAd()
@@ -49,16 +49,18 @@ class AllMoviesActivity : AppCompatActivity(), MoviePagingAdapter.MovieClickList
         type = intent.getStringExtra("type") ?: "movie"
         viewModel.load(type!!)
 
-        (binding.rv.layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int = adapter.getItemViewType(position)
-        }
+        (binding.rv.layoutManager as GridLayoutManager).spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int = adapter.getItemViewType(position)
+            }
 
         binding.rv.adapter = adapter
         binding.rv.layoutManager = GridLayoutManager(this, 2)
         binding.rv.setHasFixedSize(true)
 
         layoutSpanCount(resources.configuration)
-        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        adapter.stateRestorationPolicy =
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
         viewModel.result.observe(this) {
             adapter.submitData(lifecycle, it)
@@ -91,7 +93,6 @@ class AllMoviesActivity : AppCompatActivity(), MoviePagingAdapter.MovieClickList
     override fun onDestroy() {
         super.onDestroy()
 
-        _binding = null
         type = null
         selectedGenres.clear()
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MoV Mobile</string>
+    <string name="app_name">MoV</string>
     <string name="skip">skip</string>
     <string name="e_mail">E-Mail</string>
     <string name="password">Password</string>

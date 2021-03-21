@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import ge.mov.mobile.ui.activity.main.MainActivity;
+import ge.mov.mobile.util.Const;
+import ge.mov.mobile.util.Constants;
 
 public class TvActivity extends Activity {
     private Intent intent;
@@ -17,7 +19,8 @@ public class TvActivity extends Activity {
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_tv);
 
-        intent = new Intent(getApplicationContext(), MainActivity.class);
+        Const.Companion.setTV(true);
+        intent = new Intent(this, MainActivity.class);
         start();
     }
 

@@ -38,6 +38,8 @@
                     android:src="@drawable/logo"
                     android:text="@string/appname"
                     android:textSize="42sp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     app:layout_constraintBottom_toBottomOf="@id/lltop"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -81,6 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/search"
+                        android:focusable="true"
                         android:id="@+id/btn_search_movie"
                         android:textColor="@color/textMain"
                         android:background="@drawable/button_bg_transparent"
@@ -97,6 +100,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/settings"
                         android:id="@+id/btn_profile_pic"
+                        android:focusable="true"
                         android:layout_margin="@dimen/_5sdp"
                         android:textColor="@color/colorAccent"
                         android:background="@drawable/accent_bg_transparent"
@@ -171,6 +175,8 @@
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:fontFamily="@font/quicksand_bold"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:textStyle="bold"
                     android:text="@string/day_top_movies"
                     android:textSize="20sp"
@@ -182,6 +188,8 @@
                     android:id="@+id/txtAllPopularMovies"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:background="@drawable/movie_hover"
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:padding="@dimen/_5sdp"
                     android:fontFamily="@font/quicksand_bold"
@@ -221,6 +229,8 @@
                         android:fontFamily="@font/quicksand_bold"
                         android:textStyle="bold"
                         android:text="@string/movies"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:textSize="20sp"
                         android:textColor="@color/colorAccent"/>
 
@@ -239,6 +249,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:fontFamily="@font/quicksand_bold"
+                    android:background="@drawable/movie_hover"
+                    android:focusable="true"
                     android:text="@string/all"
                     android:padding="@dimen/_5sdp"
                     android:textSize="18sp"
@@ -267,6 +279,8 @@
                     android:layout_marginTop="@dimen/_8sdp"
                     android:fontFamily="@font/quicksand_bold"
                     android:text="@string/series"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -279,6 +293,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:fontFamily="@font/quicksand_bold"
+                    android:background="@drawable/movie_hover"
+                    android:focusable="true"
                     android:text="@string/all"
                     android:padding="@dimen/_5sdp"
                     android:textSize="18sp"
@@ -348,6 +364,8 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/series"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:orientation="horizontal"
@@ -357,6 +375,8 @@
                     <ImageView
                         android:layout_width="@dimen/_22sdp"
                         android:layout_height="@dimen/_22sdp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:src="@drawable/logo"
                         android:layout_margin="@dimen/_5sdp" />
 
@@ -364,6 +384,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/app_name"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:textColor="#fff"
                         android:layout_margin="@dimen/_5sdp" />
                 </LinearLayout>
@@ -374,7 +396,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/progress"
-            android:visibility="gone"
+            android:visibility="visible"
+            tools:visibility="gone"
             android:background="#CB000000">
 
             <ProgressBar

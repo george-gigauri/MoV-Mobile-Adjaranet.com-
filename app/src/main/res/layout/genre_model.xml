@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/genre"
             android:text="სათავგადასავლო"
+            android:focusable="true"
             android:background="@drawable/blue_bg_rounded"
             android:textColor="@android:color/white"
             android:textStyle="bold"

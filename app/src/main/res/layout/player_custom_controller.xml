@@ -55,6 +55,8 @@
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_margin="@dimen/_5sdp"
+                android:focusable="true"
+                android:background="@drawable/movie_hover"
                 android:src="@drawable/ic_subtitles_off" />
 
             <TextView
@@ -94,7 +96,8 @@
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_margin="@dimen/_14sdp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:focusable="true"
+                android:background="@drawable/movie_hover"
                 android:src="@drawable/exo_ic_previous_disabled" />
 
             <ImageView
@@ -102,7 +105,8 @@
                 android:layout_width="@dimen/_46sdp"
                 android:layout_height="@dimen/_46sdp"
                 android:layout_margin="@dimen/_14sdp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:focusable="true"
+                android:background="@drawable/movie_hover"
                 android:src="@drawable/ic_pause" />
 
             <ImageView
@@ -110,8 +114,9 @@
                 android:layout_width="@dimen/_46sdp"
                 android:layout_height="@dimen/_46sdp"
                 android:layout_margin="@dimen/_14sdp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/movie_hover"
                 android:src="@drawable/ic_play_now"
+                android:focusable="true"
                 app:tint="#FDFDFD" />
 
             <ImageView
@@ -119,7 +124,8 @@
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_margin="@dimen/_14sdp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:focusable="true"
+                android:background="@drawable/movie_hover"
                 android:src="@drawable/exo_ic_next_disabled" />
         </LinearLayout>
 
@@ -145,6 +151,7 @@
                 android:text="0:00"
                 android:textAlignment="center"
                 android:textColor="@color/exo_white"
+                android:focusable="false"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -160,6 +167,8 @@
                 app:layout_constraintStart_toEndOf="@id/exo_position"
                 app:layout_constraintTop_toTopOf="parent"
                 app:played_color="@color/textMain"
+                android:focusable="true"
+                android:background="@drawable/movie_hover"
                 app:unplayed_color="#3D000000" />
 
             <TextView
@@ -182,6 +191,7 @@
                 android:layout_height="@dimen/_28sdp"
                 android:id="@+id/lock_screen"
                 android:padding="@dimen/_4sdp"
+                android:focusable="false"
                 app:layout_constraintTop_toTopOf="parent"
                 android:src="@drawable/ic_baseline_lock_open_24"
                 app:layout_constraintBottom_toBottomOf="parent"

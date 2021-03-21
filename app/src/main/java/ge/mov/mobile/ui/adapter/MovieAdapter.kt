@@ -1,17 +1,16 @@
 package ge.mov.mobile.ui.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ge.mov.mobile.MovApplication
+import ge.mov.mobile.R
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.MovieItemBinding
-import ge.mov.mobile.ui.activity.movie.MovieActivity
-import ge.mov.mobile.util.*
 import ge.mov.mobile.util.Utils.getNameByLanguage
-import kotlinx.android.synthetic.main.movie_item.view.*
+import ge.mov.mobile.util.loadWithProgressBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -27,22 +26,27 @@ class MovieAdapter(
     inner class ViewHolder(private val binding: MovieItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.cardView.setOnClickListener {
+            binding.movieHover.setOnClickListener {
                 val pos = bindingAdapterPosition
                 if (pos != RecyclerView.NO_POSITION) {
                     val item = arr[pos]
                     listener.onItemClicked(item)
                 }
             }
+
+            binding.movieHover.setOnFocusChangeListener { _, hasFocus ->
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    if (hasFocus)
+                        binding.movieHover.setBackgroundResource(R.drawable.selected_stroke)
+                    else binding.movieHover.background = null
+                }
+            }
         }
 
         fun bind(item: Data) {
-            val language = LanguageUtil.language
-            val lang_code = if (language?.id == "ka") "GEO" else "ENG"
-
             GlobalScope.launch {
                 withContext(Dispatchers.Main) {
-                    binding.name.text = getNameByLanguage(item, lang_code)
+                    binding.name.text = getNameByLanguage(item, MovApplication.language?.code)
 
                     if (type == 1)
                         binding.name.setTextColor(Color.WHITE)

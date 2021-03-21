@@ -91,7 +91,8 @@
                             android:id="@+id/language_spinner"
                             android:paddingTop="@dimen/_14sdp"
                             android:paddingBottom="@dimen/_14sdp"
-                            android:background="@android:color/transparent"
+                            android:focusable="true"
+                            android:background="@drawable/movie_hover"
                             android:layout_alignParentEnd="true"
                             android:popupBackground="@color/colorPrimary"/>
                     </RelativeLayout>
@@ -120,7 +121,8 @@
                             android:id="@+id/popup_spinner"
                             android:paddingTop="@dimen/_14sdp"
                             android:paddingBottom="@dimen/_14sdp"
-                            android:background="@android:color/transparent"
+                            android:focusable="true"
+                            android:background="@drawable/movie_hover"
                             android:layout_alignParentEnd="true"
                             android:popupBackground="@color/colorPrimary"/>
                     </RelativeLayout>
@@ -143,20 +145,25 @@
                             android:layout_alignBottom="@id/edit_text_forward_interval"
                             android:textSize="16sp" />
 
-                        <EditText
+                        <NumberPicker
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/_55sdp"
+                            android:theme="@style/NumberPickerThemeWhiteText"
                             android:id="@+id/edit_text_forward_interval"
                             android:paddingTop="@dimen/_14sdp"
                             android:paddingBottom="@dimen/_14sdp"
-                            android:background="@android:color/transparent"
+                            android:background="@drawable/movie_hover"
                             android:layout_toStartOf="@id/secondtxt"
                             android:layout_marginEnd="@dimen/_8sdp"
                             android:text="5"
+                            android:focusable="true"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@color/colorAccent"
-                            android:inputType="numberDecimal" />
+                            android:inputType="numberDecimal"
+                            android:nextFocusDown="@id/saved_movies_count"
+                            android:nextFocusUp="@id/popup_spinner"
+                            android:nextFocusRight="@id/secondtxt"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -166,6 +173,8 @@
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="#fff"
+                            android:focusable="true"
+                            android:background="@drawable/movie_hover"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true" />
                     </RelativeLayout>
@@ -174,6 +183,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/favs"
+                        android:focusable="true"
+                        android:background="@drawable/movie_hover"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginEnd="@dimen/_10sdp">
@@ -194,7 +205,7 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/saved_movies_count"
                             android:gravity="center"
-                            android:background="@drawable/button_bg_login"
+                            android:background="@drawable/button_bg_transparent"
                             android:paddingTop="@dimen/_2sdp"
                             android:paddingBottom="@dimen/_2sdp"
                             android:paddingStart="@dimen/_8sdp"
@@ -221,6 +232,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/developer_info"
+                        android:focusable="true"
+                        android:background="@drawable/movie_hover"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginEnd="@dimen/_10sdp">

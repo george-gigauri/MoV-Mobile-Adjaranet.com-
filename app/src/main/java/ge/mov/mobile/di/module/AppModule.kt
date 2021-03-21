@@ -18,7 +18,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn( value = [ApplicationComponent::class])
 object AppModule {
     val client = okhttp3.OkHttpClient.Builder()
         .addInterceptor(CustomInterceptor())

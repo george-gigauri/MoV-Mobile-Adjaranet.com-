@@ -3,38 +3,35 @@ package ge.mov.mobile.ui.activity.main
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.gms.ads.InterstitialAd
 import dagger.hilt.android.AndroidEntryPoint
-import ge.mov.mobile.R
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.ActivitySearchBinding
 import ge.mov.mobile.paging.search.SearchMoviePagingAdapter
+import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.activity.movie.MovieActivity
 import ge.mov.mobile.util.loadAd
 import kotlin.random.Random
 
 @AndroidEntryPoint
-class SearchActivity : AppCompatActivity(), SearchMoviePagingAdapter.ItemClickListener {
+class SearchActivity : BaseActivity<ActivitySearchBinding>(),
+    SearchMoviePagingAdapter.ItemClickListener {
+
     private val vm: FragmentSearchViewModel by viewModels()
-    private var _binding: ActivitySearchBinding? = null
-    private val binding: ActivitySearchBinding
-        get() = _binding!!
 
     private lateinit var adapter: SearchMoviePagingAdapter
     private lateinit var ad: InterstitialAd
 
     private lateinit var gridLayoutManager: GridLayoutManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override val bindingFactory: (LayoutInflater) -> ActivitySearchBinding
+        get() = { ActivitySearchBinding.inflate(it) }
 
-        loadConfig(resources.configuration)
+    override fun setup(savedInstanceState: Bundle?) {
         ad = loadAd()
 
         adapter = SearchMoviePagingAdapter(this)
@@ -66,11 +63,6 @@ class SearchActivity : AppCompatActivity(), SearchMoviePagingAdapter.ItemClickLi
     override fun onConfigurationChanged(newConfig: Configuration) {
         loadConfig(newConfig)
         super.onConfigurationChanged(newConfig)
-    }
-
-    override fun onDestroy() {
-        _binding = null
-        super.onDestroy()
     }
 
     override fun onItemClick(item: Data) {

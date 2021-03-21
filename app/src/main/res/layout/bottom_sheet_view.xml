@@ -18,6 +18,8 @@
             android:layout_height="@dimen/_7sdp"
             android:background="@drawable/bottom_sheet_top_icon"
             android:layout_gravity="center"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:layout_marginTop="@dimen/_5sdp"
             android:layout_marginBottom="@dimen/_3sdp"/>
 
@@ -42,6 +44,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/img_cont"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     app:cardCornerRadius="@dimen/_12sdp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -69,6 +73,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/seasonstxt"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="@id/spinner_seasons"
                         android:text="@string/season"
@@ -79,7 +85,8 @@
                     <Spinner
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#ffffff"
+                        android:focusable="true"
+                        android:background="@drawable/movie_hover"
                         android:id="@+id/spinner_seasons"
                         android:gravity="start"
                         app:layout_constraintTop_toBottomOf="@id/seasonstxt"
@@ -102,6 +109,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:id="@+id/episodestxt"
                         android:text="@string/episode"
                         android:singleLine="true"
@@ -112,7 +121,8 @@
                     <Spinner
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#ffffff"
+                        android:focusable="true"
+                        android:background="@drawable/movie_hover"
                         android:id="@+id/spinner_episodes"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:gravity="end"
@@ -135,6 +145,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/langstxt"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:text="@string/language"
                         android:textColor="@android:color/black"
                         android:textStyle="bold"
@@ -143,8 +155,9 @@
                     <Spinner
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#ffffff"
                         android:gravity="start"
+                        android:focusable="true"
+                        android:background="@drawable/movie_hover"
                         android:id="@+id/spinner_languages"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/episodestxt"
@@ -167,6 +180,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/qualitytxt"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:text="@string/quality"
                         android:singleLine="true"
                         android:textColor="@android:color/black"
@@ -176,10 +191,11 @@
                     <Spinner
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#ffffff"
                         android:id="@+id/quality_spinner"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:gravity="end"
+                        android:focusable="true"
+                        android:background="@drawable/movie_hover"
                         app:layout_constraintTop_toBottomOf="@id/qualitytxt"
                         tools:listitem="@layout/spinner_item_view" />
                 </LinearLayout>
@@ -189,6 +205,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     app:layout_constraintTop_toTopOf="@id/play_button"
                     app:layout_constraintBottom_toBottomOf="@id/play_button"
                     app:layout_constraintStart_toStartOf="parent"
@@ -197,6 +215,8 @@
                     <ImageView
                         android:layout_width="@dimen/_38sdp"
                         android:layout_height="@dimen/_38sdp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:src="@mipmap/ic_launcher_foreground"
                         android:scaleType="centerCrop" />
 
@@ -205,6 +225,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/app_name"
                         android:textStyle="bold"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:textSize="14sp"
                         android:textColor="#000"/>
                 </LinearLayout>
@@ -213,6 +235,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/play_button"
+                    android:focusable="true"
                     app:layout_constraintTop_toBottomOf="@id/quality_c"
                     android:layout_marginTop="@dimen/_24sdp"
                     app:layout_constraintEnd_toEndOf="parent"

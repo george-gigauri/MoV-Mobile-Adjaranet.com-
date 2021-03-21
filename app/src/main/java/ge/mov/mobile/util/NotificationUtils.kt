@@ -28,6 +28,15 @@ object NotificationUtils {
             val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
             val mBuilder = NotificationCompat.Builder(context, "mov_main_channel_id")
 
+            mBuilder.setContentText(message)
+                .setSmallIcon(R.drawable.logo)
+                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.logo))
+                .setVibrate(longArrayOf(1000))
+                .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setLights(Color.argb(1, 255, 192, 203), 100, 100)
+                .setContentIntent(pendingIntent)
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val importance = NotificationManager.IMPORTANCE_DEFAULT
                 val notificationChannel = NotificationChannel(
@@ -50,6 +59,7 @@ object NotificationUtils {
                    .setAutoCancel(true)
                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                    .setLights(Color.argb(1, 255, 192, 203), 100, 100)
+                   .setContentIntent(pendingIntent)
             }
 
             notificationManager!!.notify(

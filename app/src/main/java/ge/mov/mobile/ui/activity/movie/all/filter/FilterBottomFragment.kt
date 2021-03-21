@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.R
@@ -44,6 +46,14 @@ class FilterBottomFragment : BottomSheetDialogFragment(), GenreAdapter.OnGenreSe
         savedInstanceState: Bundle?
     ): View {
         _binding = FiltersSheetBinding.inflate(inflater, container, false)
+
+        dialog?.setOnShowListener {
+            val ds = (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            val behavior = BottomSheetBehavior.from(ds!!)
+            behavior.skipCollapsed = true
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
         return inflater.inflate(R.layout.filters_sheet, container, false)
     }
 

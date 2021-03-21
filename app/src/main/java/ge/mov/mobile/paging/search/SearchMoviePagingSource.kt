@@ -2,6 +2,7 @@ package ge.mov.mobile.paging.search
 
 import android.util.Log
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.data.network.APIService
 
@@ -29,4 +30,6 @@ class SearchMoviePagingSource(
             LoadResult.Error(exception)
         }
     }
+
+    override fun getRefreshKey(state: PagingState<Int, Data>) = state.anchorPosition
 }

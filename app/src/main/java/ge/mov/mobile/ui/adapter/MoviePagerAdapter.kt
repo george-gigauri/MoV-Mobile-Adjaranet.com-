@@ -17,7 +17,11 @@ class MoviePagerAdapter(
     private val adjaraId: Int,
     private val ad: InterstitialAd
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
-    private val fragments = arrayListOf(SimilarMoviesFragment(id, adjaraId, ad), MovieCastFragment(id))
+
+    val similarMoviesFragment = SimilarMoviesFragment.getInstance(id, adjaraId)
+
+    private val fragments =
+        arrayListOf(similarMoviesFragment, MovieCastFragment(id))
 
     override fun getItemCount(): Int = fragments.size
 

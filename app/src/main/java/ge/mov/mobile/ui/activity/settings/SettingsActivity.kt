@@ -3,16 +3,14 @@ package ge.mov.mobile.ui.activity.settings
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.isDigitsOnly
-import androidx.core.widget.doAfterTextChanged
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import ge.mov.mobile.R
 import ge.mov.mobile.databinding.ActivitySettingsBinding
+import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.activity.main.MainActivity
 import ge.mov.mobile.ui.fragment.settings.FragmentDeveloper
 import ge.mov.mobile.util.Constants.AVAILABLE_LANGUAGES
@@ -21,15 +19,16 @@ import ge.mov.mobile.util.Utils
 import kotlinx.android.synthetic.main.activity_intro.*
 import kotlinx.android.synthetic.main.activity_movie.*
 
-class SettingsActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySettingsBinding
+class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
+
     private lateinit var vm: ActivitySettingsViewModel
     private lateinit var sharedPreferences: SharedPreferences
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override val bindingFactory: (LayoutInflater) -> ActivitySettingsBinding =
+        { ActivitySettingsBinding.inflate(it) }
+
+    override fun setup(savedInstanceState: Bundle?) {
         sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_settings)
         vm = ViewModelProvider(this)[ActivitySettingsViewModel::class.java]
         binding.lifecycleOwner = this
         binding.settings = vm
@@ -39,6 +38,7 @@ class SettingsActivity : AppCompatActivity() {
         onClickListeners()
         onSeekParameterChanged()
     }
+
 
     private fun spinnerListeners() {
         binding.languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -113,15 +113,19 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun onSeekParameterChanged() {
         binding.editTextForwardInterval.apply {
-            setText((sharedPreferences.getLong("seek_interval", 5000) / 1000).toString())
-            doAfterTextChanged {
-                if (!text.isNullOrEmpty() and !text.isNullOrBlank() and text.isDigitsOnly()) {
+            maxValue = 60
+            minValue = 5
+            setOnValueChangedListener { picker, oldVal, newVal ->
+                if (newVal > 0) {
                     val editor = sharedPreferences.edit()
-                    editor.putLong("seek_interval", "${text}000".toLong())
+                    editor.putLong("seek_interval", "${newVal}000".toLong())
                     editor.apply()
                 }
             }
         }
+
+        binding.editTextForwardInterval.value =
+            (sharedPreferences.getLong("seek_interval", 5000) / 1000).toInt()
     }
 
     override fun onBackPressed() {

@@ -92,13 +92,15 @@ object Utils {
         return Calendar.getInstance()[Calendar.YEAR] - getBirthYear(context) >= 18
     }
 
-    fun getNameByLanguage(data: Data, lang: String) = if (lang == "GEO") {
-        if (data.primaryName != "") {
-            data.primaryName
+    fun getNameByLanguage(data: Data, lang: String?) = if (lang != null) {
+        if (lang == "GEO") {
+            if (data.primaryName != "") {
+                data.primaryName
+            } else {
+                data.secondaryName
+            }
         } else {
             data.secondaryName
         }
-    } else {
-        data.secondaryName
-    }
+    } else data.originalName
 }

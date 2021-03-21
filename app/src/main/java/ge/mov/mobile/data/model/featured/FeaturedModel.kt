@@ -1,8 +1,8 @@
 package ge.mov.mobile.data.model.featured
 
 data class FeaturedModel (
-    val id: Long,
-    val adjaraId: Long,
+    val id: Int,
+    val adjaraId: Int,
     val primaryName: String,
     val secondaryName: String,
     val tertiaryName: String,

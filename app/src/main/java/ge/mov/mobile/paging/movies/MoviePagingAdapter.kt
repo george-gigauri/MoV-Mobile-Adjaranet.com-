@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import ge.mov.mobile.MovApplication
+import ge.mov.mobile.R
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.MovieItemBinding
 import ge.mov.mobile.util.LanguageUtil
-import ge.mov.mobile.util.Utils.getNameByLanguage
 import ge.mov.mobile.util.loadWithProgressBar
 
 class MoviePagingAdapter(
@@ -16,28 +17,31 @@ class MoviePagingAdapter(
 ) : PagingDataAdapter<Data, MoviePagingAdapter.VH>(COMPARATOR) {
     inner class VH(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.root.setOnClickListener {
+            binding.movieHover.setOnClickListener {
                 val position = bindingAdapterPosition
 
-                if (position != RecyclerView.NO_POSITION){
+                if (position != RecyclerView.NO_POSITION) {
                     val item = getItem(position)
                     if (item != null) {
                         listener.onItemClick(item)
                     }
                 }
             }
+
+            binding.movieHover.setOnFocusChangeListener { _, hasFocus ->
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    if (hasFocus)
+                        binding.movieHover.setBackgroundResource(R.drawable.selected_stroke)
+                    else binding.movieHover.background = null
+                }
+            }
         }
 
         fun bind(i: Data) {
-            val language = LanguageUtil.language
-            val lang_code = if (language?.id == "ka") "GEO" else "ENG"
-
             binding.apply {
-                name.text = getNameByLanguage(i, lang_code)
+                name.text = i.getNameByLanguage(MovApplication.language?.code)
                 poster.loadWithProgressBar(progress, i.posters?.data?._240)
             }
-
-            //binding.root.setOnClickListener { listener.onItemClick(i) }
         }
     }
 

@@ -2,6 +2,7 @@ package ge.mov.mobile.paging.movies
 
 import android.util.Log
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.data.network.APIService
 
@@ -49,4 +50,6 @@ class MoviePagingSource(
             LoadResult.Error(exception)
         }
     }
+
+    override fun getRefreshKey(state: PagingState<Int, Data>) = state.anchorPosition
 }

@@ -19,7 +19,7 @@ interface APIService {
     @GET("movies")
     suspend fun getMovies(
         @Query("page") page: Int,
-        @Query("per_page") per_page: Int = 20,
+        @Query("per_page") per_page: Int = 18,
         @Query("filters[language]") language: String = "GEO",
         @Query("filters[type]") type: String = "movie", // adjaranet
         @Query("filters[only_public]") public: String = "yes",
@@ -36,7 +36,7 @@ interface APIService {
     suspend fun getSimilarMovies(
         @Path("id") id: Int,
         @Query("page") page: Int = 1,
-        @Query("per_page") perPage: Int = 20,
+        @Query("per_page") perPage: Int = 12,
         @Query("source") source: String = "adjaranet"
     ) : Response<BasicMovie>
 
@@ -45,7 +45,7 @@ interface APIService {
         @Query("type") type: String = "movie",
         @Query("period") period: String = "day",
         @Query("page") page: Int = 1,
-        @Query("per_page") perPage: Int = 20,
+        @Query("per_page") perPage: Int = 18,
         @Query("filters[genre]") genre: String? = null,
         @Query("filters[with_actors]") actors: Int = 3,
         @Query("filters[with_directors]") directors: Int = 1,
@@ -82,7 +82,7 @@ interface APIService {
     @GET("casts/{id}/movies")
     suspend fun getMoviesByPerson(
         @Path("id") id: Long,
-        @Query("per_page") perPage: Int = 150
+        @Query("per_page") perPage: Int = 250
     ) : Response<BasicMovie>
 
     @GET("languages")

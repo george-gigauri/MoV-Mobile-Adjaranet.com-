@@ -2,11 +2,9 @@ package ge.mov.mobile.ui.activity.movie
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import coil.load
@@ -14,11 +12,13 @@ import coil.request.CachePolicy
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import ge.mov.mobile.MovApplication.Companion.language
 import ge.mov.mobile.R
 import ge.mov.mobile.data.database.AppDatabase
 import ge.mov.mobile.data.database.MovieDao
 import ge.mov.mobile.data.database.MovieEntity
 import ge.mov.mobile.databinding.ActivityMovieBinding
+import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.activity.dialog.showMovieDialog
 import ge.mov.mobile.ui.adapter.GenreAdapter
 import ge.mov.mobile.ui.adapter.MoviePagerAdapter
@@ -29,8 +29,7 @@ import kotlinx.coroutines.*
 import java.util.*
 
 @AndroidEntryPoint
-class MovieActivity : AppCompatActivity() {
-    private lateinit var dataBinding: ActivityMovieBinding
+class MovieActivity : BaseActivity<ActivityMovieBinding>() {
     private val vm: MovieDetailViewModel by viewModels()
     private lateinit var db: MovieDao
     private var id: Int? = null
@@ -38,42 +37,25 @@ class MovieActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var ad: InterstitialAd
 
-
     private val SHARE_MOVIE_REQUEST_CODE = 240
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie)
-        dataBinding.lifecycleOwner = this
+    override val bindingFactory: (LayoutInflater) -> ActivityMovieBinding
+        get() = { ActivityMovieBinding.inflate(it) }
 
+    override fun setup(savedInstanceState: Bundle?) {
         sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE)
 
         ad = loadAd()
 
-        /*   if (!approved) {
-               mIntestitialAd = InterstitialAd(this)
-               mIntestitialAd.adUnitId = "ca-app-pub-2337439332290274/2854996575"
-               mIntestitialAd.loadAd(AdRequest.Builder().build())
-           } else {
-               toast("User Approved for Non-Ads service.")
-           } */
-
         init()
         loadInfo()
 
-        dataBinding.goBack.setOnClickListener {
-//            if (!approved)
-//                if (mIntestitialAd.isLoaded)
-//                    mIntestitialAd.show()
-            finish()
-        }
+        binding.goBack.setOnClickListener { finish() }
     }
 
     private fun init() {
-        id = intent?.getIntExtra("id", 0)
-        adjaraId = intent?.getIntExtra("adjaraId", 0)
-
-        dataBinding.details = vm
+        id = intent?.extras?.getInt("id", 0)
+        adjaraId = intent?.extras?.getInt("adjaraId", 0)
 
         GlobalScope.launch(Dispatchers.IO) {
             db = Room.databaseBuilder(
@@ -85,18 +67,27 @@ class MovieActivity : AppCompatActivity() {
     }
 
     private fun loadInfo() {
-        dataBinding.progress.visible(true)
-        lifecycleScope.launch {
-            val it = withContext(Dispatchers.IO) { vm.getMovieDetails(id!!) }
+        binding.progress.visible(true)
+        lifecycleScope.launchWhenStarted {
+            val it = withContext(Dispatchers.Main) {
+                val tmp = vm.getMovieDetails(id!!)
+                adjaraId = tmp?.adjaraId
+                return@withContext tmp
+            }
+
             var saved: Boolean = withContext(Dispatchers.IO) {
-                vm.isMovieSaved(
-                    applicationContext,
-                    it!!.id
-                )
+                try {
+                    vm.isMovieSaved(
+                        applicationContext,
+                        it!!.id
+                    )
+                } catch (e: Exception) {
+                    false
+                }
             }
 
             if (it != null) {
-                withContext(Dispatchers.Main) {
+                runOnUiThread {
                     if (!Constants.showAdultContent && it.adult) {
                         toast("You don't have permission to watch this movie.")
                         finish()
@@ -109,25 +100,28 @@ class MovieActivity : AppCompatActivity() {
                         else -> it.covers.data._145
                     }
 
-                    dataBinding.poster.load(cover) {
+                    binding.movieName.text = it.getNameByLanguage(language?.code)
+                    binding.description.text = it.getDescriptionByLanguage(language?.code)
+
+                    binding.poster.load(cover) {
                         placeholder(R.color.colorAccent)
                         error(Constants.getErrorImage())
                         diskCachePolicy(CachePolicy.DISABLED)
                         memoryCachePolicy(CachePolicy.DISABLED)
                     }
 
-                    dataBinding.genresRv.adapter =
+                    binding.genresRv.adapter =
                         GenreAdapter(it.genres.data, this@MovieActivity, 2)
 
                     if (saved) {
-                        dataBinding.saveButton.setMinAndMaxProgress(0.0f, 1.0f)
-                        dataBinding.saveButton.playAnimation()
+                        binding.saveButton.setMinAndMaxProgress(0.0f, 1.0f)
+                        binding.saveButton.playAnimation()
                     } else {
-                        dataBinding.saveButton.setMinAndMaxProgress(0.0f, 0.0f)
-                        dataBinding.saveButton.playAnimation()
+                        binding.saveButton.setMinAndMaxProgress(0.0f, 0.0f)
+                        binding.saveButton.playAnimation()
                     }
 
-                    dataBinding.saveButton.setOnClickListener { _ ->
+                    binding.saveButton.setOnClickListener { _ ->
                         lifecycleScope.launch {
                             saved = withContext(Dispatchers.IO) {
                                 vm.isMovieSaved(applicationContext, it.id)
@@ -142,7 +136,7 @@ class MovieActivity : AppCompatActivity() {
                         }
                     }
 
-                    dataBinding.playButton.setOnClickListener { _ ->
+                    binding.playButton.setOnClickListener { _ ->
                         val popupStyle = sharedPreferences.getInt("popup_style", 1)
                         if (popupStyle == 0) {
                             showMovieDialog(this@MovieActivity, it.id)
@@ -155,15 +149,15 @@ class MovieActivity : AppCompatActivity() {
                         }
                     }
 
-                    dataBinding.share.setOnClickListener { _ ->
-                        dataBinding.progress.visible(true)
+                    binding.share.setOnClickListener { _ ->
+                        binding.progress.visible(true)
                         val url =
                             "https://www.adjaranet.com/movies/${it.adjaraId}/${it.secondaryName}"
                         shareUrl(it.secondaryName, url)
                     }
 
                     // ViewPager2 Setup
-                    dataBinding.tabPager.adapter = MoviePagerAdapter(
+                    binding.tabPager.adapter = MoviePagerAdapter(
                         applicationContext,
                         supportFragmentManager,
                         lifecycle,
@@ -174,14 +168,14 @@ class MovieActivity : AppCompatActivity() {
                     val titles =
                         arrayListOf(getString(R.string.similar_movies), getString(R.string.cast))
                     TabLayoutMediator(
-                        dataBinding.tabRecommendedMovies,
-                        dataBinding.tabPager
+                        binding.tabRecommendedMovies,
+                        binding.tabPager
                     ) { tab, position ->
                         tab.text = titles[position]
-                        dataBinding.tabPager.currentItem = tab.position
+                        binding.tabPager.currentItem = tab.position
                     }.attach()
 
-                    dataBinding.progress.visible(false)
+                    binding.progress.visible(false)
                 }
             }
         }
@@ -192,17 +186,8 @@ class MovieActivity : AppCompatActivity() {
             vm.deleteFromDatabase(this@MovieActivity, movie)
         }
 
-        /* dataBinding.saveButton.setImageDrawable(
-             ContextCompat.getDrawable(
-                 applicationContext,
-                 R.drawable.ic_heart_outline
-             )
-         ) */
-
-        dataBinding.saveButton.setMinAndMaxProgress(0.0f, 0.0f)
-        dataBinding.saveButton.playAnimation()
-
-        toast("Movie removed from saved list.")
+        binding.saveButton.setMinAndMaxProgress(0.0f, 0.0f)
+        binding.saveButton.playAnimation()
     }
 
     private fun saveMovie(movie: MovieEntity) {
@@ -210,16 +195,8 @@ class MovieActivity : AppCompatActivity() {
             vm.insertMovieToDatabase(this@MovieActivity, movie)
         }
 
-        /*  dataBinding.saveButton.setImageDrawable(
-              ContextCompat.getDrawable(
-                  applicationContext,
-                  R.drawable.ic_heart_filled
-              )
-          ) */
-
-        dataBinding.saveButton.setMinAndMaxProgress(0.0f, 1.0f)
-        dataBinding.saveButton.playAnimation()
-        toast("Movie has been saved for later.")
+        binding.saveButton.setMinAndMaxProgress(0.0f, 1.0f)
+        binding.saveButton.playAnimation()
     }
 
     private fun shareUrl(title: String, url: String) {
@@ -238,26 +215,14 @@ class MovieActivity : AppCompatActivity() {
 
         if (requestCode == SHARE_MOVIE_REQUEST_CODE) {
             if (resultCode == RESULT_OK)
-                dataBinding.progress.visible(false)
+                binding.progress.visible(false)
             else
-                dataBinding.progress.visible(false)
+                binding.progress.visible(false)
         }
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-//        if (!approved)
-//            if (mIntestitialAd.isLoaded)
-//                mIntestitialAd.show()
         finish()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-
-        val lang = Utils.loadLanguage(this)
-        Utils.saveLanguage(this, lang)
-        setTheme(R.style.AppTheme)
-        newConfig.locale = Locale(lang.id, lang.code)
     }
 }

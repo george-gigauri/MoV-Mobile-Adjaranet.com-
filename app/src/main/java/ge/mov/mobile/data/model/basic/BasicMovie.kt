@@ -16,5 +16,13 @@ data class Data (
     val originalName: String,
     val posters: Posters?,
     val adult: Boolean
-)
+) {
+    fun getNameByLanguage(code: String?) = if (code != null) {
+        if (code == "GEO") {
+            if (primaryName != "") primaryName else originalName
+        } else {
+            if (secondaryName != "") secondaryName else originalName
+        }
+    } else originalName
+}
 

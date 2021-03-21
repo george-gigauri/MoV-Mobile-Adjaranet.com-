@@ -1,154 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootMovie"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".ui.activity.movie.MovieActivity">
 
-    <data>
-        <import type="android.content.Context" />
-        <variable
-            name="details"
-            type="ge.mov.mobile.ui.activity.movie.MovieDetailViewModel" />
-    </data>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rootMovie">
+        android:background="@color/colorPrimaryDark">
 
-        <RelativeLayout
+        <!--  BACKGROUND IMAGE HEADER -->
+        <ImageView
+            android:id="@+id/poster"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark">
+            android:layout_height="@dimen/_185sdp"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/error_image_loading" />
 
-            <!--  BACKGROUND IMAGE HEADER -->
-            <ImageView
-                android:id="@+id/poster"
+        <!--  BACKGROUND IMAGE SHADE -->
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_185sdp"
+            android:layout_alignParentTop="true"
+            android:src="#2F000000" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_185sdp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/error_image_loading"
-                android:layout_alignParentTop="true"/>
+                android:layout_height="wrap_content">
 
-            <!--  BACKGROUND IMAGE SHADE -->
+                <!--  GO BACK BUTTON -->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:background="@drawable/white_circle">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_185sdp"
-                android:layout_alignParentTop="true"
-                android:src="#2F000000" />
-
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <!--  GO BACK BUTTON -->
                     <ImageView
-                        android:layout_width="@dimen/_32sdp"
-                        android:layout_height="@dimen/_32sdp"
                         android:id="@+id/go_back"
+                        android:layout_width="@dimen/_32sdp"
+                        android:layout_height="@dimen/_32sdp"
+                        android:background="@drawable/movie_hover"
+                        android:focusable="true"
                         android:padding="@dimen/_5sdp"
-                        android:background="@drawable/white_circle"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentStart="true"
                         android:src="@drawable/ic_baseline_arrow_back_24"
-                        android:layout_marginStart="@dimen/_12sdp"
-                        android:layout_marginTop="@dimen/_14sdp"
                         app:tint="@color/colorAccent" />
+                </FrameLayout>
 
-                    <!-- SHARE BUTTON -->
+                <!-- SHARE BUTTON -->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:layout_toStartOf="@id/fav_cont"
+                    android:background="@drawable/white_circle">
+
                     <ImageView
-                        android:layout_width="@dimen/_32sdp"
-                        android:layout_height="@dimen/_32sdp"
                         android:id="@+id/share"
-                        android:padding="@dimen/_5sdp"
-                        android:background="@drawable/white_circle"
-                        android:layout_alignParentTop="true"
-                        android:layout_toStartOf="@id/save_button"
-                        android:layout_marginEnd="@dimen/_12sdp"
-                        android:src="@drawable/ic_share"
-                        android:layout_marginTop="@dimen/_14sdp"
-                        app:tint="@color/colorAccent" />
-
-                    <!--  SAVE BUTTON -->
-                    <com.airbnb.lottie.LottieAnimationView
                         android:layout_width="@dimen/_32sdp"
                         android:layout_height="@dimen/_32sdp"
-                        android:id="@+id/save_button"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:background="@drawable/white_circle"
-                        android:layout_marginTop="@dimen/_14sdp"
-                        android:layout_marginEnd="@dimen/_12sdp"
-                        app:lottie_rawRes="@raw/mov_save_for_later"
-                        app:lottie_autoPlay="false"
-                        app:lottie_speed="1"
-                        app:lottie_repeatCount="0" />
+                        android:background="@drawable/movie_hover"
+                        android:focusable="true"
+                        android:padding="@dimen/_5sdp"
+                        android:src="@drawable/ic_share"
+                        app:tint="@color/colorAccent" />
+                </FrameLayout>
 
-                    <androidx.cardview.widget.CardView
+                <!--  SAVE BUTTON -->
+                <FrameLayout
+                    android:id="@+id/fav_cont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:background="@drawable/white_circle">
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/save_button"
+                        android:layout_width="@dimen/_32sdp"
+                        android:layout_height="@dimen/_32sdp"
+                        android:background="@drawable/movie_hover"
+                        android:focusable="true"
+                        app:lottie_autoPlay="false"
+                        app:lottie_rawRes="@raw/mov_save_for_later"
+                        app:lottie_repeatCount="0"
+                        app:lottie_speed="1" />
+                </FrameLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_145sdp"
+                    android:layout_marginBottom="@dimen/_50sdp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="@dimen/_24sdp"
+                    app:cardElevation="0dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/card"
-                        android:layout_marginTop="@dimen/_145sdp"
-                        app:cardElevation="0dp"
-                        android:layout_marginBottom="@dimen/_50sdp"
-                        app:cardBackgroundColor="@android:color/white"
-                        app:cardCornerRadius="@dimen/_35sdp">
+                        android:layout_margin="@dimen/_15sdp">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <TextView
+                            android:id="@+id/movieName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_15sdp">
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_marginEnd="@dimen/_54sdp"
+                            android:text="Loading..."
+                            android:textColor="@android:color/black"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toStartOf="@id/play_cont"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                            <TextView
-                                android:id="@+id/movieName"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_5sdp"
-                                android:layout_marginEnd="@dimen/_54sdp"
-                                android:textColor="@android:color/black"
-                                android:textSize="22sp"
-                                android:textStyle="bold"
-                                android:text="@{ details.movieName }"
-                                app:layout_constraintEnd_toStartOf="@id/playButton"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                        <FrameLayout
+                            android:id="@+id/play_cont"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:background="@drawable/accent_bg_transparent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/movieName">
 
                             <ImageView
                                 android:id="@+id/playButton"
                                 android:layout_width="@dimen/_42sdp"
                                 android:layout_height="@dimen/_42sdp"
-                                android:layout_marginEnd="@dimen/_10sdp"
-                                android:src="@drawable/play"
-                                android:background="@drawable/accent_bg_transparent"
+                                android:background="@drawable/movie_hover"
+                                android:focusable="true"
                                 android:padding="@dimen/_5sdp"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/movieName"
+                                android:src="@drawable/play"
                                 app:tint="@color/colorAccent" />
+                        </FrameLayout>
 
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/genres_rv"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_20sdp"
-                                android:orientation="horizontal"
-                                android:paddingTop="@dimen/_5sdp"
-                                android:paddingBottom="@dimen/_5sdp"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                app:layout_constraintTop_toBottomOf="@id/movieName" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/genres_rv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:orientation="horizontal"
+                            android:paddingTop="@dimen/_5sdp"
+                            android:paddingBottom="@dimen/_5sdp"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintTop_toBottomOf="@id/movieName" />
+
+                        <HorizontalScrollView
+                            android:id="@+id/basicParams"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:gravity="center"
+                            android:scrollbars="none"
+                            android:nestedScrollingEnabled="true"
+                            app:layout_constraintTop_toBottomOf="@id/genres_rv">
 
                             <LinearLayout
-                                android:id="@+id/basicParams"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_10sdp"
-                                android:gravity="center"
-                                android:orientation="horizontal"
-                                app:layout_constraintTop_toBottomOf="@id/genres_rv">
+                                android:layout_gravity="center_horizontal"
+                                android:orientation="horizontal">
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -160,8 +189,8 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@string/year"
                                         android:layout_margin="@dimen/_3sdp"
+                                        android:text="@string/year"
                                         android:textColor="@android:color/darker_gray"
                                         android:textSize="16sp" />
 
@@ -246,6 +275,7 @@
 
                                 </LinearLayout>
                             </LinearLayout>
+                        </HorizontalScrollView>
 
                             <TextView
                                 android:id="@+id/txtDescription"
@@ -266,53 +296,54 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_5sdp"
                                 android:textColor="@android:color/black"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:text="@{ details.movieDescription }"
                                 app:layout_constraintTop_toBottomOf="@id/txtDescription"
                                 tools:text="Here is an simple description" />
 
 
-                            <com.google.android.material.tabs.TabLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/tab_recommended_movies"
-                                app:layout_constraintTop_toBottomOf="@id/description"
-                                app:tabRippleColor="@color/colorAccent"
-                                app:tabIndicator="@drawable/tab_indicator_accent"
-                                app:tabSelectedTextColor="@color/colorAccent"
-                                app:tabIndicatorFullWidth="false"
-                                android:layout_marginTop="@dimen/_12sdp"/>
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/tab_recommended_movies"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            app:layout_constraintTop_toBottomOf="@id/description"
+                            app:tabIndicator="@drawable/tab_indicator_accent"
+                            app:tabIndicatorFullWidth="false"
+                            app:tabRippleColor="@color/colorAccent"
+                            app:tabSelectedTextColor="@color/colorAccent" />
 
-                            <androidx.viewpager2.widget.ViewPager2
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/tab_pager"
-                                app:layout_constraintTop_toBottomOf="@id/tab_recommended_movies"
-                                android:layout_margin="@dimen/_5sdp" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </androidx.cardview.widget.CardView>
-                </RelativeLayout>
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/tab_pager"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_5sdp"
+                            app:layout_constraintTop_toBottomOf="@id/tab_recommended_movies" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
 
-            </androidx.core.widget.NestedScrollView>
-        </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
+    </RelativeLayout>
 
-        <include layout="@layout/bottom_sheet_view"
-            android:id="@+id/bottom_layout" />
+    <include
+        android:id="@+id/bottom_layout"
+        layout="@layout/bottom_sheet_view" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/progress"
-            android:background="#BF000000"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:visibility="@{ details.isLoading() }">
+    <FrameLayout
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#BF000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="gone"
+        tools:visibility="gone">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-        </FrameLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</layout>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

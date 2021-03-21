@@ -5,10 +5,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/_117sdp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_14sdp"
-        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_6sdp"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:layout_marginStart="@dimen/_12sdp">
+        android:layout_marginStart="@dimen/_6sdp">
 
         <androidx.cardview.widget.CardView
             android:layout_width="@dimen/_116sdp"
@@ -27,12 +27,12 @@
                 android:src="@color/colorPrimary"
                 android:scaleType="centerCrop" />
 
-
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/progress"
                 android:layout_gravity="center" />
+
         </androidx.cardview.widget.CardView>
 
         <TextView
@@ -45,11 +45,21 @@
             app:layout_constraintTop_toBottomOf="@id/cardView"
             android:text="Loading Film..."
             android:textColor="#fff"
+            android:textAlignment="center"
             android:textSize="17sp"
             android:layout_marginTop="@dimen/_3sdp"
             android:textStyle="bold"
             android:fontFamily="@font/quicksand_semibold" />
 
-
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@id/movie_hover"
+            android:background="@drawable/movie_hover"
+            android:focusable="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
