@@ -9,8 +9,8 @@ import ge.mov.mobile.MovApplication
 import ge.mov.mobile.R
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.MovieItemBinding
+import ge.mov.mobile.extension.loadWithProgressBar
 import ge.mov.mobile.util.Utils.getNameByLanguage
-import ge.mov.mobile.util.loadWithProgressBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

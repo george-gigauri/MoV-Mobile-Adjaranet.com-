@@ -1,6 +1,8 @@
 package ge.mov.mobile.data.network
 
 import ge.mov.mobile.data.model.LanguageData
+import ge.mov.mobile.data.model.MovieFileUrl
+import ge.mov.mobile.data.model.MovieReminder
 import ge.mov.mobile.data.model.Series.EpisodeFiles
 import ge.mov.mobile.data.model.Series.Person
 import ge.mov.mobile.data.model.Series.PersonModel
@@ -8,9 +10,11 @@ import ge.mov.mobile.data.model.basic.BasicMovie
 import ge.mov.mobile.data.model.featured.Featured
 import ge.mov.mobile.data.model.movie.Genres
 import ge.mov.mobile.data.model.movie.MovieItemModel
-import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface APIService {
     @GET("movies/featured?source=adjaranet")
@@ -83,7 +87,7 @@ interface APIService {
     suspend fun getMoviesByPerson(
         @Path("id") id: Long,
         @Query("per_page") perPage: Int = 250
-    ) : Response<BasicMovie>
+    ): Response<BasicMovie>
 
     @GET("languages")
     suspend fun getLanguages(): Response<LanguageData>
@@ -91,5 +95,18 @@ interface APIService {
     @GET("casts/{id}")
     suspend fun getPerson(
         @Path("id") id: Long
-    ) : Response<PersonModel>
+    ): Response<PersonModel>
+
+    @GET("movies/latest-episodes?source=adjaranet")
+    suspend fun getLatest(): Response<MovieReminder>
+
+    @Headers(
+        "x-source: adjaranet",
+        "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Microsoft Edge\";v=\"90\""
+    )
+    @GET("movies/{movie_id}/files/{file_id}?source=adjaranet&rd=0")
+    suspend fun getMoviePlayUrl(
+        @Path("movie_id") id: Int,
+        @Path("file_id") fileId: Long
+    ): Response<MovieFileUrl>
 }

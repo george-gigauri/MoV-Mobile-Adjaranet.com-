@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ge.mov.mobile">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.software.leanback"
         android:required="false" />
-
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
@@ -25,15 +27,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:uiOptions="splitActionBarWhenNarrow">
+        android:uiOptions="splitActionBarWhenNarrow"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
+        <activity android:name=".ui.activity.auth.RegisterActivity"></activity>
+        <activity android:name=".ui.tv.MainTvActivity" />
+
+        <service
+            android:name=".service.MovieDownloadService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".service.DeleteMovieService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity android:name=".ui.activity.offline.DownloadedMoviesActivity" />
         <activity android:name=".ui.activity.main.SearchActivity" />
         <activity android:name=".ui.activity.movie.all.AllMoviesActivity" />
         <activity
             android:name=".TvActivity"
+            android:configChanges="keyboard|keyboardHidden|navigation"
             android:label="@string/app_name"
             android:theme="@style/Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
@@ -50,10 +69,11 @@
             android:configChanges="layoutDirection|locale|orientation|screenSize" />
         <activity
             android:name=".ui.activity.movie.WatchActivity"
-            android:configChanges="locale"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Fullscreen" />
-        <activity android:name=".ui.activity.movie.MovieActivity" />
+        <activity
+            android:name=".ui.activity.movie.MovieActivity"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.main.MainActivity"
             android:configChanges="locale"
@@ -74,7 +94,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.LoginActivity" />
+        <activity android:name=".ui.activity.auth.LoginActivity" />
         <activity
             android:name=".ui.activity.other.SplashActivity"
             android:theme="@style/Fullscreen" />
@@ -93,7 +113,7 @@
 
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="com.google.android.exoplayer2.ext.cast.DefaultCastOptionsProvider" />
+            android:value="ge.mov.mobile.CastOptionsProvider" />
     </application>
 
 </manifest>

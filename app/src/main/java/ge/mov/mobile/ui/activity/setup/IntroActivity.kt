@@ -4,27 +4,26 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import ge.mov.mobile.R
-import ge.mov.mobile.ui.adapter.introduction.IntroAdapter
-import ge.mov.mobile.databinding.ActivityIntroBinding
 import ge.mov.mobile.data.model.IntroModel
+import ge.mov.mobile.databinding.ActivityIntroBinding
+import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.activity.main.MainActivity
+import ge.mov.mobile.ui.adapter.introduction.IntroAdapter
 import ge.mov.mobile.util.Utils
 
-class IntroActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityIntroBinding
+class IntroActivity : BaseActivity<ActivityIntroBinding>() {
+
     private var arr = ArrayList<IntroModel>()
     private lateinit var adapter: IntroAdapter
     private var position: Int = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_intro)
-        binding.lifecycleOwner = this
+    override val bindingFactory: (LayoutInflater) -> ActivityIntroBinding
+        get() = { ActivityIntroBinding.inflate(it) }
 
+    override fun setup(savedInstanceState: Bundle?) {
         firstPageVisible(true)
         lastPageVisible(false)
         viewPagerVisible(false)

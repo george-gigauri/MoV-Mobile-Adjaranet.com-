@@ -1,15 +1,12 @@
 package ge.mov.mobile.ui.adapter
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ge.mov.mobile.R
 import ge.mov.mobile.data.model.Language
 import ge.mov.mobile.databinding.GenreModelBinding
 import ge.mov.mobile.util.LanguageUtil
-import kotlinx.android.synthetic.main.genre_model.view.*
 
 class LanguageAdapter(private val listener: OnLanguageSelectedListener) :
     RecyclerView.Adapter<LanguageAdapter.VH>() {
@@ -33,11 +30,11 @@ class LanguageAdapter(private val listener: OnLanguageSelectedListener) :
             binding.genre.text = if (locale != null) {
                 if (locale.code == "GE") language.primaryNameTurned else language.secondaryName
             } else language.primaryNameTurned
+
+            binding.genre.isSelected = language.selected
             if (language.selected) {
-                binding.genre.setBackgroundResource(R.drawable.blue_bg_rounded)
                 binding.genre.setTextColor(Color.WHITE)
             } else {
-                binding.genre.setBackgroundResource(R.drawable.categories_light_background)
                 binding.genre.setTextColor(Color.BLACK)
             }
         }

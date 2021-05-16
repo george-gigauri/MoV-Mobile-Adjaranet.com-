@@ -4,22 +4,19 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import ge.mov.mobile.R
+import android.view.LayoutInflater
 import ge.mov.mobile.databinding.ActivitySetupBirthdayBinding
+import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.activity.main.MainActivity
 import ge.mov.mobile.util.Constants
 import ge.mov.mobile.util.Utils
 
-class SetupBirthdayActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySetupBirthdayBinding
+class SetupBirthdayActivity : BaseActivity<ActivitySetupBirthdayBinding>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_setup_birthday)
-        binding.lifecycleOwner = this
+    override val bindingFactory: (LayoutInflater) -> ActivitySetupBirthdayBinding
+        get() = { ActivitySetupBirthdayBinding.inflate(it) }
 
+    override fun setup(savedInstanceState: Bundle?) {
         binding.btnContinue.setOnClickListener {
             val day = binding.birthdayPicker.dayOfMonth
             val month = binding.birthdayPicker.month + 1

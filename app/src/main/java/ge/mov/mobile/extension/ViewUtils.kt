@@ -1,12 +1,23 @@
-package ge.mov.mobile.util
+package ge.mov.mobile.extension
 
 import android.app.Activity
+import android.app.DownloadManager
 import android.content.Context
+import android.content.Context.DOWNLOAD_SERVICE
+import android.content.Context.MODE_PRIVATE
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import coil.load
 import coil.request.CachePolicy
@@ -14,12 +25,15 @@ import coil.request.ImageRequest
 import coil.request.ImageResult
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
+import dev.sasikanth.colorsheet.utils.ColorSheetUtils
 import ge.mov.mobile.BuildConfig
 import ge.mov.mobile.R
-import ge.mov.mobile.data.model.Series.Episode
-import ge.mov.mobile.data.model.Series.EpisodeFiles
-import ge.mov.mobile.data.model.movie.Seasons
-import kotlin.reflect.typeOf
+import ge.mov.mobile.util.Constants
+import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
+import java.text.SimpleDateFormat
+
 
 fun d(tag: String, msg: String) {
     Log.d(tag, msg)
@@ -128,20 +142,8 @@ fun View.visible(isVisible: Boolean) {
     }
 }
 
-fun Spinner.adapt(obj: Any) {
-    this.adapter = when (obj) {
-        is List<*> -> ArrayAdapter(this.context, R.layout.spinner_item_view, obj)
-        is EpisodeFiles -> ArrayAdapter(this.context, R.layout.spinner_item_view, getEpisodesAsString(obj))
-        else -> null
-    }
-}
-
-private fun getEpisodesAsString(episodeFiles: EpisodeFiles): List<String> {
-    val temp = ArrayList<String>()
-    episodeFiles.data.forEach {
-        temp.add("${it.episode} - ${it.title}")
-    }
-    return temp
+fun Spinner.adapt(obj: List<Any>) {
+    adapter = ArrayAdapter(context, R.layout.spinner_item_view, obj)
 }
 
 fun Activity.loadAd(): InterstitialAd {
@@ -159,6 +161,82 @@ fun Context.showAd(ad: InterstitialAd) {
     ad.loadAd(AdRequest.Builder().build())
 }
 
-fun Activity.drawable(src: Int) : Drawable? = ContextCompat.getDrawable(this, src)
+fun Activity.toBitmap(url: String?): Bitmap {
+    return try {
+        val _url = URL(url)
+        val connection = _url.openConnection() as HttpURLConnection
+        connection.doInput = true
+        connection.connect()
+        val inputStream = connection.inputStream
 
-fun Fragment.drawable(src: Int) : Drawable? = ContextCompat.getDrawable(requireActivity(), src)
+        BitmapFactory.decodeStream(inputStream)
+    } catch (e: Exception) {
+        Log.i("toBitmap()", e.message.toString())
+        e.printStackTrace()
+        BitmapFactory.decodeResource(resources, R.drawable.backgrund_category)
+    }
+}
+
+fun Activity.drawable(src: Int): Drawable? = ContextCompat.getDrawable(this, src)
+
+fun Fragment.drawable(src: Int): Drawable? = ContextCompat.getDrawable(requireActivity(), src)
+
+fun Context.download(url: String?): Long? {
+    if (url != null || url != "") {
+        val path = File(filesDir, "Downloads")
+        if (!path.exists())
+            path.mkdirs()
+
+        val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        val request = DownloadManager.Request(Uri.parse(url))
+        request.setDestinationUri(path.toUri())
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+        request.setTitle("Downloading...")
+
+        return dm.enqueue(request)
+    }
+    return null
+}
+
+fun Context.startFuckingService(intent: Intent) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        startForegroundService(intent)
+    else startService(intent)
+}
+
+fun Activity.setPreferredColor(view: View): Int {
+    val sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE)
+    val color = sharedPreferences.getInt("color", 0)
+
+    return if (color == 0) {
+        setStatusBarColor(color)
+        view.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
+        resources.getColor(R.color.colorPrimaryDark)
+    } else {
+        setStatusBarColor(color)
+        view.setBackgroundColor(color)
+        color
+    }
+}
+
+fun Fragment.setPreferredColor(view: View) {
+    val sharedPreferences = requireActivity().getSharedPreferences("AppPreferences", MODE_PRIVATE)
+    val color = sharedPreferences.getInt("color", 0)
+
+    if (color == 0) {
+        view.setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
+    } else {
+        view.setBackgroundColor(color)
+    }
+}
+
+fun Activity.setStatusBarColor(color: Int) {
+    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+    window.statusBarColor = Color.parseColor(ColorSheetUtils.colorToHex(color))
+}
+
+fun String.toBdayDate(): Long {
+    val sdf = SimpleDateFormat("dd-MM-yyyy").parse(this)
+    return sdf?.time ?: System.currentTimeMillis()
+}

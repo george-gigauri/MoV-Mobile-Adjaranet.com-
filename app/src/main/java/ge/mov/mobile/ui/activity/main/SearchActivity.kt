@@ -11,11 +11,11 @@ import com.google.android.gms.ads.InterstitialAd
 import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.ActivitySearchBinding
+import ge.mov.mobile.extension.loadAd
+import ge.mov.mobile.extension.setPreferredColor
 import ge.mov.mobile.paging.search.SearchMoviePagingAdapter
 import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.activity.movie.MovieActivity
-import ge.mov.mobile.util.loadAd
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class SearchActivity : BaseActivity<ActivitySearchBinding>(),
@@ -34,8 +34,11 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(),
     override fun setup(savedInstanceState: Bundle?) {
         ad = loadAd()
 
+        setPreferredColor(binding.root)
+
         adapter = SearchMoviePagingAdapter(this)
         binding.searchResultsRv.adapter = adapter
+
         vm.result.observe(this) {
             adapter.submitData(lifecycle, it)
             adapter.notifyDataSetChanged()
@@ -71,7 +74,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(),
         intent.putExtra("adjaraId", item.adjaraId)
         startActivity(intent)
 
-        if (ad.isLoaded && Random.nextBoolean())
-            ad.show()
+        // if (ad.isLoaded && Random.nextBoolean() && Random.nextBoolean())
+        //     ad.show()
     }
 }

@@ -7,11 +7,12 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.gms.ads.InterstitialAd
 import dagger.hilt.android.AndroidEntryPoint
-import ge.mov.mobile.data.database.MovieEntity
+import ge.mov.mobile.data.database.entity.MovieEntity
 import ge.mov.mobile.databinding.FragmentSavedMoviesBinding
+import ge.mov.mobile.extension.loadAd
+import ge.mov.mobile.extension.setPreferredColor
 import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.adapter.SavedMoviesAdapter
-import ge.mov.mobile.util.loadAd
 
 @AndroidEntryPoint
 class SavedMoviesFragment : BaseActivity<FragmentSavedMoviesBinding>() {
@@ -24,6 +25,8 @@ class SavedMoviesFragment : BaseActivity<FragmentSavedMoviesBinding>() {
 
     override fun setup(savedInstanceState: Bundle?) {
         ad = loadAd()
+
+        setPreferredColor(binding.root)
 
         init()
         binding.goBack.setOnClickListener {

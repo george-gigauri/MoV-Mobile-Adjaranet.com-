@@ -2,28 +2,28 @@ package ge.mov.mobile.ui.adapter
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ge.mov.mobile.R
 import ge.mov.mobile.data.model.movie.Genre
-import ge.mov.mobile.ui.activity.main.MainActivity
-import ge.mov.mobile.ui.activity.movie.MovieActivity
-import ge.mov.mobile.ui.fragment.main.MoviesFragment
 import ge.mov.mobile.util.Utils
 import kotlinx.android.synthetic.main.genre_model.view.*
-import java.io.Serializable
 
 class GenreAdapter(
     private val arr: List<Genre>,
     private val context: Context?,
     private val type: Int,
-    private val selectedItems: ArrayList<Int>? = null,
-    private val listener: OnGenreSelectListener? = null
+    private val listener: OnGenreClickListener? = null
 ) : RecyclerView.Adapter<GenreAdapter.ViewHolder>() {
     class ViewHolder(i: View) : RecyclerView.ViewHolder(i)
+
+    var selectedItems: ArrayList<Int> = ArrayList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -34,15 +34,13 @@ class GenreAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val i = arr[position]
 
-        if (selectedItems != null)
-            if (selectedItems.contains(i.id))
-                i.isSelected = true
+        i.isSelected = selectedItems.contains(i.id)
 
         if (type == 1 && context != null) {
-            holder.itemView.genre.setBackgroundResource(R.drawable.categories_light_background)
+            holder.itemView.genre.isSelected = false
             holder.itemView.genre.setTextColor(Color.BLACK)
         } else {
-            holder.itemView.genre.setBackgroundResource(R.drawable.blue_bg_rounded)
+            holder.itemView.genre.isSelected = false
             holder.itemView.genre.setTextColor(Color.WHITE)
         }
 
@@ -63,42 +61,20 @@ class GenreAdapter(
         else
             i.secondaryName
 
+        holder.itemView.setOnClickListener { listener?.onClicked(i, position) }
 
-        holder.itemView.setOnClickListener {
-            if (listener == null) {
-                val bundle = Bundle()
-                bundle.putInt("genre", i.id)
-                bundle.putString("genreName", holder.itemView.genre.text.toString())
-                val fragmentMovies = MoviesFragment()
-                fragmentMovies.arguments = bundle
-
-                if (context != null) {
-                    if (type == 1) {
-                        (context as MainActivity).supportFragmentManager.beginTransaction()
-                            .replace(R.id.root_main, fragmentMovies, "movies")
-                            .addToBackStack("movies")
-                            .commit()
-                    } else {
-                        (context as MovieActivity).supportFragmentManager.beginTransaction()
-                            .replace(R.id.rootMovie, fragmentMovies, "movies")
-                            .addToBackStack("movies")
-                            .commit()
-                    }
-                }
-            } else {
-                i.isSelected = !i.isSelected
-                changeBackground(i.isSelected, holder)
-                listener.onSelected(i, holder, position)
-            }
+        holder.itemView.genre.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus)
+                holder.itemView.genre.requestFocus()
+            else holder.itemView.genre.clearFocus()
         }
     }
 
-    private fun changeBackground(clicked: Boolean, holder: ViewHolder) {
-        if (clicked) {
-            holder.itemView.genre.setBackgroundResource(R.drawable.blue_bg_rounded)
+    private fun changeBackground(isSelected: Boolean, holder: ViewHolder) {
+        holder.itemView.genre.isSelected = isSelected
+        if (isSelected) {
             holder.itemView.genre.setTextColor(Color.WHITE)
         } else {
-            holder.itemView.genre.setBackgroundResource(R.drawable.categories_light_background)
             holder.itemView.genre.setTextColor(Color.BLACK)
         }
     }
@@ -125,11 +101,7 @@ class GenreAdapter(
         } else 0
     }
 
-    interface OnGenreSelectListener : Serializable {
-        fun onSelected(item: Genre, holder: ViewHolder, position: Int)
-    }
-
     interface OnGenreClickListener {
-        fun onClicked(item: Genre)
+        fun onClicked(item: Genre, position: Int)
     }
 }

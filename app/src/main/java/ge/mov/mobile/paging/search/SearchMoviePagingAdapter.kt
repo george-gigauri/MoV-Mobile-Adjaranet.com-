@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import ge.mov.mobile.R
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.MovieItemBinding
+import ge.mov.mobile.extension.loadWithProgressBar
 import ge.mov.mobile.util.LanguageUtil
 import ge.mov.mobile.util.Utils
-import ge.mov.mobile.util.loadWithProgressBar
 
 class SearchMoviePagingAdapter(
     private val listener: ItemClickListener
@@ -65,7 +65,6 @@ class SearchMoviePagingAdapter(
     companion object {
         private val COMPARATOR = object : DiffUtil.ItemCallback<Data>() {
             override fun areItemsTheSame(oldItem: Data, newItem: Data) = oldItem == newItem
-
             override fun areContentsTheSame(oldItem: Data, newItem: Data) = oldItem == newItem
         }
     }

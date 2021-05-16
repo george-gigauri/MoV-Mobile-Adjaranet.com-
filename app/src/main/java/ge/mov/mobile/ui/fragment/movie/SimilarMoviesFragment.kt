@@ -54,7 +54,6 @@ class SimilarMoviesFragment : Fragment(), MovieAdapter.OnClickListener {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_similar_movies, container, false)
         binding = FragmentSimilarMoviesBinding.bind(view)
-        binding.lifecycleOwner = this
 
         init()
         loadSimilarMovies()

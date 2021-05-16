@@ -4,17 +4,25 @@ import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import ge.mov.mobile.BuildConfig
 import ge.mov.mobile.MovApplication
 import ge.mov.mobile.R
+import ge.mov.mobile.analytics.FirebaseCustomAnalytics
+import ge.mov.mobile.analytics.FirebaseLogger
+import ge.mov.mobile.data.database.DBService
 import ge.mov.mobile.di.module.AppModule
 import ge.mov.mobile.ui.activity.other.NoConnectionActivity
 import ge.mov.mobile.ui.activity.setup.ApplicationSetupActivity
@@ -29,6 +37,12 @@ import java.util.*
 
 abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
+    lateinit var analytics: FirebaseCustomAnalytics
+
+    lateinit var logger: FirebaseLogger
+
+    open var isFullScreen: Boolean = false
+
     val binding: VB
         get() = _binding!!
 
@@ -38,21 +52,47 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     private var _binding: VB? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme)
+        loadLanguage()
+
+        if (isFullScreen) FullScreen()
+        else setTheme(R.style.AppTheme)
+
         super.onCreate(savedInstanceState)
+        analytics = FirebaseCustomAnalytics(this)
+        logger = FirebaseLogger(this)
         _binding = bindingFactory.invoke(layoutInflater)
         MovApplication.language = loadLanguage(this)
         setContentView(binding.root)
+
         setup(savedInstanceState)
 
         if (Utils.isBirthdayInfoProvided(this))
             if (Utils.isUserAdult(context = this))
                 Constants.showAdultContent = true
+
+        setAnalytics()
+        /*     val periodicWorkRequest = PeriodicWorkRequestBuilder<ReminderWork>(1, TimeUnit.MINUTES)
+                 .build()
+             val reminderWorkManager = WorkManager.getInstance(this)
+             reminderWorkManager.enqueue(periodicWorkRequest) */
     }
 
     abstract fun setup(savedInstanceState: Bundle?)
 
-    private fun forwardUser() {
+    private fun setAnalytics() {
+        lifecycleScope.launchWhenCreated {
+            val db = DBService.getInstance(this@BaseActivity)
+                .movieDao()
+            val count = db.getSavedMoviesCount()
+            analytics.setMoviesCountUserProperty(count)
+        }
+
+        val popupStyle =
+            getSharedPreferences("AppPreferences", MODE_PRIVATE).getInt("popup_style", 1)
+        analytics.setPopupStyle(if (popupStyle == 1) "bottom" else "window")
+    }
+
+    fun forwardUser() {
         if (!NetworkUtils.isNetworkConnected(this)) {
             val intent = Intent(applicationContext, NoConnectionActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -84,11 +124,18 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase)
-        val config = Configuration()
-        applyOverrideConfiguration(config)
+        applyOverrideConfiguration(Configuration())
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        applyOverrideConfiguration(newConfig)
     }
 
     override fun applyOverrideConfiguration(newConfig: Configuration) {
+        val uiMode = newConfig.uiMode
+        newConfig.setTo(baseContext.resources.configuration)
+        newConfig.uiMode = uiMode
         super.applyOverrideConfiguration(updateConfigurationIfSupported(newConfig))
     }
 
@@ -105,6 +152,7 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         val savedLanguage = loadLanguage(this)
         val locale = Locale(savedLanguage.id)
         config.setLocale(locale)
+
         MovApplication.language = savedLanguage
         saveLanguage(this, AVAILABLE_LANGUAGES.filter { it.id == savedLanguage.id }[0])
         return config
@@ -112,7 +160,9 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        checkUpdate()
+
+        if (checkConnection())
+            checkUpdate()
     }
 
     override fun onDestroy() {
@@ -150,6 +200,82 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
                         }
                     }
                 }.create().show()
+        }
+    }
+
+    private fun checkConnection(): Boolean {
+        var status = false
+
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (cm.activeNetwork != null && cm.getNetworkCapabilities(cm.activeNetwork) != null) {
+                // connected to the internet
+                status = true
+            }
+        } else {
+            if (cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnectedOrConnecting) {
+                // connected to the internet
+                status = true
+            }
+        }
+
+        return status
+    }
+
+    private fun loadLanguage() {
+        val code = loadLanguage(this).id
+        val locale = Locale(code)
+        Locale.setDefault(locale)
+        val config: Configuration = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+    }
+
+    private fun FullScreen() {
+        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+    }
+
+    fun askPermissions() {
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                ) || ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            ) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ),
+                    100019
+                )
+
+                // REQUEST_CODE is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
         }
     }
 }

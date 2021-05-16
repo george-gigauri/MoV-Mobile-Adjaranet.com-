@@ -1,39 +1,39 @@
 package ge.mov.mobile.ui.fragment.settings
 
+import android.content.Intent
+import android.content.Intent.ACTION_VIEW
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import coil.load
 import coil.request.CachePolicy
+import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.R
-import ge.mov.mobile.ui.adapter.user.DeveloperSocialAdapter
+import ge.mov.mobile.analytics.FirebaseLogger
+import ge.mov.mobile.data.model.Social
 import ge.mov.mobile.databinding.FragmentDeveloperBinding
+import ge.mov.mobile.ui.adapter.user.DeveloperSocialAdapter
 
-class FragmentDeveloper : Fragment() {
+@AndroidEntryPoint
+class FragmentDeveloper : Fragment(R.layout.fragment_developer),
+    DeveloperSocialAdapter.OnSocialItemClicked {
     private lateinit var binding: FragmentDeveloperBinding
-    private lateinit var vm: DeveloperViewModel
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_developer, container, false)
-        vm = ViewModelProviders.of(this)[DeveloperViewModel::class.java]
-        binding.lifecycleOwner = this
-        binding.developer = vm
-        val view = binding.root
+    private val vm: DeveloperViewModel by viewModels()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding = FragmentDeveloperBinding.bind(view)
 
         setDeveloperInfo()
 
         binding.goBack.setOnClickListener {
             activity?.supportFragmentManager?.popBackStack()
-            activity?.supportFragmentManager?.beginTransaction()?.remove(FragmentDeveloper())?.commitAllowingStateLoss()
+            activity?.supportFragmentManager?.beginTransaction()?.remove(FragmentDeveloper())
+                ?.commitAllowingStateLoss()
         }
-
-        return view
     }
 
     private fun setDeveloperInfo() {
@@ -47,12 +47,24 @@ class FragmentDeveloper : Fragment() {
 
         val social = vm.getSocial()
         if (!social.isNullOrEmpty())
-            binding.developerSocialList.adapter = DeveloperSocialAdapter(requireContext(), social)
+            binding.developerSocialList.adapter = DeveloperSocialAdapter(this, social)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        activity?.supportFragmentManager?.beginTransaction()?.remove(FragmentDeveloper())?.commitAllowingStateLoss()
+        activity?.supportFragmentManager?.beginTransaction()?.remove(FragmentDeveloper())
+            ?.commitAllowingStateLoss()
+    }
+
+    override fun onSocialItemClick(i: Social) {
+        try {
+            FirebaseLogger(requireActivity()).logDeveloperSocialInfoClicked(i.type)
+
+            val intent = Intent(ACTION_VIEW)
+            intent.data = Uri.parse(i.url)
+            startActivity(intent)
+        } catch (e: Exception) {
+        }
     }
 }

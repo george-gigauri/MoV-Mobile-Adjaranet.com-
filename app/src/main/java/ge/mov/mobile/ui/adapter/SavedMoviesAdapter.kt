@@ -8,37 +8,49 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.ads.InterstitialAd
 import ge.mov.mobile.R
-import ge.mov.mobile.data.database.MovieEntity
-import ge.mov.mobile.data.model.basic.BasicMovie
+import ge.mov.mobile.data.database.entity.MovieEntity
 import ge.mov.mobile.data.model.movie.MovieItemModel
 import ge.mov.mobile.data.model.movie.MovieModel
 import ge.mov.mobile.di.module.AppModule
+import ge.mov.mobile.extension.loadWithProgressBar
+import ge.mov.mobile.extension.showAd
 import ge.mov.mobile.ui.activity.movie.MovieActivity
 import ge.mov.mobile.util.Utils
-import ge.mov.mobile.util.loadWithProgressBar
-import ge.mov.mobile.util.showAd
 import kotlinx.android.synthetic.main.movie_item.view.*
 import kotlinx.coroutines.*
 import kotlin.random.Random
 
-class SavedMoviesAdapter (
+class SavedMoviesAdapter(
     private val context: Context,
     private val arr: ArrayList<MovieEntity>,
     private val ad: InterstitialAd? = null
 ) : RecyclerView.Adapter<SavedMoviesAdapter.ViewHolder>() {
-    class ViewHolder (i: View) : RecyclerView.ViewHolder(i)
+    class ViewHolder(private val i: View) : RecyclerView.ViewHolder(i) {
+        fun bind() {
+            i.apply {
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    if (movie_hover.hasFocus())
+                        movie_hover.setBackgroundResource(R.drawable.selected_stroke)
+                    else movie_hover.background = null
+                }
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(
-            R.layout.movie_item,
-            parent,
-            false
-        ))
+        return ViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.movie_item,
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val i = arr[position]
         loadMovie(holder, i.id)
+        holder.bind()
     }
 
     override fun getItemCount(): Int {

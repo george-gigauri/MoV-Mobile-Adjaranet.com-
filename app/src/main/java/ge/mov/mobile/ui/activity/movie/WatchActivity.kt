@@ -4,20 +4,18 @@ import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.view.GestureDetector
-import android.view.KeyEvent
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.*
@@ -28,31 +26,48 @@ import com.google.android.exoplayer2.util.Log
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.util.Util
 import com.google.android.gms.ads.InterstitialAd
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.R
-import ge.mov.mobile.data.database.MovieSubscriptionEntity
+import ge.mov.mobile.analytics.FirebaseLogger
+import ge.mov.mobile.data.database.entity.MovieSubscriptionEntity
 import ge.mov.mobile.data.model.Series.EpisodeFiles
 import ge.mov.mobile.databinding.ActivityWatchBinding
+import ge.mov.mobile.extension.drawable
+import ge.mov.mobile.extension.loadAd
+import ge.mov.mobile.extension.toast
+import ge.mov.mobile.extension.visible
 import ge.mov.mobile.util.*
+import ge.mov.mobile.util.Constants.playInstead
 import kotlinx.android.synthetic.main.fragment_saved_movies.*
 import kotlinx.coroutines.*
+import java.util.*
 
 
+@AndroidEntryPoint
 class WatchActivity : AppCompatActivity(), Player.EventListener {
     private var isScreenLocked = false
     private val TIME_INTERVAL = 2000
     private var mBackPressed: Long = 0
 
+    private var _binding: ActivityWatchBinding? = null
+    private val binding: ActivityWatchBinding
+        get() = _binding!!
+
+    private lateinit var logger: FirebaseLogger
+
     companion object {
         private var movie: MovieSubscriptionEntity = MovieSubscriptionEntity()
-        private lateinit var movieSrc: String
-        private lateinit var subtitlesSrc: String
+        private var movieSrc: String = ""
+        private var subtitlesSrc: String = ""
+        private var fileId: Long = 0L
         private var series: EpisodeFiles? = null
-        private lateinit var defaultLanguage: String
-        private lateinit var defaultQuality: String
+        private var defaultLanguage: String = "GEO"
+        private var defaultQuality: String = "HIGH"
+        private var type: Int = 1
     }
 
-    private lateinit var vm: WatchViewModel
-    private lateinit var binding: ActivityWatchBinding
+    private val vm: WatchViewModel by viewModels()
 
     private lateinit var exoPlayer: SimpleExoPlayer
     private lateinit var lockButton: ImageView
@@ -60,27 +75,57 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
 
     private var subscribeOnPause = true
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
-        FullScreencall()
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_watch)
-        vm = ViewModelProvider(this)[WatchViewModel::class.java]
+
+        val decorView = window.decorView
+        val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        decorView.systemUiVisibility = uiOptions
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            )
+            window.attributes.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
+
+        _binding = ActivityWatchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        logger = FirebaseLogger(this)
 
         ad = loadAd()
-
-        val myLang = Utils.loadLanguage(this)
-        Utils.saveLanguage(this, myLang)
-
         showSeekBackward(false)
         showSeekForward(false)
 
         init()
 
-        if (movieSrc != "") {
-            initPlayer()
-        } else {
-            toast("Error parsing an URL !")
+        vm.isRegionAllowed.observe(this) {
+            //toast("${it.country}, ${it.countryCode}")
+            Log.i("WatchActivity", "${it.country}, ${it.countryCode}")
+            if (it.countryCode != "GE") {
+                movieSrc = playInstead
+                binding.vnaiyc.isVisible = true
+                initPlayer()
+            } else {
+                vm.fileUrl.observe(this) { url ->
+                    movieSrc = url ?: ""
+
+                    Log.i("WatchActivity", url.toString())
+
+                    if (movieSrc != "") {
+                        initPlayer()
+                    } else {
+                        Snackbar.make(
+                            binding.root,
+                            "ფილმი არ არის გახმოვანებული.",
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setAction("გასვლა") { finish() }.setTextColor(Color.WHITE).show()
+                    }
+                }
+            }
         }
 
         binding.movieView.findViewById<ImageView>(R.id.next_episode).setOnClickListener {
@@ -93,7 +138,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
     }
 
     private fun init() {
-        movieSrc = intent.getStringExtra("src") ?: ""
+        // movieSrc = intent.getStringExtra("src") ?: ""
         subtitlesSrc = intent.getStringExtra("subtitle") ?: ""
         defaultLanguage = intent.getStringExtra("def_lang") ?: "ENG"
         defaultQuality = intent.getStringExtra("def_quality") ?: "HIGH"
@@ -101,13 +146,15 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
         movie.season = intent.getIntExtra("s", 0)
         movie.episode = intent.getIntExtra("e", 0)
         series = intent.extras?.getSerializable("files") as EpisodeFiles?
+        type = intent.getIntExtra("type", 1)
+        fileId = intent.getLongExtra("file_id", 0L)
 
-        Log.i(
-            "SE State",
-            "Current Season: ${movie.season},   Saved Episode:  ${movie.episode}"
-        )
+        vm.getFileUrl(movie.id, 0, fileId)
 
-        lifecycleScope.launch(Dispatchers.Main) {
+        binding.movieView.findViewById<ImageView>(R.id.player_exit)
+            .setOnClickListener { finish() }
+
+        lifecycleScope.launch {
             if (series != null && series!!.data.size > 1) {
                 binding.movieView.findViewById<ImageView>(R.id.next_episode).apply {
                     setImageDrawable(drawable(R.drawable.exo_ic_skip_next))
@@ -158,7 +205,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
             }
         }
 
-        findViewById<TextView>(R.id.movie_title).text = intent.extras?.getString(
+        binding.movieView.findViewById<TextView>(R.id.movie_title).text = intent.extras?.getString(
             "movie_title",
             "Loading..."
         )
@@ -179,18 +226,21 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
     @SuppressLint("ClickableViewAccessibility")
     private fun initPlayer() {
         exoPlayer = SimpleExoPlayer.Builder(this).build()
+
         if (subtitlesSrc != "")
             loadSubtitles()
         else
             loadNormalMovie()
+
         subtitlesListener()
         binding.movieView.subtitleView?.visible(false)
 
         if (movie.time != null) {
             val savedState = runBlocking { vm.loadState(this@WatchActivity, movie.id) }
-            if (savedState?.time != null)
-                if (savedState.season == movie.season && savedState.episode == movie.episode)
+            if (savedState?.time != null) {
+                if (savedState.season == movie.season && savedState.episode == movie.episode + 1)
                     exoPlayer.seekTo(savedState.time!!)
+            }
         }
 
         exoPlayer.addListener(this)
@@ -243,6 +293,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
     private fun positionControls() {
         val speed = binding.movieView.findViewById<TextView>(R.id.playback_speed)
         speed.setOnClickListener {
+            logger.logSpeedClicked()
             when (speed.text) {
                 "1X" -> {
                     speed.text = "1.15X"
@@ -284,22 +335,24 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
     }
 
     override fun onPause() {
-        movie.time = exoPlayer.currentPosition
-        vm.saveVideoState(this, movie)
+        if (this::exoPlayer.isInitialized) {
+            movie.time = exoPlayer.currentPosition
+            vm.saveVideoState(this, movie)
 
-        exoPlayer.pause()
+            exoPlayer.pause()
 
-        if (isScreenLocked) {
-            val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            activityManager.moveTaskToFront(taskId, 0)
+            if (isScreenLocked) {
+                val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                activityManager.moveTaskToFront(taskId, 0)
+            }
         }
         super.onPause()
     }
 
     override fun onDestroy() {
-        exoPlayer.stop()
-        exoPlayer.release()
         super.onDestroy()
+        if (this::exoPlayer.isInitialized)
+            exoPlayer.stop()
     }
 
     override fun onResume() {
@@ -310,13 +363,11 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
             if (movie.season == restored?.season && movie.episode == restored.episode && restored.time != null)
                 exoPlayer.seekTo(restored.time!!)
             exoPlayer.play()
-        } else {
-            initPlayer()
         }
     }
 
     override fun onBackPressed() {
-        if (!isScreenLocked) {
+        if (!isScreenLocked && !Const.isTV) {
             if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
                 super.onBackPressed()
                 finish()
@@ -326,16 +377,10 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
             }
             mBackPressed = System.currentTimeMillis()
         } else {
-            toast("ეკრანი დაბლოკილია.")
+            if (binding.movieView.isControllerVisible) {
+                binding.movieView.hideController()
+            } else binding.movieView.showController()
         }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-
-        val myLang = Utils.loadLanguage(this)
-        Utils.saveLanguage(this, myLang)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_watch)
     }
 
     override fun onPlaybackStateChanged(state: Int) {
@@ -443,6 +488,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
             val isSubtitlesOn = btnSubtitles.drawable == subtitlesOnSrc
 
             if (subtitlesAvailable) {
+                logger.logSubtitlesClicked()
                 if (isSubtitlesOn) {
                     btnSubtitles.setImageDrawable(subtitlesOffSrc)
                     binding.movieView.subtitleView?.visible(false)
@@ -468,11 +514,14 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
 
             withContext(Dispatchers.IO) {
                 if (series != null) {
+                    logger.logNextEpisodeClicked()
                     if (series!!.data.size > 1 && episode < series!!.data.size) {
                         var l1 = true
                         var l2 = true
                         var url = ""
                         var captions: String? = null
+                        var fId: Long = 0L
+                        //    runOnUiThread { toast("${episode - 2} Ep") }
                         for (i in series!!.data[episode].files) {
                             if (i.lang == language) {
                                 l1 = false
@@ -483,6 +532,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
                                     if (quality == j.quality) {
                                         l2 = false
                                         url = j.src
+                                        fId = j.id
                                     } else url = j.src
                                 }
                             } else url = i.files[0].src
@@ -498,12 +548,12 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
                             intent.putExtra("src", url)
                             intent.putExtra("subtitle", captions ?: "")
                             intent.putExtra("files", series)
+                            intent.putExtra("file_id", fId)
                             intent.putExtra(
                                 "movie_title",
-                                "S${season}, E${episode} - ${series!!.data[episode - 1].title}"
+                                "S${season}, E${episode + 1} - ${series!!.data[episode].title}"
                             )
                             startActivity(intent)
-
                             finish()
                         }
                     }
@@ -515,8 +565,6 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
     private fun getPreviousEpisodeIfExists() {
         subscribeOnPause = false
         lifecycleScope.launch {
-            //  withContext(Dispatchers.IO) { DialogHelper.subscribe(this@WatchActivity, movie) }
-            //  movie.episode--
             movie.time = 0
             val season = movie.season
             val episode = movie.episode - 1
@@ -525,10 +573,12 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
 
             withContext(Dispatchers.IO) {
                 if (series != null) {
+                    logger.logPreviousEpisodeClicked()
                     if (series!!.data.isNotEmpty() && episode < series!!.data.size && episode >= 0) {
                         var l1 = true
                         var l2 = true
                         var url = ""
+                        var fId: Long = 0L
                         var captions: String? = null
                         for (i in series!!.data[episode - 1].files) {
                             if (i.lang == language) {
@@ -540,6 +590,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
                                     if (quality == j.quality) {
                                         l2 = false
                                         url = j.src
+                                        fId = j.id
                                     } else url = j.src
                                 }
                             } else url = i.files[0].src
@@ -555,6 +606,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
                             intent.putExtra("src", url)
                             intent.putExtra("subtitle", captions ?: "")
                             intent.putExtra("files", series)
+                            intent.putExtra("file_id", fId)
                             intent.putExtra(
                                 "movie_title",
                                 "S${season}, E${episode} - ${series!!.data[episode - 1].title}"
@@ -576,16 +628,5 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
                 if (Const.isTV) binding.movieView.showController()
         }
         return super.onKeyDown(keyCode, event)
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        FullScreencall()
-    }
-
-    private fun FullScreencall() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     }
 }

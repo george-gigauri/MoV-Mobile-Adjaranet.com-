@@ -28,7 +28,8 @@ data class MovieModel(
     val seasons: Seasons,
     val genres: Genres,
     val regionAllowed: Boolean,
-    // val trailers: Trailers,
+    val trailers: Trailers,
+    val lastUpdatedSeries: LastUpdatedSeriesData?,
     val countries: Countries,
     val primaryDescription: String,
     val secondaryDescription: String,
@@ -43,22 +44,36 @@ data class MovieModel(
         }
     } else originalName
 
-    fun getDescriptionByLanguage(code: String?) = if (code != null) {
-        if (code == "GEO") {
-            if (primaryDescription != "") primaryDescription else secondaryDescription
-        } else {
-            if (secondaryName != "") secondaryDescription else primaryDescription
+    fun getDescriptionByLanguage(code: String?): String {
+        if (code != null) {
+            plots.data.forEach {
+                if (it.language == code)
+                    return it.description
+            }
         }
-    } else "@{ vm.movieDescription }"
+
+        return "@{ vm.description }"
+    }
 }
 
-data class Seasons (
+data class Seasons(
     val data: List<Season>
 )
 
-data class Season (
+data class Season(
     val episodesCount: Int,
     val movieId: Long,
     val name: String,
     val number: Int
+) {
+    override fun toString() = number.toString()
+}
+
+data class LastUpdatedSeriesData(
+    val data: LastUpdatedSeries?
+)
+
+data class LastUpdatedSeries(
+    val season: Int?,
+    val episode: Int?
 )

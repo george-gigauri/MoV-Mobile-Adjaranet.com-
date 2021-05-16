@@ -1,85 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7A000000">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!--   <ImageView
+           android:layout_width="@dimen/_28sdp"
+           android:layout_height="@dimen/_28sdp"
+           android:id="@+id/exo_subtitle"
+           android:src="@drawable/ic_subtitles_off"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintTop_toTopOf="parent"
+           android:layout_margin="@dimen/_8sdp"/> -->
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#7A000000">
+        android:layout_height="@dimen/_48sdp"
+        android:background="@drawable/gradient"
+        android:rotationX="180"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <!--   <ImageView
-               android:layout_width="@dimen/_28sdp"
-               android:layout_height="@dimen/_28sdp"
-               android:id="@+id/exo_subtitle"
-               android:src="@drawable/ic_subtitles_off"
-               app:layout_constraintEnd_toEndOf="parent"
-               app:layout_constraintTop_toTopOf="parent"
-               android:layout_margin="@dimen/_8sdp"/> -->
+    <ImageView
+        android:id="@+id/player_exit"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:background="@drawable/movie_hover"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:padding="@dimen/_4sdp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/exo_white" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_48sdp"
-            android:background="@drawable/gradient"
-            android:rotationX="180"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/movie_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:singleLine="true"
+        android:text="Loading name..."
+        android:textColor="#fff"
+        android:textSize="@dimen/_16sdp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/player_exit"
+        app:layout_constraintEnd_toStartOf="@id/extensions_c"
+        app:layout_constraintStart_toEndOf="@id/player_exit"
+        app:layout_constraintTop_toTopOf="@id/player_exit" />
+
+
+    <LinearLayout
+        android:id="@+id/extensions_c"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5sdp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.mediarouter.app.MediaRouteButton
+            android:id="@+id/btn_cast_id"
+            android:layout_width="@dimen/_32sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:background="@drawable/movie_hover"
+            android:focusable="true"
+            android:visibility="gone"
+            app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
+            app:externalRouteEnabledDrawable="@drawable/cast_ic_notification_1"
+            app:externalRouteEnabledDrawableStatic="@drawable/cast_ic_notification_on"
+            app:mediaRouteButtonTint="@color/exo_white" />
+
+        <ImageView
+            android:id="@+id/exo_subtitle"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:background="@drawable/movie_hover"
+            android:focusable="true"
+            android:src="@drawable/ic_subtitles_off" />
 
         <TextView
-            android:id="@+id/movie_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:layout_marginEnd="@dimen/_20sdp"
-            android:singleLine="true"
-            android:text="Loading name..."
-            android:textColor="#fff"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/extensions_c"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <LinearLayout
-            android:id="@+id/extensions_c"
+            android:id="@+id/playback_speed"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_23sdp"
             android:layout_margin="@dimen/_5sdp"
+            android:background="@drawable/white_border_corner"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:orientation="horizontal"
+            android:paddingStart="@dimen/_6sdp"
+            android:paddingTop="@dimen/_2sdp"
+            android:paddingEnd="@dimen/_6sdp"
+            android:paddingBottom="@dimen/_2sdp"
+            android:text="1X"
+            android:textAlignment="center"
+            android:textColor="@color/exo_white"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/exo_subtitle"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_margin="@dimen/_5sdp"
-                android:focusable="true"
-                android:background="@drawable/movie_hover"
-                android:src="@drawable/ic_subtitles_off" />
-
-            <TextView
-                android:id="@+id/playback_speed"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_23sdp"
-                android:layout_margin="@dimen/_5sdp"
-                android:background="@drawable/white_border_corner"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:paddingStart="@dimen/_6sdp"
-                android:paddingTop="@dimen/_2sdp"
-                android:paddingEnd="@dimen/_6sdp"
-                android:paddingBottom="@dimen/_2sdp"
-                android:text="1X"
-                android:textAlignment="center"
-                android:textColor="@color/exo_white"
-                android:textSize="@dimen/_12sdp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/exo_subtitle" />
-        </LinearLayout>
+            app:layout_constraintTop_toTopOf="@id/exo_subtitle" />
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -198,5 +225,4 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

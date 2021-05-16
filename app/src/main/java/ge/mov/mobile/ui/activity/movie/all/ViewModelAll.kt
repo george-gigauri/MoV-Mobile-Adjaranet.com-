@@ -1,15 +1,11 @@
 package ge.mov.mobile.ui.activity.movie.all
 
-import android.util.Log
-import androidx.databinding.Bindable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import ge.mov.mobile.data.model.movie.Genre
-import ge.mov.mobile.data.model.movie.Language
 import ge.mov.mobile.data.repository.AllMovieRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -50,6 +46,10 @@ class ViewModelAll @ViewModelInject constructor(
 
         if (yearTo != null)
             filterYearTo.value = yearTo.toString()
+    }
+
+    fun setGenre(id: Int) {
+        filteredGenres.value = listOf(id)
     }
 
     suspend fun loadGenres() = withContext(Dispatchers.IO) { repository.getGenres() }

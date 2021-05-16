@@ -1,10 +1,14 @@
 package ge.mov.mobile.ui.activity.movie
 
 import android.content.Intent
+import android.content.Intent.ACTION_VIEW
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
+import androidx.core.net.toUri
+import androidx.core.view.isVisible
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import coil.load
@@ -15,15 +19,17 @@ import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.MovApplication.Companion.language
 import ge.mov.mobile.R
 import ge.mov.mobile.data.database.AppDatabase
-import ge.mov.mobile.data.database.MovieDao
-import ge.mov.mobile.data.database.MovieEntity
+import ge.mov.mobile.data.database.dao.MovieDao
+import ge.mov.mobile.data.database.entity.MovieEntity
 import ge.mov.mobile.databinding.ActivityMovieBinding
+import ge.mov.mobile.extension.*
 import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.activity.dialog.showMovieDialog
 import ge.mov.mobile.ui.adapter.GenreAdapter
 import ge.mov.mobile.ui.adapter.MoviePagerAdapter
 import ge.mov.mobile.ui.fragment.movie.bottom.BottomFragment
 import ge.mov.mobile.util.*
+import ge.mov.mobile.util.Const.Companion.isTV
 import kotlinx.android.synthetic.main.activity_movie.*
 import kotlinx.coroutines.*
 import java.util.*
@@ -47,15 +53,36 @@ class MovieActivity : BaseActivity<ActivityMovieBinding>() {
 
         ad = loadAd()
 
+        setPreferredColor(binding.relativeLayout)
+
         init()
         loadInfo()
 
+        askPermissions()
+
         binding.goBack.setOnClickListener { finish() }
+
+        binding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (scrollY > oldScrollY) {
+                binding.btnTrailer
+                    .animate()
+                    .translationY(230f)
+                    .start()
+            } else {
+                binding.btnTrailer
+                    .animate()
+                    .translationY(0f)
+                    .start()
+            }
+        })
     }
 
     private fun init() {
         id = intent?.extras?.getInt("id", 0)
         adjaraId = intent?.extras?.getInt("adjaraId", 0)
+
+        binding.btnTrailer.isVisible = !isTV
+
 
         GlobalScope.launch(Dispatchers.IO) {
             db = Room.databaseBuilder(
@@ -102,6 +129,10 @@ class MovieActivity : BaseActivity<ActivityMovieBinding>() {
 
                     binding.movieName.text = it.getNameByLanguage(language?.code)
                     binding.description.text = it.getDescriptionByLanguage(language?.code)
+                    binding.year.text = it.year.toString()
+                    binding.imdb.text = it.rating.imdb.score.toString()
+                    binding.country.text = it.countries.data.firstOrNull()?.secondaryName
+                    binding.watchCount.text = it.watchCount.toString()
 
                     binding.poster.load(cover) {
                         placeholder(R.color.colorAccent)
@@ -111,7 +142,7 @@ class MovieActivity : BaseActivity<ActivityMovieBinding>() {
                     }
 
                     binding.genresRv.adapter =
-                        GenreAdapter(it.genres.data, this@MovieActivity, 2)
+                        GenreAdapter(it.genres.data, this@MovieActivity, 1)
 
                     if (saved) {
                         binding.saveButton.setMinAndMaxProgress(0.0f, 1.0f)
@@ -144,9 +175,17 @@ class MovieActivity : BaseActivity<ActivityMovieBinding>() {
                             val bottomFragment = BottomFragment()
                             val bundle = Bundle()
                             bundle.putInt("id", it.id)
+                            bundle.putString("poster", it.posters.data?._240)
+                            bundle.putString("title", binding.movieName.text.toString())
                             bottomFragment.arguments = bundle
                             bottomFragment.show(supportFragmentManager, null)
                         }
+                    }
+
+                    binding.btnTrailer.setOnClickListener { v ->
+                        val trailerIntent = Intent(ACTION_VIEW)
+                        trailerIntent.setDataAndType(it.trailers.data[0].fileUrl.toUri(), "video/*")
+                        startActivity(trailerIntent)
                     }
 
                     binding.share.setOnClickListener { _ ->
@@ -225,4 +264,5 @@ class MovieActivity : BaseActivity<ActivityMovieBinding>() {
         super.onBackPressed()
         finish()
     }
+
 }

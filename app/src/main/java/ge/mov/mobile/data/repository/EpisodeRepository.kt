@@ -1,5 +1,7 @@
 package ge.mov.mobile.data.repository
 
+import ge.mov.mobile.data.database.dao.OfflineMovieDao
+import ge.mov.mobile.data.database.entity.OfflineMovieEntity
 import ge.mov.mobile.data.model.Series.EpisodeFiles
 import ge.mov.mobile.data.network.APIService
 import kotlinx.coroutines.Dispatchers
@@ -8,14 +10,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class EpisodeRepository @Inject constructor(private val api: APIService) {
+class EpisodeRepository @Inject constructor(
+    private val api: APIService,
+    private val offlineDao: OfflineMovieDao
+) {
+
     suspend fun getEpisodes(id: Int, season: Int): EpisodeFiles? = withContext(Dispatchers.IO) {
         val response = api.getMovieFile(id, season)
         val body = response.body() ?: return@withContext null
-        val arr = ArrayList<String>()
-
-        for (i in body.data)
-            arr.add("${i.episode} - ${i.title}")
+        val arr = body.data.map { "${it.episode} - ${it.title}" }
 
         return@withContext body
     }
@@ -24,11 +27,12 @@ class EpisodeRepository @Inject constructor(private val api: APIService) {
         val response = api.getMovie(id)
         val body = response.body() ?: return@withContext emptyList()
         val seasons = body.data.seasons.data
-        val temp = ArrayList<String>()
-
-        for (i in seasons)
-            temp.add(i.number.toString())
+        val temp = seasons.map { it.number.toString() }
 
         return@withContext if (body.data.seasons.data.isNullOrEmpty()) emptyList() else temp
+    }
+
+    suspend fun save(model: OfflineMovieEntity) {
+        offlineDao.save(model)
     }
 }

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".ui.tv.MainTvActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/lltop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/btn_search_movie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@drawable/button_bg_transparent"
+                android:focusable="true"
+                android:fontFamily="@font/ptsansnarrow_regular"
+                android:paddingStart="@dimen/_10sdp"
+                android:paddingTop="@dimen/_5sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:paddingBottom="@dimen/_5sdp"
+                android:text="@string/search"
+                android:textColor="@color/textMain"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btn_profile_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@drawable/accent_bg_transparent"
+                android:focusable="true"
+                android:fontFamily="@font/ptsansnarrow_regular"
+                android:paddingStart="@dimen/_10sdp"
+                android:paddingTop="@dimen/_5sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:paddingBottom="@dimen/_5sdp"
+                android:text="@string/settings"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvTopMovies"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:focusable="false"
+            android:text="@string/day_top_movies"
+            android:textColor="@color/colorAccent"
+            android:textIsSelectable="false"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toStartOf="@id/tvAllTopMovies"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lltop" />
+
+        <TextView
+            android:id="@+id/tvAllTopMovies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@drawable/movie_hover"
+            android:focusable="true"
+            android:text="@string/all"
+            android:textColor="@color/colorAccent"
+            android:textIsSelectable="false"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lltop" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_top_movies_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:isAutoProcessFocus="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/tvTopMovies"
+            tools:itemCount="5"
+            tools:listitem="@layout/movie_item" />
+
+        <TextView
+            android:id="@+id/tvMovies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:focusable="false"
+            android:text="@string/movies"
+            android:textColor="@color/colorAccent"
+            android:textIsSelectable="false"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_top_movies_tv" />
+
+        <TextView
+            android:id="@+id/tvAllMovies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:background="@drawable/movie_hover"
+            android:focusable="true"
+            android:text="@string/all"
+            android:textColor="@color/colorAccent"
+            android:textIsSelectable="false"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvMovies"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvMovies" />
+
+        <app.com.tvrecyclerview.TvRecyclerView
+            android:id="@+id/rv_movies_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/tvMovies"
+            tools:itemCount="5"
+            tools:listitem="@layout/movie_item" />
+
+        <TextView
+            android:id="@+id/tvSeries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:focusable="false"
+            android:text="@string/series"
+            android:textColor="@color/colorAccent"
+            android:textIsSelectable="false"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_movies_tv" />
+
+        <TextView
+            android:id="@+id/tvAllSeries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:background="@drawable/movie_hover"
+            android:focusable="true"
+            android:text="@string/all"
+            android:textColor="@color/colorAccent"
+            android:textIsSelectable="false"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvSeries"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvSeries" />
+
+        <app.com.tvrecyclerview.TvRecyclerView
+            android:id="@+id/rv_series_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/tvSeries"
+            tools:itemCount="5"
+            tools:listitem="@layout/movie_item" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

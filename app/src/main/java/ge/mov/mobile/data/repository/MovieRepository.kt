@@ -3,15 +3,16 @@ package ge.mov.mobile.data.repository
 import ge.mov.mobile.data.model.movie.MovieModel
 import ge.mov.mobile.data.network.APIService
 import ge.mov.mobile.util.LanguageUtil
-import ge.mov.mobile.util.d
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MovieRepository @Inject constructor(private val api: APIService) {
-    suspend fun getDetails(id: Int) : MovieModel? = withContext(Dispatchers.IO) {
+class MovieRepository @Inject constructor(
+    private val api: APIService
+) {
+    suspend fun getDetails(id: Int): MovieModel? = withContext(Dispatchers.IO) {
         val response = api.getMovie(id)
         val body = response.body() ?: return@withContext null
         return@withContext body.data

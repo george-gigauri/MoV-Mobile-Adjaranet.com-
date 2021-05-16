@@ -3,10 +3,11 @@ package ge.mov.mobile.ui.activity.setup
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import ge.mov.mobile.R
 import ge.mov.mobile.data.model.LocaleModel
+import ge.mov.mobile.ui.activity.main.MainActivity
 import ge.mov.mobile.util.Constants
 import ge.mov.mobile.util.Utils
 import kotlinx.android.synthetic.main.activity_application_setup.*
@@ -33,7 +34,7 @@ class ApplicationSetupActivity : AppCompatActivity() {
         val intent: Intent = if (!Utils.isBirthdayInfoProvided(this)) { // Check if user has provided an age
             Intent(applicationContext, SetupBirthdayActivity::class.java)
         } else {
-            Intent(applicationContext, IntroActivity::class.java)
+            Intent(applicationContext, MainActivity::class.java)
         }
 
         intent.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK

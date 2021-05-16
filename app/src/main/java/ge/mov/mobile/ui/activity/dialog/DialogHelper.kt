@@ -2,7 +2,7 @@ package ge.mov.mobile.ui.activity.dialog
 
 import android.content.Context
 import ge.mov.mobile.data.database.DBService
-import ge.mov.mobile.data.database.MovieSubscriptionEntity
+import ge.mov.mobile.data.database.entity.MovieSubscriptionEntity
 import kotlinx.coroutines.*
 
 object DialogHelper {

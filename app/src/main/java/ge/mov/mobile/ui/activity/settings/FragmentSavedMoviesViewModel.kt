@@ -2,9 +2,12 @@ package ge.mov.mobile.ui.activity.settings
 
 import android.content.Context
 import android.view.View
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import ge.mov.mobile.data.database.DBService
-import ge.mov.mobile.data.database.MovieEntity
+import ge.mov.mobile.data.database.entity.MovieEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

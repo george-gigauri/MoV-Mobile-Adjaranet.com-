@@ -9,12 +9,12 @@ import ge.mov.mobile.MovApplication
 import ge.mov.mobile.R
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.MovieItemBinding
-import ge.mov.mobile.util.LanguageUtil
-import ge.mov.mobile.util.loadWithProgressBar
+import ge.mov.mobile.extension.loadWithProgressBar
 
 class MoviePagingAdapter(
     private val listener: MovieClickListener
 ) : PagingDataAdapter<Data, MoviePagingAdapter.VH>(COMPARATOR) {
+
     inner class VH(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.movieHover.setOnClickListener {

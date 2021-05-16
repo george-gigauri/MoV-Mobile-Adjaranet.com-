@@ -1,7 +1,6 @@
 package ge.mov.mobile.ui.activity.movie.all.filter
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,12 +25,13 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
-class FilterBottomFragment : BottomSheetDialogFragment(), GenreAdapter.OnGenreSelectListener, LanguageAdapter.OnLanguageSelectedListener {
+class FilterBottomFragment : BottomSheetDialogFragment(), GenreAdapter.OnGenreClickListener,
+    LanguageAdapter.OnLanguageSelectedListener {
     private var _binding: FiltersSheetBinding? = null
     private val binding: FiltersSheetBinding get() = _binding!!
     private val vm: ViewModelAll by viewModels()
     private var arrGenres: ArrayList<Int> = ArrayList()
-    private var selectedLanguage: String =  "GEO"
+    private var selectedLanguage: String = "GEO"
     private lateinit var languageAdapter: LanguageAdapter
 
     private lateinit var adapter: GenreAdapter
@@ -45,8 +45,6 @@ class FilterBottomFragment : BottomSheetDialogFragment(), GenreAdapter.OnGenreSe
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FiltersSheetBinding.inflate(inflater, container, false)
-
         dialog?.setOnShowListener {
             val ds = (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             val behavior = BottomSheetBehavior.from(ds!!)
@@ -60,7 +58,6 @@ class FilterBottomFragment : BottomSheetDialogFragment(), GenreAdapter.OnGenreSe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FiltersSheetBinding.bind(view)
-        binding.filters = vm
 
         languageAdapter = LanguageAdapter(this)
         binding.filterLanguagesRv.adapter = languageAdapter
@@ -71,18 +68,17 @@ class FilterBottomFragment : BottomSheetDialogFragment(), GenreAdapter.OnGenreSe
         binding.etYearFrom.setText(arguments?.getString("yearFrom", "0") ?: "0")
         binding.etYearTo.setText(arguments?.getString("yearTo", "0") ?: Calendar.getInstance()[Calendar.YEAR].toString())
 
-        val listener = this
         lifecycleScope.launch {
-            val genres = withContext(Dispatchers.IO) { vm.loadGenres() }
+            val genres = withContext(Dispatchers.Main) { vm.loadGenres() }
 
             withContext(Dispatchers.Main) {
                 adapter = GenreAdapter(
                     genres.body()!!.data,
                     requireActivity(),
                     1,
-                    selectedItems = arrGenres,
-                    listener = listener
+                    listener = this@FilterBottomFragment
                 )
+                adapter.selectedItems = arrGenres
                 binding.filterGenresRv.adapter = adapter
                 binding.filterGenresRv.scrollToPosition(adapter.firstSelectedPosition())
             }
@@ -112,8 +108,8 @@ class FilterBottomFragment : BottomSheetDialogFragment(), GenreAdapter.OnGenreSe
                 filterListener?.onFilterRequested(
                     arrGenres.toList(),
                     selectedLanguage,
-                    yearFrom.toInt(),
-                    yearTo.toInt()
+                    yearFrom.replace("null", "0").toInt(),
+                    yearTo.replace("null", Calendar.getInstance()[Calendar.YEAR].toString()).toInt()
                 )
             }
 
@@ -134,13 +130,15 @@ class FilterBottomFragment : BottomSheetDialogFragment(), GenreAdapter.OnGenreSe
 
     override fun getTheme() = R.style.BottomSheetDialogTheme
 
-    override fun onSelected(item: Genre, holder: GenreAdapter.ViewHolder, position: Int) {
+    override fun onClicked(item: Genre, position: Int) {
         val id = item.id
 
-        if (arrGenres.contains(id))
-            arrGenres.remove(id)
+        if (adapter.selectedItems.contains(id))
+            adapter.selectedItems.remove(id)
         else
-            arrGenres.add(id)
+            adapter.selectedItems.add(id)
+
+        adapter.notifyItemChanged(position)
     }
 
     interface OnFilterListener : Serializable {

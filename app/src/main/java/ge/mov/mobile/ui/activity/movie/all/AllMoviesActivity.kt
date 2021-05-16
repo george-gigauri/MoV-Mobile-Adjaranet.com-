@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -11,13 +12,14 @@ import com.google.android.gms.ads.InterstitialAd
 import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.ActivityAllMoviesBinding
+import ge.mov.mobile.extension.loadAd
+import ge.mov.mobile.extension.setPreferredColor
+import ge.mov.mobile.extension.showAd
+import ge.mov.mobile.extension.visible
 import ge.mov.mobile.paging.movies.MoviePagingAdapter
 import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.activity.movie.MovieActivity
 import ge.mov.mobile.ui.activity.movie.all.filter.FilterBottomFragment
-import ge.mov.mobile.util.loadAd
-import ge.mov.mobile.util.showAd
-import ge.mov.mobile.util.visible
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -46,8 +48,18 @@ class AllMoviesActivity : BaseActivity<ActivityAllMoviesBinding>(),
 
         ad = loadAd()
 
+        setPreferredColor(binding.root)
+
         type = intent.getStringExtra("type") ?: "movie"
         viewModel.load(type!!)
+
+        binding.title.text = intent.getStringExtra("genre_title") ?: "ყველა / All"
+
+        val genreId = intent.extras?.getInt("genre_id")
+        if (genreId != null) {
+            viewModel.setGenre(genreId)
+            binding.btnFilters.visibility = View.INVISIBLE
+        }
 
         (binding.rv.layoutManager as GridLayoutManager).spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
@@ -98,7 +110,7 @@ class AllMoviesActivity : BaseActivity<ActivityAllMoviesBinding>(),
     }
 
     override fun onItemClick(movie: Data) {
-        if (Random.nextBoolean() && ad.isLoaded) {
+        if (Random.nextBoolean() && ad.isLoaded && !Random.nextBoolean()) {
             showAd(ad)
             ad = loadAd()
         }

@@ -5,18 +5,18 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import coil.load
 import coil.request.CachePolicy
 import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.ActivityPersonMoviesBinding
+import ge.mov.mobile.extension.loadAd
+import ge.mov.mobile.extension.setPreferredColor
+import ge.mov.mobile.extension.visible
 import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.adapter.MovieAdapter
 import ge.mov.mobile.util.Constants
-import ge.mov.mobile.util.loadAd
-import ge.mov.mobile.util.visible
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -34,6 +34,8 @@ class PersonMoviesActivity : BaseActivity<ActivityPersonMoviesBinding>(), MovieA
         initGridLayoutManager()
         loadActor()
         loadMovies()
+
+        setPreferredColor(binding.root)
 
         binding.goback.setOnClickListener {
             finish()

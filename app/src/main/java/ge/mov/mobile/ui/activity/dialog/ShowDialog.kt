@@ -4,14 +4,13 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.*
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import ge.mov.mobile.R
-import ge.mov.mobile.data.database.MovieSubscriptionEntity
+import ge.mov.mobile.data.database.entity.MovieSubscriptionEntity
 import ge.mov.mobile.data.model.Series.EpisodeFiles
 import ge.mov.mobile.data.model.movie.Seasons
 import ge.mov.mobile.ui.activity.movie.WatchActivity
@@ -32,7 +31,7 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Int) {
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     dialog.setCancelable(false)
     dialog.setContentView(R.layout.movie_settings_dialog)
-    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent);
+    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
     val season: Spinner = dialog.findViewById(R.id.season_spinner)
     val episode: Spinner = dialog.findViewById(R.id.episode_spinner)
@@ -78,7 +77,7 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Int) {
 
             episodesArray = getEpisodesArray(episodeFiles!!)
             val languages = getLanguagesArray(episodeFiles)
-            val qualities = getQualityArray(episodeFiles)
+            val qualities = getQualityArray(episodeFiles).sortedBy { it }
 
             episode.adapter = ArrayAdapter(
                 activity,
@@ -122,6 +121,7 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Int) {
 
         var l1 = true
         var l2 = true
+        var fId: Long = 0L
         val files = runBlocking { vm.loadFiles(id, s) }
         for (i in files!!.data[e].files) {
             if (i.lang == lang) {
@@ -131,6 +131,7 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Int) {
                     if (qual == j.quality) {
                         l2 = false
                         url = j.src
+                        fId = j.id
                     }
                 }
             }
@@ -163,10 +164,12 @@ fun Activity.showMovieDialog(activity: FragmentActivity, id: Int) {
                 intent.putExtra("e", 0)
             } else {
                 intent.putExtra("s", season.selectedItemPosition + 1)
-                intent.putExtra("e", episode.selectedItemPosition + 1)
+                intent.putExtra("e", episode.selectedItemPosition)
             }
             intent.putExtra("id", id)
             intent.putExtra("src", url)
+            intent.putExtra("files", files)
+            intent.putExtra("file_id", fId)
         }
 
         startActivity(intent)

@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="Select Language"
             android:textSize="22sp"
-            android:fontFamily="@font/quicksand_bold"
+            android:fontFamily="@font/ptsansnarrow_regular"
             android:textColor="@color/colorAccent"
             android:textStyle="bold"
             android:layout_margin="@dimen/_25sdp" />
@@ -32,7 +32,7 @@
             android:text="English"
             android:textSize="18sp"
             android:textColor="#fff"
-            android:fontFamily="@font/quicksand_semibold"
+            android:fontFamily="@font/ptsansnarrow_regular"
             android:layout_gravity="center"
             android:padding="@dimen/_12sdp"
             android:layout_margin="@dimen/_5sdp"

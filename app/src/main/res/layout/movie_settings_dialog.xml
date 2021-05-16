@@ -125,6 +125,7 @@
                     android:layout_margin="@dimen/_10sdp"
                     android:background="?attr/selectableItemBackground"
                     android:text="@string/go_back"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/black" />
 
                 <Button
@@ -134,7 +135,8 @@
                     android:layout_margin="@dimen/_10sdp"
                     android:background="@drawable/blue_bg_rounded"
                     android:textStyle="bold"
-                    android:textColor="#fff"
+                    android:textAllCaps="false"
+                    android:textColor="#000742"
                     android:text="@string/play" />
             </LinearLayout>
         </LinearLayout>

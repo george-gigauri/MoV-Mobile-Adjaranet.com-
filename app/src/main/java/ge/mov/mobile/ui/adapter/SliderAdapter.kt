@@ -1,23 +1,16 @@
 package ge.mov.mobile.ui.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.PagerAdapter
 import coil.load
 import coil.request.CachePolicy
-import ge.mov.mobile.R
+import ge.mov.mobile.MovApplication.Companion.language
 import ge.mov.mobile.data.model.featured.FeaturedModel
 import ge.mov.mobile.databinding.SliderItemBinding
-import ge.mov.mobile.ui.activity.movie.MovieActivity
-import ge.mov.mobile.util.LanguageUtil
-import ge.mov.mobile.util.Utils
-import ge.mov.mobile.util.toast
 
 class SliderAdapter (
     private val context: Context,
@@ -38,7 +31,6 @@ class SliderAdapter (
 
         val i = slides[position]
 
-        val language = LanguageUtil.language
         val lang_code = if (language?.id == "ka") "GEO" else "ENG"
 
         binding.sliderTitle.text = if (lang_code == "GEO")
@@ -56,7 +48,7 @@ class SliderAdapter (
         }
 
         binding.sliderImage.load(poster) {
-            memoryCachePolicy(CachePolicy.DISABLED);
+            memoryCachePolicy(CachePolicy.DISABLED)
             diskCachePolicy(CachePolicy.DISABLED)
         }
 

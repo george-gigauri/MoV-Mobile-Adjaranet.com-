@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.movie.MovieActivity">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimaryDark">
@@ -17,21 +18,29 @@
             android:id="@+id/poster"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_185sdp"
-            android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/error_image_loading" />
+            android:focusable="false"
+            android:src="@drawable/error_image_loading"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!--  BACKGROUND IMAGE SHADE -->
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
+            android:focusable="false"
             android:layout_height="@dimen/_185sdp"
-            android:layout_alignParentTop="true"
-            android:src="#2F000000" />
+            android:src="#2F000000"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -53,8 +62,8 @@
                         android:layout_height="@dimen/_32sdp"
                         android:background="@drawable/movie_hover"
                         android:focusable="true"
-                        android:padding="@dimen/_5sdp"
-                        android:src="@drawable/ic_baseline_arrow_back_24"
+                        android:padding="@dimen/_7sdp"
+                        android:src="@drawable/ic_back"
                         app:tint="@color/colorAccent" />
                 </FrameLayout>
 
@@ -109,7 +118,7 @@
                     android:layout_marginTop="@dimen/_145sdp"
                     android:layout_marginBottom="@dimen/_50sdp"
                     app:cardBackgroundColor="@android:color/white"
-                    app:cardCornerRadius="@dimen/_24sdp"
+                    app:cardCornerRadius="@dimen/_12sdp"
                     app:cardElevation="0dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -124,6 +133,7 @@
                             android:layout_marginStart="@dimen/_5sdp"
                             android:layout_marginEnd="@dimen/_54sdp"
                             android:text="Loading..."
+                            android:focusable="false"
                             android:textColor="@android:color/black"
                             android:textSize="22sp"
                             android:textStyle="bold"
@@ -151,14 +161,17 @@
                                 app:tint="@color/colorAccent" />
                         </FrameLayout>
 
-
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/genres_rv"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_20sdp"
+                            android:background="@null"
                             android:orientation="horizontal"
                             android:paddingTop="@dimen/_5sdp"
+                            android:nestedScrollingEnabled="true"
+                            tools:itemCount="3"
+                            tools:listitem="@layout/genre_model"
                             android:paddingBottom="@dimen/_5sdp"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             app:layout_constraintTop_toBottomOf="@id/movieName" />
@@ -169,13 +182,15 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:gravity="center"
-                            android:scrollbars="none"
+                            android:focusable="false"
                             android:nestedScrollingEnabled="true"
+                            android:scrollbars="none"
                             app:layout_constraintTop_toBottomOf="@id/genres_rv">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:focusable="false"
                                 android:layout_gravity="center_horizontal"
                                 android:orientation="horizontal">
 
@@ -184,6 +199,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="@dimen/_5sdp"
                                     android:gravity="center"
+                                    android:focusable="false"
                                     android:orientation="vertical">
 
                                     <TextView
@@ -191,13 +207,16 @@
                                         android:layout_height="wrap_content"
                                         android:layout_margin="@dimen/_3sdp"
                                         android:text="@string/year"
+                                        android:focusable="false"
                                         android:textColor="@android:color/darker_gray"
                                         android:textSize="16sp" />
 
                                     <TextView
+                                        android:id="@+id/year"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@{String.valueOf(details.movieDetails.year)}"
+                                        android:focusable="false"
+                                        android:text="0"
                                         android:textColor="#000"
                                         android:textStyle="bold" />
 
@@ -207,21 +226,25 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="@dimen/_5sdp"
+                                    android:focusable="false"
                                     android:gravity="center"
                                     android:orientation="vertical">
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_margin="@dimen/_3sdp"
                                         android:text="@string/imdb"
-                                        android:layout_margin="@dimen/_3sdp"
+                                        android:focusable="false"
                                         android:textColor="@android:color/darker_gray"
                                         android:textSize="16sp" />
 
                                     <TextView
+                                        android:id="@+id/imdb"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@{String.valueOf(details.movieDetails.rating.imdb.score)}"
+                                        android:focusable="false"
+                                        android:text="0"
                                         android:textColor="#000"
                                         android:textStyle="bold" />
 
@@ -232,20 +255,24 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="@dimen/_5sdp"
                                     android:gravity="center"
+                                    android:focusable="false"
                                     android:orientation="vertical">
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_margin="@dimen/_3sdp"
+                                        android:focusable="false"
                                         android:text="@string/country"
-                                        android:layout_margin="@dimen/_3sdp"
                                         android:textColor="@android:color/darker_gray"
                                         android:textSize="16sp" />
 
                                     <TextView
+                                        android:id="@+id/country"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@{ details.movieCountry }"
+                                        android:focusable="false"
+                                        android:text="GEO"
                                         android:textColor="#000"
                                         android:textStyle="bold" />
 
@@ -254,6 +281,7 @@
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:focusable="false"
                                     android:layout_margin="@dimen/_5sdp"
                                     android:gravity="center"
                                     android:orientation="vertical">
@@ -261,15 +289,18 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@string/views"
                                         android:layout_margin="@dimen/_3sdp"
+                                        android:focusable="false"
+                                        android:text="@string/views"
                                         android:textColor="@android:color/darker_gray"
                                         android:textSize="16sp" />
 
                                     <TextView
+                                        android:id="@+id/watch_count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@{String.valueOf(details.movieDetails.watchCount)}"
+                                        android:focusable="false"
+                                        android:text="0"
                                         android:textColor="#000"
                                         android:textStyle="bold" />
 
@@ -277,30 +308,30 @@
                             </LinearLayout>
                         </HorizontalScrollView>
 
-                            <TextView
-                                android:id="@+id/txtDescription"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_15sdp"
-                                android:singleLine="true"
-                                android:text="@string/description"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorAccent"
-                                android:textSize="20sp"
-                                android:textStyle="bold"
-                                app:layout_constraintTop_toBottomOf="@id/basicParams" />
+                        <TextView
+                            android:id="@+id/txtDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_15sdp"
+                            android:focusable="false"
+                            android:singleLine="true"
+                            android:text="@string/description"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintTop_toBottomOf="@id/basicParams" />
 
-                            <TextView
-                                android:id="@+id/description"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_5sdp"
-                                android:textColor="@android:color/black"
-                                android:textSize="16sp"
-                                android:text="@{ details.movieDescription }"
-                                app:layout_constraintTop_toBottomOf="@id/txtDescription"
-                                tools:text="Here is an simple description" />
-
+                        <TextView
+                            android:id="@+id/description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:focusable="false"
+                            android:text="loading..."
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp"
+                            app:layout_constraintTop_toBottomOf="@id/txtDescription" />
 
                         <com.google.android.material.tabs.TabLayout
                             android:id="@+id/tab_recommended_movies"
@@ -324,7 +355,24 @@
             </RelativeLayout>
 
         </androidx.core.widget.NestedScrollView>
-    </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_trailer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:background="@drawable/pink_button_rectangle"
+            android:nextFocusDown="@id/tab_recommended_movies"
+            android:paddingVertical="@dimen/_14sdp"
+            android:stateListAnimator="@null"
+            android:text="@string/trailer"
+            android:textAllCaps="false"
+            android:textColor="@color/exo_white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
         android:id="@+id/bottom_layout"
