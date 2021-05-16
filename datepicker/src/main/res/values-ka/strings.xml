@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ycuwq_datepicker_cancel">გაუქმება</string>
+    <string name="ycuwq_datepicker_decide">არჩევა</string>
+    <string name="ycuwq_datepicker_hour">სთ</string>
+    <string name="ycuwq_datepicker_minute">წთ</string>
+</resources>
