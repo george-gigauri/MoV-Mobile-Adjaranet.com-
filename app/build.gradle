@@ -23,8 +23,8 @@ android {
         applicationId "ge.mov.mobile"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 69
-        versionName "V 5.6"
+        versionCode 70
+        versionName "V 5.6.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("int", "APP_ID", "5")
