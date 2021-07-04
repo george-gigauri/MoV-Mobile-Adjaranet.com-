@@ -37,11 +37,11 @@ class GenreAdapter(
         i.isSelected = selectedItems.contains(i.id)
 
         if (type == 1 && context != null) {
-            holder.itemView.genre.isSelected = false
+            holder.itemView.genre.isSelected = true
             holder.itemView.genre.setTextColor(Color.BLACK)
         } else {
-            holder.itemView.genre.isSelected = false
-            holder.itemView.genre.setTextColor(Color.WHITE)
+            holder.itemView.genre.isSelected = true
+            holder.itemView.genre.setTextColor(holder.itemView.context.resources.getColor(R.color.colorAccent))
         }
 
         if (type == 1 && listener != null)
@@ -73,7 +73,7 @@ class GenreAdapter(
     private fun changeBackground(isSelected: Boolean, holder: ViewHolder) {
         holder.itemView.genre.isSelected = isSelected
         if (isSelected) {
-            holder.itemView.genre.setTextColor(Color.WHITE)
+            holder.itemView.genre.setTextColor(holder.itemView.context.resources.getColor(R.color.colorAccent))
         } else {
             holder.itemView.genre.setTextColor(Color.BLACK)
         }

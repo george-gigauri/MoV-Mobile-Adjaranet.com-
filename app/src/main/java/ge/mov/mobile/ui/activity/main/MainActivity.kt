@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.ads.InterstitialAd
@@ -22,14 +23,14 @@ import ge.mov.mobile.ui.activity.base.BaseActivity
 import ge.mov.mobile.ui.activity.movie.MovieActivity
 import ge.mov.mobile.ui.activity.movie.all.AllMoviesActivity
 import ge.mov.mobile.ui.activity.offline.DownloadedMoviesActivity
+import ge.mov.mobile.ui.activity.settings.SavedMoviesFragment
 import ge.mov.mobile.ui.activity.settings.SettingsActivity
-import ge.mov.mobile.ui.adapter.GenreAdapter
-import ge.mov.mobile.ui.adapter.MovieAdapter
-import ge.mov.mobile.ui.adapter.SliderAdapter
+import ge.mov.mobile.ui.adapter.*
 import ge.mov.mobile.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -60,6 +61,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), MovieAdapter.OnClickLi
         // Temporary Code
         //startActivity(Intent(this, LoginActivity::class.java))
         //finish()
+
+        binding.rootMain.setOnRefreshListener {
+            if (binding.rootMain.isRefreshing) {
+                vm.updateSavedMovies()
+                binding.rootMain.isRefreshing = false
+            }
+        }
 
         binding.txtMovies.setOnClickListener {
             val intent = Intent(applicationContext, AllMoviesActivity::class.java)
@@ -93,6 +101,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), MovieAdapter.OnClickLi
             val intent = Intent(applicationContext, SearchActivity::class.java)
             startActivity(intent)
             logger.logSearchOpened()
+        }
+
+        binding.txtAllSavedMovies.setOnClickListener {
+            startActivity(Intent(this, SavedMoviesFragment::class.java))
+        }
+
+        vm.savedMovies.observe(this) {
+            binding.txtSavedMovies.isVisible = !it.isNullOrEmpty()
+            binding.savedMovies.isVisible = !it.isNullOrEmpty()
+            binding.txtAllSavedMovies.isVisible = !it.isNullOrEmpty()
+            binding.savedMovies.adapter = SavedMoviesAdapter(this, ArrayList(it), this)
         }
 
         lifecycleScope.launchWhenStarted {

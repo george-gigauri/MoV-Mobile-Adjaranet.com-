@@ -19,7 +19,7 @@
         app:hide_on_touch="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:resize_mode="fit"
+        app:resize_mode="zoom"
         app:rewind_increment="10000"
         app:show_timeout="15000"
         app:use_controller="true" />

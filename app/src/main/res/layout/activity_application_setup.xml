@@ -32,6 +32,8 @@
             android:text="English"
             android:textSize="18sp"
             android:textColor="#fff"
+            android:background="@drawable/movie_hover"
+            android:focusable="true"
             android:fontFamily="@font/ptsansnarrow_regular"
             android:layout_gravity="center"
             android:padding="@dimen/_12sdp"
@@ -46,6 +48,9 @@
             android:layout_gravity="center"
             android:padding="@dimen/_11sdp"
             android:textColor="#fff"
+            android:background="@drawable/movie_hover"
+            android:focusable="true"
+            android:fontFamily="@font/enkel"
             android:layout_margin="@dimen/_5sdp"
             android:id="@+id/select_georgian" />
 

@@ -1,8 +1,6 @@
 package ge.mov.mobile.ui.activity.movie
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -19,13 +17,12 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.*
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout.*
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.util.Log
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.util.Util
-import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.R
@@ -33,8 +30,6 @@ import ge.mov.mobile.analytics.FirebaseLogger
 import ge.mov.mobile.data.database.entity.MovieSubscriptionEntity
 import ge.mov.mobile.data.model.Series.EpisodeFiles
 import ge.mov.mobile.databinding.ActivityWatchBinding
-import ge.mov.mobile.extension.drawable
-import ge.mov.mobile.extension.loadAd
 import ge.mov.mobile.extension.toast
 import ge.mov.mobile.extension.visible
 import ge.mov.mobile.util.*
@@ -43,9 +38,9 @@ import kotlinx.android.synthetic.main.fragment_saved_movies.*
 import kotlinx.coroutines.*
 import java.util.*
 
-
 @AndroidEntryPoint
 class WatchActivity : AppCompatActivity(), Player.EventListener {
+
     private var isScreenLocked = false
     private val TIME_INTERVAL = 2000
     private var mBackPressed: Long = 0
@@ -71,7 +66,6 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
 
     private lateinit var exoPlayer: SimpleExoPlayer
     private lateinit var lockButton: ImageView
-    private lateinit var ad: InterstitialAd
 
     private var subscribeOnPause = true
 
@@ -95,15 +89,19 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
         setContentView(binding.root)
         logger = FirebaseLogger(this)
 
-        ad = loadAd()
         showSeekBackward(false)
         showSeekForward(false)
 
         init()
 
+        val isLocal = intent.getBooleanExtra("isLocal", false)
+        if (isLocal) {
+            movieSrc = intent.getStringExtra("src").orEmpty()
+            initPlayer()
+            return
+        }
+
         vm.isRegionAllowed.observe(this) {
-            //toast("${it.country}, ${it.countryCode}")
-            Log.i("WatchActivity", "${it.country}, ${it.countryCode}")
             if (it.countryCode != "GE") {
                 movieSrc = playInstead
                 binding.vnaiyc.isVisible = true
@@ -111,8 +109,6 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
             } else {
                 vm.fileUrl.observe(this) { url ->
                     movieSrc = url ?: ""
-
-                    Log.i("WatchActivity", url.toString())
 
                     if (movieSrc != "") {
                         initPlayer()
@@ -138,7 +134,6 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
     }
 
     private fun init() {
-        // movieSrc = intent.getStringExtra("src") ?: ""
         subtitlesSrc = intent.getStringExtra("subtitle") ?: ""
         defaultLanguage = intent.getStringExtra("def_lang") ?: "ENG"
         defaultQuality = intent.getStringExtra("def_quality") ?: "HIGH"
@@ -154,49 +149,21 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
         binding.movieView.findViewById<ImageView>(R.id.player_exit)
             .setOnClickListener { finish() }
 
-        lifecycleScope.launch {
-            if (series != null && series!!.data.size > 1) {
-                binding.movieView.findViewById<ImageView>(R.id.next_episode).apply {
-                    setImageDrawable(drawable(R.drawable.exo_ic_skip_next))
-                    isEnabled = true
-                    isClickable = true
-                }
+        if (series != null) {
+            binding.movieView.findViewById<ImageView>(R.id.next_episode).apply {
+                isVisible = series!!.data.size > 1
+                isEnabled = series!!.data.size > 1
+            }
 
-                if (movie.season > 0 && movie.episode > 1) {
-                    binding.movieView.findViewById<ImageView>(R.id.prev_episode).apply {
-                        setImageDrawable(drawable(R.drawable.exo_ic_previous_enabled))
-                        isClickable = true
-                        isEnabled = true
-                    }
-                } else {
-                    binding.movieView.findViewById<ImageView>(R.id.prev_episode).apply {
-                        setImageDrawable(drawable(R.drawable.exo_ic_previous_disabled))
-                        isEnabled = false
-                        isClickable = false
-                    }
-                }
-            } else {
-                binding.movieView.findViewById<ImageView>(R.id.prev_episode).apply {
-                    setImageDrawable(drawable(R.drawable.exo_ic_previous_disabled))
-                    isClickable = false
-                    isEnabled = false
-                }
-
-                binding.movieView.findViewById<ImageView>(R.id.prev_episode).apply {
-                    setImageDrawable(drawable(R.drawable.exo_ic_previous_disabled))
-                    isClickable = false
-                    isEnabled = false
-                }
+            binding.movieView.findViewById<ImageView>(R.id.prev_episode).apply {
+                isVisible = series!!.data.size > 1
+                isEnabled = series!!.data.size > 1
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             val state = withContext(Dispatchers.IO) { vm.loadState(this@WatchActivity, movie.id) }
             if (state != null) {
-                Log.i(
-                    "SE State",
-                    "Saved Season: ${movie.season},   Saved Episode:  ${movie.episode}"
-                )
                 movie.time = if (state.season == movie.season && state.episode == movie.episode) {
                     state.time
                 } else {
@@ -213,13 +180,9 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
         lockButton = binding.movieView.findViewById(R.id.lock_screen)
 
         lockButton.setOnClickListener {
-            if (isScreenLocked) {
-                isScreenLocked = false
-                lockButton.setImageDrawable(drawable(R.drawable.ic_baseline_lock_open_24))
-            } else {
-                isScreenLocked = true
-                lockButton.setImageDrawable(drawable(R.drawable.ic_baseline_lock_24))
-            }
+            val resizeMode = binding.movieView.resizeMode
+            binding.movieView.resizeMode = if (resizeMode == RESIZE_MODE_FIT)
+                RESIZE_MODE_ZOOM else RESIZE_MODE_FIT
         }
     }
 
@@ -229,8 +192,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
 
         if (subtitlesSrc != "")
             loadSubtitles()
-        else
-            loadNormalMovie()
+        else loadNormalMovie()
 
         subtitlesListener()
         binding.movieView.subtitleView?.visible(false)
@@ -340,11 +302,6 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
             vm.saveVideoState(this, movie)
 
             exoPlayer.pause()
-
-            if (isScreenLocked) {
-                val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-                activityManager.moveTaskToFront(taskId, 0)
-            }
         }
         super.onPause()
     }
@@ -353,17 +310,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
         super.onDestroy()
         if (this::exoPlayer.isInitialized)
             exoPlayer.stop()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        if (this::exoPlayer.isInitialized) {
-            val restored = runBlocking { vm.loadState(this@WatchActivity, movie.id) }
-            if (movie.season == restored?.season && movie.episode == restored.episode && restored.time != null)
-                exoPlayer.seekTo(restored.time!!)
-            exoPlayer.play()
-        }
+        _binding = null
     }
 
     override fun onBackPressed() {
@@ -403,7 +350,7 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
     private fun showSeekForward(isVisible: Boolean) {
         lifecycleScope.launch(Dispatchers.Main) {
             binding.apply {
-                seekIndicator.setImageResource(R.drawable.ic_forward)
+                seekIndicator.setImageResource(R.drawable.ic_forward_first)
                 if (!isVisible) {
                     seekIndicator.animate()
                         .scaleX(0f)
@@ -502,17 +449,11 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
 
     private fun getNextEpisodeIfExists() {
         subscribeOnPause = false
-        Log.i(
-            "Previous SE",
-            "Previous Season: ${movie.season},   Previous Episode:  ${movie.episode}"
-        )
-        lifecycleScope.launch {
             val season = movie.season
             val episode = movie.episode + 1
             val language = defaultLanguage
             val quality = defaultQuality
 
-            withContext(Dispatchers.IO) {
                 if (series != null) {
                     logger.logNextEpisodeClicked()
                     if (series!!.data.size > 1 && episode < series!!.data.size) {
@@ -540,38 +481,32 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
                                 break
                         }
 
-                        withContext(Dispatchers.Main) {
-                            val intent = Intent(applicationContext, WatchActivity::class.java)
-                            intent.putExtra("s", season)
-                            intent.putExtra("e", episode)
-                            intent.putExtra("id", movie.id)
-                            intent.putExtra("src", url)
-                            intent.putExtra("subtitle", captions ?: "")
-                            intent.putExtra("files", series)
-                            intent.putExtra("file_id", fId)
-                            intent.putExtra(
-                                "movie_title",
-                                "S${season}, E${episode + 1} - ${series!!.data[episode].title}"
-                            )
-                            startActivity(intent)
-                            finish()
-                        }
+                        val intent = Intent(applicationContext, WatchActivity::class.java)
+                        intent.putExtra("s", season)
+                        intent.putExtra("e", episode)
+                        intent.putExtra("id", movie.id)
+                        intent.putExtra("src", url)
+                        intent.putExtra("subtitle", captions ?: "")
+                        intent.putExtra("files", series)
+                        intent.putExtra("file_id", fId)
+                        intent.putExtra(
+                            "movie_title",
+                            "S${season}, E${episode + 1} - ${series!!.data[episode].title}"
+                        )
+                        startActivity(intent)
+                        finish()
                     }
                 }
-            }
-        }
     }
 
     private fun getPreviousEpisodeIfExists() {
         subscribeOnPause = false
-        lifecycleScope.launch {
             movie.time = 0
             val season = movie.season
             val episode = movie.episode - 1
             val language = defaultLanguage
             val quality = defaultQuality
 
-            withContext(Dispatchers.IO) {
                 if (series != null) {
                     logger.logPreviousEpisodeClicked()
                     if (series!!.data.isNotEmpty() && episode < series!!.data.size && episode >= 0) {
@@ -598,7 +533,6 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
                                 break
                         }
 
-                        withContext(Dispatchers.Main) {
                             val intent = Intent(applicationContext, WatchActivity::class.java)
                             intent.putExtra("s", season)
                             intent.putExtra("e", episode)
@@ -615,11 +549,8 @@ class WatchActivity : AppCompatActivity(), Player.EventListener {
                             overridePendingTransition(0, 0)
 
                             finish()
-                        }
                     }
                 }
-            }
-        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {

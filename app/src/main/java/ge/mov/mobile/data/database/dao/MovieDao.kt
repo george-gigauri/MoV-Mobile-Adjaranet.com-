@@ -15,14 +15,17 @@ interface MovieDao {
     suspend fun delete(id: Int, adjaraId: Int)
 
     @Query("SELECT * FROM saved_movies WHERE id = :id")
-    suspend fun getMovie(id: Long) : MovieEntity
+    suspend fun getMovie(id: Long): MovieEntity
 
     @Query("SELECT EXISTS (SELECT * FROM SAVED_MOVIES WHERE id = :id)")
-    suspend fun isMovieSaved(id: Int) : Boolean
+    suspend fun isMovieSaved(id: Int): Boolean
 
     @Query("SELECT COUNT(*) FROM SAVED_MOVIES")
-    suspend fun getSavedMoviesCount() : Int
+    suspend fun getSavedMoviesCount(): Int
 
     @Query("SELECT * FROM SAVED_MOVIES ORDER BY uid DESC")
-    suspend fun getAllMovies() : List<MovieEntity>
+    suspend fun getAllMovies(): List<MovieEntity>
+
+    @Query("SELECT * FROM SAVED_MOVIES ORDER BY uid DESC LIMIT :limit")
+    suspend fun getMovies(limit: Int): List<MovieEntity>
 }

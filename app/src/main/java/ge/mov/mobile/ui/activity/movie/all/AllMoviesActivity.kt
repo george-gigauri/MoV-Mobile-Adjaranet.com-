@@ -3,8 +3,8 @@ package ge.mov.mobile.ui.activity.movie.all
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -56,10 +56,10 @@ class AllMoviesActivity : BaseActivity<ActivityAllMoviesBinding>(),
         binding.title.text = intent.getStringExtra("genre_title") ?: "ყველა / All"
 
         val genreId = intent.extras?.getInt("genre_id")
-        if (genreId != null) {
-            viewModel.setGenre(genreId)
-            binding.btnFilters.visibility = View.INVISIBLE
-        }
+        //  if (genreId != null) {
+        viewModel.setGenre(genreId)
+        //      binding.btnFilters.visibility = View.INVISIBLE
+        //  }
 
         (binding.rv.layoutManager as GridLayoutManager).spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
@@ -68,7 +68,6 @@ class AllMoviesActivity : BaseActivity<ActivityAllMoviesBinding>(),
 
         binding.rv.adapter = adapter
         binding.rv.layoutManager = GridLayoutManager(this, 2)
-        binding.rv.setHasFixedSize(true)
 
         layoutSpanCount(resources.configuration)
         adapter.stateRestorationPolicy =
@@ -77,6 +76,7 @@ class AllMoviesActivity : BaseActivity<ActivityAllMoviesBinding>(),
         viewModel.result.observe(this) {
             adapter.submitData(lifecycle, it)
             adapter.notifyDataSetChanged()
+            binding.rv.smoothScrollToPosition(0)
         }
 
         binding.rv.post { binding.progress.visible(false) }
@@ -139,6 +139,8 @@ class AllMoviesActivity : BaseActivity<ActivityAllMoviesBinding>(),
         this.yearFrom = yearFrom
         this.yearTo = yearTo
         viewModel.load(type!!, genres, languageFilter, yearFrom, yearTo)
+
+        Log.i("AllMoviesActivityGenres", genres.toString())
 
         this.selectedGenres.clear()
         if (genres != null) {

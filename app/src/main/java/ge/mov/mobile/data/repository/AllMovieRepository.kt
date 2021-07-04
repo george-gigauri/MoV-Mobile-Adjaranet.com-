@@ -21,12 +21,12 @@ class AllMovieRepository @Inject constructor(private val api: APIService) {
         )
     }
 
-    fun loadMovies(type: String, filterGenres: List<Int>? = null, language: String = "GEO", filterYearFrom: Int? = null, filterYearTo: Int? = null) = Pager(
+    fun loadMovies(type: String, filterGenres: List<Int?>? = null, language: String = "GEO", filterYearFrom: Int? = null, filterYearTo: Int? = null) = Pager(
         config = pagingConfig,
         pagingSourceFactory = { MoviePagingSource(api, type, language, filterGenres, filterYearFrom, filterYearTo) }
     ).liveData
 
-    fun loadPopular(type: String, filterGenres: List<Int>? = null) = Pager(
+    fun loadPopular(type: String, filterGenres: List<Int?>? = null) = Pager(
         config = pagingConfig,
         pagingSourceFactory = { MoviePagingSource(api, type, "GEO", filterGenres) }
     ).liveData

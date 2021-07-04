@@ -15,7 +15,7 @@ class ViewModelAll @ViewModelInject constructor(
     private val repository: AllMovieRepository
 ) : ViewModel() {
     private val currentRequest = MutableLiveData("movie")
-    private val filteredGenres = MutableLiveData<List<Int>?>(null)
+    private val filteredGenres = MutableLiveData<List<Int?>?>(null)
     private val filteredLanguage = MutableLiveData("GEO")
 
     val filterYearFrom = MutableLiveData("0")
@@ -29,7 +29,13 @@ class ViewModelAll @ViewModelInject constructor(
                 filterYearFrom.switchMap { yearFrom ->
                     filterYearTo.switchMap { yearTo ->
                         filteredLanguage.switchMap { language ->
-                            repository.loadMovies(type, genreFilters, language, yearFrom.toInt(), yearTo.toInt()).cachedIn(viewModelScope)
+                            repository.loadMovies(
+                                type,
+                                genreFilters,
+                                language,
+                                yearFrom.toInt(),
+                                yearTo.toInt()
+                            ).cachedIn(viewModelScope)
                         }.cachedIn(viewModelScope)
                     }.cachedIn(viewModelScope)
                 }.cachedIn(viewModelScope)
@@ -37,7 +43,13 @@ class ViewModelAll @ViewModelInject constructor(
         }
     }
 
-    fun load(type: String, filtersGenre: List<Int>? = null, language: String = "GEO", yearFrom: Int? = null, yearTo: Int? = null) {
+    fun load(
+        type: String = "series",
+        filtersGenre: List<Int>? = null,
+        language: String = "GEO",
+        yearFrom: Int? = null,
+        yearTo: Int? = null
+    ) {
         currentRequest.value = type
         filteredGenres.value = filtersGenre
         filteredLanguage.value = language
@@ -48,8 +60,10 @@ class ViewModelAll @ViewModelInject constructor(
             filterYearTo.value = yearTo.toString()
     }
 
-    fun setGenre(id: Int) {
-        filteredGenres.value = listOf(id)
+    fun setGenre(id: Int?) {
+        id?.let {
+            filteredGenres.value = listOf(id)
+        }
     }
 
     suspend fun loadGenres() = withContext(Dispatchers.IO) { repository.getGenres() }

@@ -50,7 +50,7 @@ class MoVFirebaseMessagingService : FirebaseMessagingService() {
                 intent.putExtra("id", id)
                 intent.putExtra("adjaraId", adjaraId)
                 pendingIntent =
-                    PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             }
 
             NotificationUtils.push(this, title!!, body!!, pendingIntent)

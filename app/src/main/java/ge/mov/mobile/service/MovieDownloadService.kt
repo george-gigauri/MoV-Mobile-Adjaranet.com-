@@ -32,7 +32,7 @@ class MovieDownloadService : Service() {
 
         if (url != null) {
 
-            val destination = "/MoVDownloads/${_id}_${season}_${episode}_$lang.mp4"
+            val destination = "/MoVDownloads/${_id}_${_title}_${season}_${episode}_$lang.mp4"
 
             val dm = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val request = DownloadManager.Request(Uri.parse(url))
@@ -44,12 +44,6 @@ class MovieDownloadService : Service() {
         }
 
         return START_STICKY
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        unregisterReceiver(onDownloadCompleted())
     }
 
     private fun copyFile() {
@@ -112,7 +106,8 @@ class MovieDownloadService : Service() {
 
     private fun onDownloadCompleted() = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            copyFile()
+            stopForeground(true)
+            // copyFile()
         }
     }
 }

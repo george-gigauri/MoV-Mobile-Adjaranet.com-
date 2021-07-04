@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ge.mov.mobile.R
 import ge.mov.mobile.data.model.Language
 import ge.mov.mobile.databinding.GenreModelBinding
 import ge.mov.mobile.util.LanguageUtil
@@ -33,7 +34,7 @@ class LanguageAdapter(private val listener: OnLanguageSelectedListener) :
 
             binding.genre.isSelected = language.selected
             if (language.selected) {
-                binding.genre.setTextColor(Color.WHITE)
+                binding.genre.setTextColor(binding.root.context.resources.getColor(R.color.colorAccent))
             } else {
                 binding.genre.setTextColor(Color.BLACK)
             }

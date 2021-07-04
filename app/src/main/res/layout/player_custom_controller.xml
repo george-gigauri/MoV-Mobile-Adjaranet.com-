@@ -79,17 +79,19 @@
 
         <ImageView
             android:id="@+id/exo_subtitle"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
             android:layout_margin="@dimen/_5sdp"
             android:background="@drawable/movie_hover"
             android:focusable="true"
+            android:scaleType="fitXY"
+            app:tint="@color/exo_white"
             android:src="@drawable/ic_subtitles_off" />
 
         <TextView
             android:id="@+id/playback_speed"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_23sdp"
+            android:layout_height="@dimen/_24sdp"
             android:layout_margin="@dimen/_5sdp"
             android:background="@drawable/white_border_corner"
             android:clickable="true"
@@ -120,40 +122,43 @@
 
             <ImageView
                 android:id="@+id/prev_episode"
-                android:layout_width="@dimen/_38sdp"
-                android:layout_height="@dimen/_38sdp"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
                 android:layout_margin="@dimen/_14sdp"
                 android:focusable="true"
+                app:tint="@color/exo_white"
                 android:background="@drawable/movie_hover"
-                android:src="@drawable/exo_ic_previous_disabled" />
+                android:src="@drawable/ic_rewind" />
 
             <ImageView
                 android:id="@+id/exo_pause"
-                android:layout_width="@dimen/_46sdp"
-                android:layout_height="@dimen/_46sdp"
+                android:layout_width="@dimen/_36sdp"
+                android:layout_height="@dimen/_36sdp"
                 android:layout_margin="@dimen/_14sdp"
+                app:tint="@color/exo_white"
                 android:focusable="true"
                 android:background="@drawable/movie_hover"
                 android:src="@drawable/ic_pause" />
 
             <ImageView
                 android:id="@+id/exo_play"
-                android:layout_width="@dimen/_46sdp"
-                android:layout_height="@dimen/_46sdp"
+                android:layout_width="@dimen/_36sdp"
+                android:layout_height="@dimen/_36sdp"
                 android:layout_margin="@dimen/_14sdp"
                 android:background="@drawable/movie_hover"
-                android:src="@drawable/ic_play_now"
+                android:src="@drawable/ic_play"
                 android:focusable="true"
                 app:tint="#FDFDFD" />
 
             <ImageView
                 android:id="@+id/next_episode"
-                android:layout_width="@dimen/_38sdp"
-                android:layout_height="@dimen/_38sdp"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
                 android:layout_margin="@dimen/_14sdp"
                 android:focusable="true"
+                app:tint="@color/exo_white"
                 android:background="@drawable/movie_hover"
-                android:src="@drawable/exo_ic_next_disabled" />
+                android:src="@drawable/ic_forward" />
         </LinearLayout>
 
         <View
@@ -208,19 +213,20 @@
                 android:textAlignment="center"
                 android:textColor="@color/exo_white"
                 android:textSize="14sp"
-                android:layout_marginEnd="@dimen/_4sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/lock_screen"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:layout_width="@dimen/_28sdp"
-                android:layout_height="@dimen/_28sdp"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
                 android:id="@+id/lock_screen"
                 android:padding="@dimen/_4sdp"
                 android:focusable="false"
+                app:tint="@color/exo_white"
                 app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/ic_baseline_lock_open_24"
+                android:src="@drawable/ic_fexpand"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 

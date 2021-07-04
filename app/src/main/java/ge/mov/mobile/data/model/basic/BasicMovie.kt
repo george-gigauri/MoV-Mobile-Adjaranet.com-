@@ -1,6 +1,7 @@
 package ge.mov.mobile.data.model.basic
 
 import ge.mov.mobile.data.model.movie.MetaInfo
+import ge.mov.mobile.data.model.movie.MovieModel
 import ge.mov.mobile.data.model.movie.Posters
 
 data class BasicMovie (
@@ -24,5 +25,19 @@ data class Data (
             if (secondaryName != "") secondaryName else originalName
         }
     } else originalName
+
+    companion object {
+        fun fromMovieModel(
+            model: MovieModel
+        ): Data = Data(
+            model.id,
+            model.adjaraId,
+            model.primaryName,
+            model.secondaryName,
+            model.originalName,
+            model.posters,
+            model.adult
+        )
+    }
 }
 

@@ -21,9 +21,9 @@ interface APIService {
     suspend fun getFeatured(): Response<Featured>
 
     @GET("movies")
-    suspend fun getMovies(
+    suspend fun getMoviesWithGenre(
         @Query("page") page: Int,
-        @Query("per_page") per_page: Int = 18,
+        @Query("per_page") per_page: Int = 20,
         @Query("filters[language]") language: String = "GEO",
         @Query("filters[type]") type: String = "movie", // adjaranet
         @Query("filters[only_public]") public: String = "yes",
@@ -34,7 +34,22 @@ interface APIService {
         @Query("filters[year_range]") yearsRange: String? = null,
         @Query("sort") sort: String = "-upload_date",
         @Query("source") source: String = "adjaranet"
-    ) : Response<BasicMovie>
+    ): Response<BasicMovie>
+
+    @GET("movies")
+    suspend fun getMovies(
+        @Query("page") page: Int,
+        @Query("per_page") per_page: Int = 20,
+        @Query("filters[language]") language: String = "GEO",
+        @Query("filters[type]") type: String = "movie", // adjaranet
+        @Query("filters[only_public]") public: String = "yes",
+        @Query("filters[with_actors]") actors: Int = 3,
+        @Query("filters[with_directors]") directors: Int = 1,
+        @Query("filters[with_files]") files: String = "yes",
+        @Query("filters[year_range]") yearsRange: String? = null,
+        @Query("sort") sort: String = "-upload_date",
+        @Query("source") source: String = "adjaranet"
+    ): Response<BasicMovie>
 
     @GET("movies/{id}/related")
     suspend fun getSimilarMovies(
@@ -42,7 +57,7 @@ interface APIService {
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = 12,
         @Query("source") source: String = "adjaranet"
-    ) : Response<BasicMovie>
+    ): Response<BasicMovie>
 
     @GET("movies/top")
     suspend fun getTop (

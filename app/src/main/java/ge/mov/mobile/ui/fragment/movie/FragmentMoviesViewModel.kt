@@ -26,15 +26,15 @@ class FragmentMoviesViewModel : ViewModel() {
             yearFilters = "$filtersFromYear,$filtersToYear"
         }
 
-        val body = runBlocking {
-            AppModule.getMoviesApi(AppModule.getRetrofit())
-                .getMovies(page = page, genre = genre.toString(), yearsRange = yearFilters, per_page = perPage)
-                .body()
-        }
+       // val body = runBlocking {
+       //     AppModule.getMoviesApi(AppModule.getRetrofit())
+       //         .getMovies(page = page, genre = genre.toString(), yearsRange = yearFilters, per_page = perPage)
+       //         .body()
+       // }
 
-        if (body != null) {
-            movies.postValue(body)
-        }
+      //  if (body != null) {
+       //     movies.postValue(body)
+     //   }
         isLoading.postValue(false)
 
         return movies

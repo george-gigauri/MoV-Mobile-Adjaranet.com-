@@ -23,8 +23,8 @@ android {
         applicationId "ge.mov.mobile"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 62
-        versionName "V 5.5.4"
+        versionCode 69
+        versionName "V 5.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("int", "APP_ID", "5")
@@ -43,7 +43,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            buildConfigField("String", "ADMOB_ID_INTERSTITIAL", '"s"')
+            buildConfigField("String", "ADMOB_ID_INTERSTITIAL", '"ca-app-pub-2337439332290274/2854996575"')
             //  ca-app-pub-3940256099942544/1033173712
         }
     }
@@ -114,7 +114,7 @@ dependencies {
     annotationProcessor "com.github.bumptech.glide:compiler:4.11.0"
     implementation "dev.sasikanth:colorsheet:1.0.1"
 
-    implementation "androidx.paging:paging-runtime-ktx:3.0.0-rc01"
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0"
 
     implementation 'com.mindorks.android:prdownloader:0.6.0'
 

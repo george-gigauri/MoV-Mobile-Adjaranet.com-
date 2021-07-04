@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_main"
@@ -160,24 +160,68 @@
                 android:nextFocusRight="@id/categories"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintTop_toBottomOf="@id/slider" />
-                <!-- END Categories -->
+            <!-- END Categories -->
 
-                <!-- Top Movies -->
-                <TextView
-                    android:id="@+id/txtTopMovies"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:fontFamily="@font/ptsansnarrow_regular"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:textStyle="bold"
-                    android:text="@string/day_top_movies"
-                    android:textSize="20sp"
-                    android:textColor="@color/colorAccent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/categories" />
+            <!-- SAVED MOVIES -->
+            <TextView
+                android:id="@+id/txtSavedMovies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:fontFamily="@font/ptsansnarrow_regular"
+                android:text="@string/saved"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/categories" />
+
+            <TextView
+                android:id="@+id/txtAllSavedMovies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:background="@drawable/movie_hover"
+                android:focusable="true"
+                android:fontFamily="@font/ptsansnarrow_regular"
+                android:padding="@dimen/_5sdp"
+                android:text="@string/all"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/txtSavedMovies"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txtSavedMovies" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/saved_movies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/txtSavedMovies" />
+            <!-- END Top Movies -->
+
+            <!-- Top Movies -->
+            <TextView
+                android:id="@+id/txtTopMovies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:fontFamily="@font/ptsansnarrow_regular"
+                android:text="@string/day_top_movies"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/saved_movies" />
 
                 <TextView
                     android:id="@+id/txtAllPopularMovies"
@@ -401,4 +445,4 @@
                 android:layout_gravity="center" />
 
         </FrameLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -37,15 +37,19 @@ class WatchViewModel @ViewModelInject constructor(
 
     @SuppressLint("SimpleDateFormat")
     fun saveVideoState(context: Context, movie: MovieSubscriptionEntity) =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val date = Date()
             val dateTime = dateFormat.format(date)
             movie.savedOn = dateTime
 
-            DBService.getInstance(context)
-                .subscriptionDao()
-                .save(movie)
+            withContext(Dispatchers.IO) {
+                DBService.getInstance(context)
+                    .subscriptionDao()
+                    .save(movie.apply {
+                        episode += 1
+                    })
+            }
         }
 
     fun loadState(context: Context, id: Int): MovieSubscriptionEntity? = runBlocking {
@@ -59,7 +63,7 @@ class WatchViewModel @ViewModelInject constructor(
         if (response.isSuccessful) {
             val body = response.body()
             if (body != null) {
-                _isRegionAllowed.value = body
+                _isRegionAllowed.value = body!!
             }
         }
     }

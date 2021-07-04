@@ -120,6 +120,7 @@ class DownloadedMoviesActivity : BaseActivity<ActivityDownloadedMoviesBinding>()
             intent.putExtra("id", i.id)
             intent.putExtra("s", i.season)
             intent.putExtra("e", i.episode)
+            intent.putExtra("isLocal", true)
             startActivity(intent)
         }
     }

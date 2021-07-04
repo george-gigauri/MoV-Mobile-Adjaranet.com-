@@ -183,9 +183,14 @@ class MovieActivity : BaseActivity<ActivityMovieBinding>() {
                     }
 
                     binding.btnTrailer.setOnClickListener { v ->
-                        val trailerIntent = Intent(ACTION_VIEW)
-                        trailerIntent.setDataAndType(it.trailers.data[0].fileUrl.toUri(), "video/*")
-                        startActivity(trailerIntent)
+                        if (!it.trailers.data.isNullOrEmpty()) {
+                            val trailerIntent = Intent(ACTION_VIEW)
+                            trailerIntent.setDataAndType(
+                                it.trailers.data[0].fileUrl.toUri(),
+                                "video/*"
+                            )
+                            startActivity(trailerIntent)
+                        } else toast("No Trailer Found.")
                     }
 
                     binding.share.setOnClickListener { _ ->

@@ -1,5 +1,6 @@
 package ge.mov.mobile.ui.activity.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,14 +9,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.gms.ads.InterstitialAd
 import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.data.database.entity.MovieEntity
+import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.FragmentSavedMoviesBinding
 import ge.mov.mobile.extension.loadAd
 import ge.mov.mobile.extension.setPreferredColor
 import ge.mov.mobile.ui.activity.base.BaseActivity
+import ge.mov.mobile.ui.activity.movie.MovieActivity
+import ge.mov.mobile.ui.adapter.MovieAdapter
 import ge.mov.mobile.ui.adapter.SavedMoviesAdapter
 
 @AndroidEntryPoint
-class SavedMoviesFragment : BaseActivity<FragmentSavedMoviesBinding>() {
+class SavedMoviesFragment : BaseActivity<FragmentSavedMoviesBinding>(),
+    MovieAdapter.OnClickListener {
 
     private val vm: FragmentSavedMoviesViewModel by viewModels()
     private lateinit var ad: InterstitialAd
@@ -49,8 +54,10 @@ class SavedMoviesFragment : BaseActivity<FragmentSavedMoviesBinding>() {
     private fun loadData() {
         binding.savedMoviesRefresher.isRefreshing = true
         vm.getAllSavedMovies(applicationContext).observe(this, {
-            binding.savedMoviesRv.adapter = SavedMoviesAdapter(applicationContext,
-                it as ArrayList<MovieEntity>
+            binding.savedMoviesRv.adapter = SavedMoviesAdapter(
+                applicationContext,
+                it as ArrayList<MovieEntity>,
+                this
             )
             binding.savedMoviesRv.post {
                 if (it.isNullOrEmpty()) {
@@ -68,5 +75,13 @@ class SavedMoviesFragment : BaseActivity<FragmentSavedMoviesBinding>() {
         super.onResume()
 
         loadData()
+    }
+
+    override fun onItemClicked(item: Data) {
+        val intent = Intent(this, MovieActivity::class.java)
+        intent.putExtra("id", item.id)
+        intent.putExtra("adjaraId", item.adjaraId)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
     }
 }

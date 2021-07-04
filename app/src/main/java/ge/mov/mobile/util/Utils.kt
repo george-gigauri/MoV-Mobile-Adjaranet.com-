@@ -22,6 +22,7 @@ object Utils {
         editor.apply()
 
         setLanguage(context, language)
+        saveSetup(context)
     }
 
     fun loadLanguage(context: Context): LocaleModel {

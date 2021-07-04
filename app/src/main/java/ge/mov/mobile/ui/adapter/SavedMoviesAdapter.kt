@@ -6,34 +6,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.ads.InterstitialAd
 import ge.mov.mobile.R
 import ge.mov.mobile.data.database.entity.MovieEntity
+import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.data.model.movie.MovieItemModel
 import ge.mov.mobile.data.model.movie.MovieModel
 import ge.mov.mobile.di.module.AppModule
 import ge.mov.mobile.extension.loadWithProgressBar
-import ge.mov.mobile.extension.showAd
 import ge.mov.mobile.ui.activity.movie.MovieActivity
 import ge.mov.mobile.util.Utils
 import kotlinx.android.synthetic.main.movie_item.view.*
 import kotlinx.coroutines.*
-import kotlin.random.Random
 
 class SavedMoviesAdapter(
     private val context: Context,
     private val arr: ArrayList<MovieEntity>,
-    private val ad: InterstitialAd? = null
+    private val listener: MovieAdapter.OnClickListener
 ) : RecyclerView.Adapter<SavedMoviesAdapter.ViewHolder>() {
     class ViewHolder(private val i: View) : RecyclerView.ViewHolder(i) {
         fun bind() {
-            i.apply {
-                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                    if (movie_hover.hasFocus())
-                        movie_hover.setBackgroundResource(R.drawable.selected_stroke)
-                    else movie_hover.background = null
-                }
-            }
+            /* i.movie_hover.setOnFocusChangeListener { _, hasFocus ->
+                 if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                     if (hasFocus)
+                         i.movie_hover.setBackgroundResource(R.drawable.selected_stroke)
+                     else i.movie_hover.background = null
+                 }
+             } */
         }
     }
 
@@ -78,16 +76,7 @@ class SavedMoviesAdapter(
             setMoviePoster(holder, if (i.posters.data != null) i.posters.data._240 else "")
 
             holder.itemView.setOnClickListener {
-                val show = Random.nextBoolean()
-
-                val intent = Intent(context, MovieActivity::class.java)
-                intent.putExtra("id", i.id)
-                intent.putExtra("adjaraId", i.adjaraId)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                context.startActivity(intent)
-
-                if (show)
-                    ad?.let { it1 -> context.showAd(it1) }
+                listener.onItemClicked(Data.fromMovieModel(i))
             }
         }
     }

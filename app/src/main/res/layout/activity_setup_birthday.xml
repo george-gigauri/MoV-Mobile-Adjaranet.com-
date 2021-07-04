@@ -8,10 +8,11 @@
     tools:context=".ui.activity.setup.SetupBirthdayActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/_24sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,39 +27,34 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <androidx.cardview.widget.CardView
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/_24sdp"
-            app:cardCornerRadius="@dimen/_24sdp"
-            app:cardElevation="0dp">
+            android:id="@+id/tv_birthday"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_32sdp"
+            android:background="@drawable/movie_hover"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-            <DatePicker
-                android:id="@+id/birthdayPicker"
-                android:layout_width="@dimen/_224sdp"
-                android:layout_height="match_parent"
-                android:calendarTextColor="#fff"
-                android:calendarViewShown="true"
-                android:yearListSelectorColor="#fff"
-                android:background="#fff" />
-
-        </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_continue"
-                    android:text="@string/continue_to_app"
-                    android:background="@drawable/accent_bg_transparent"
-                    android:paddingStart="@dimen/_12sdp"
-                    android:paddingEnd="@dimen/_12sdp"
-                    android:paddingTop="@dimen/_5sdp"
-                    android:paddingBottom="@dimen/_5sdp"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorAccent"
-                    android:textStyle="bold"
-                    android:drawablePadding="@dimen/_10sdp"
-                    app:drawableEndCompat="@drawable/ic_fwd" />
+        <TextView
+            android:id="@+id/btn_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/accent_bg_transparent"
+            android:drawablePadding="@dimen/_10sdp"
+            android:paddingStart="@dimen/_12sdp"
+            android:paddingTop="@dimen/_8sdp"
+            android:paddingEnd="@dimen/_12sdp"
+            android:paddingBottom="@dimen/_8sdp"
+            android:text="@string/continue_to_app"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:drawableEndCompat="@drawable/ic_fwd" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

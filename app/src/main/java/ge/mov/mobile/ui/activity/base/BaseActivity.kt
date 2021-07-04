@@ -24,6 +24,7 @@ import ge.mov.mobile.analytics.FirebaseCustomAnalytics
 import ge.mov.mobile.analytics.FirebaseLogger
 import ge.mov.mobile.data.database.DBService
 import ge.mov.mobile.di.module.AppModule
+import ge.mov.mobile.extension.setPreferredColor
 import ge.mov.mobile.ui.activity.other.NoConnectionActivity
 import ge.mov.mobile.ui.activity.setup.ApplicationSetupActivity
 import ge.mov.mobile.ui.activity.setup.SetupBirthdayActivity
@@ -129,15 +130,15 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        applyOverrideConfiguration(newConfig)
+//        applyOverrideConfiguration(newConfig)
     }
 
-    override fun applyOverrideConfiguration(newConfig: Configuration) {
-        val uiMode = newConfig.uiMode
-        newConfig.setTo(baseContext.resources.configuration)
-        newConfig.uiMode = uiMode
-        super.applyOverrideConfiguration(updateConfigurationIfSupported(newConfig))
-    }
+//    override fun applyOverrideConfiguration(newConfig: Configuration) {
+//        val uiMode = newConfig.uiMode
+//        newConfig.setTo(baseContext.resources.configuration)
+//        newConfig.uiMode = uiMode
+//        super.applyOverrideConfiguration(updateConfigurationIfSupported(newConfig))
+//    }
 
     open fun updateConfigurationIfSupported(config: Configuration): Configuration? {
         if (Build.VERSION.SDK_INT >= 24) {
