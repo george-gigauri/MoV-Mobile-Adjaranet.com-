@@ -7,7 +7,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import ge.mov.mobile.ui.activity.movie.MovieActivity
+import ge.mov.mobile.ui.activity.MovieActivity
 import ge.mov.mobile.util.Constants.Firebase.USERS_COLLECTION
 import ge.mov.mobile.util.NotificationUtils
 

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimaryDark"
-    tools:context=".ui.activity.auth.LoginActivity">
+    tools:context=".ui.activity.LoginActivity">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -42,8 +42,8 @@
 
                 <ImageView
                     android:id="@+id/logo"
-                    android:layout_width="@dimen/_72sdp"
-                    android:layout_height="@dimen/_72sdp"
+                    android:layout_width="@dimen/_64sdp"
+                    android:layout_height="@dimen/_64sdp"
                     android:layout_centerHorizontal="true"
                     android:fontFamily="@font/ptsansnarrow_regular"
                     android:src="@drawable/logo"
@@ -217,6 +217,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:fontFamily="@font/ptsansnarrow_regular"
             android:text="@string/by_continuing_to_use_our_app_you_agree_to_our"
             android:textColor="#fff" />

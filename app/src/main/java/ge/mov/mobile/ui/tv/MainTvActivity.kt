@@ -7,8 +7,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.databinding.ActivityMainTvBinding
 import ge.mov.mobile.extension.toast
-import ge.mov.mobile.ui.activity.base.BaseActivity
-import ge.mov.mobile.ui.activity.main.MainActivityViewModel
+import ge.mov.mobile.ui.activity.BaseActivity
 import ge.mov.mobile.ui.adapter.MovieAdapter
 import kotlinx.coroutines.runBlocking
 

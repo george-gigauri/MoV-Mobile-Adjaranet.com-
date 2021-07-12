@@ -1,9 +1,13 @@
 package ge.mov.mobile.data.repository
 
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import ge.mov.mobile.data.model.movie.MovieModel
 import ge.mov.mobile.data.network.APIService
 import ge.mov.mobile.util.LanguageUtil
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,6 +16,8 @@ import javax.inject.Singleton
 class MovieRepository @Inject constructor(
     private val api: APIService
 ) {
+    private val fUser = Firebase.auth.currentUser
+
     suspend fun getDetails(id: Int): MovieModel? = withContext(Dispatchers.IO) {
         val response = api.getMovie(id)
         val body = response.body() ?: return@withContext null
@@ -71,4 +77,37 @@ class MovieRepository @Inject constructor(
 
         return@withContext body?.data
     }
+
+    suspend fun saveMovie(id: Int, adjaraId: Int) = withContext(Dispatchers.IO) {
+        if (fUser != null) {
+            Firebase.firestore.collection("users").document(fUser.uid)
+                .collection("saved")
+                .document(id.toString())
+                .set(mapOf("id" to id, "adjaraId" to adjaraId))
+                .await()
+        }
+    }
+
+    suspend fun unsaveMovie(id: Int, adjaraId: Int) = withContext(Dispatchers.IO) {
+        if (fUser != null)
+            Firebase.firestore.collection("users").document(fUser.uid)
+                .collection("saved")
+                .document(id.toString())
+                .delete()
+                .await()
+    }
+
+    suspend fun isMovieSavedToFirebase(id: Int, adjaraId: Int): Boolean =
+        withContext(Dispatchers.IO) {
+            return@withContext if (fUser == null) false
+            else {
+                Firebase.firestore.collection("users")
+                    .document(fUser.uid)
+                    .collection("saved")
+                    .document(id.toString())
+                    .get()
+                    .await()
+                    .exists()
+            }
+        }
 }

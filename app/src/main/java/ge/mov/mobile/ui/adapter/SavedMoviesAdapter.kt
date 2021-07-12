@@ -1,7 +1,6 @@
 package ge.mov.mobile.ui.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import ge.mov.mobile.data.model.movie.MovieItemModel
 import ge.mov.mobile.data.model.movie.MovieModel
 import ge.mov.mobile.di.module.AppModule
 import ge.mov.mobile.extension.loadWithProgressBar
-import ge.mov.mobile.ui.activity.movie.MovieActivity
 import ge.mov.mobile.util.Utils
 import kotlinx.android.synthetic.main.movie_item.view.*
 import kotlinx.coroutines.*

@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".ui.activity.MainActivity">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollViewMain"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark"
-        tools:context=".ui.activity.main.MainActivity">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -42,33 +42,9 @@
                 android:layout_marginTop="@dimen/_12sdp"
                 android:layout_marginEnd="@dimen/_5sdp"
                 android:orientation="horizontal"
+                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
-                <!--         <ImageView
-                             android:id="@+id/btn_search_movie"
-                             android:layout_width="@dimen/_30sdp"
-                             android:layout_height="@dimen/_30sdp"
-                             android:layout_marginTop="@dimen/_5sdp"
-                             android:layout_marginEnd="@dimen/_10sdp"
-                             android:layout_marginBottom="@dimen/_5sdp"
-                             android:src="@drawable/ic_baseline_search_24" />
-
-                         <androidx.cardview.widget.CardView
-                             android:layout_width="wrap_content"
-                             android:layout_height="wrap_content"
-                             app:cardBackgroundColor="@color/colorAccent"
-                             android:layout_margin="@dimen/_5sdp"
-                             app:cardCornerRadius="@dimen/_12sdp">
-
-                             <ImageView
-                                 android:id="@+id/btn_profile_pic"
-                                 android:layout_width="@dimen/_30sdp"
-                                 android:layout_height="@dimen/_30sdp"
-                                 android:padding="@dimen/_5sdp"
-                                 android:src="@drawable/ic_settings"
-                                 app:tint="#fff" />
-                         </androidx.cardview.widget.CardView> -->
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -102,6 +78,14 @@
                         android:textStyle="bold"
                         android:fontFamily="@font/ptsansnarrow_regular" />
 
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="@dimen/_32sdp"
+                    android:layout_height="@dimen/_32sdp"
+                    android:id="@+id/ivAvatar"
+                    android:background="@drawable/movie_hover"
+                    android:src="@drawable/ic_person"
+                    android:tint="#fff" />
                 </LinearLayout>
                 <!-- END TOP BAR -->
 

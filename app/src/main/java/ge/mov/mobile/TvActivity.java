@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import ge.mov.mobile.ui.activity.main.MainActivity;
+import ge.mov.mobile.ui.activity.MainActivity;
 import ge.mov.mobile.util.Const;
 
 public class TvActivity extends Activity {

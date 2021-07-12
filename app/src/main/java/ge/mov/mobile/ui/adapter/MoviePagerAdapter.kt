@@ -6,8 +6,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.gms.ads.InterstitialAd
-import ge.mov.mobile.ui.fragment.movie.MovieCastFragment
-import ge.mov.mobile.ui.fragment.movie.SimilarMoviesFragment
+import ge.mov.mobile.ui.fragment.MovieCastFragment
+import ge.mov.mobile.ui.fragment.SimilarMoviesFragment
 
 class MoviePagerAdapter(
     private val context: Context,

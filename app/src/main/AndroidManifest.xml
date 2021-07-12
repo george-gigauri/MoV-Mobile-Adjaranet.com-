@@ -30,7 +30,7 @@
         android:uiOptions="splitActionBarWhenNarrow"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".ui.activity.auth.RegisterActivity"></activity>
+        <activity android:name=".ui.activity.RegisterActivity"></activity>
         <activity android:name=".ui.tv.MainTvActivity" />
 
         <service
@@ -42,9 +42,9 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".ui.activity.offline.DownloadedMoviesActivity" />
-        <activity android:name=".ui.activity.main.SearchActivity" />
-        <activity android:name=".ui.activity.movie.all.AllMoviesActivity" />
+        <activity android:name=".ui.activity.DownloadedMoviesActivity" />
+        <activity android:name=".ui.activity.SearchActivity" />
+        <activity android:name=".ui.activity.AllMoviesActivity" />
         <activity
             android:name=".TvActivity"
             android:configChanges="keyboard|keyboardHidden|navigation"
@@ -56,26 +56,26 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.setup.SetupBirthdayActivity" />
-        <activity android:name=".ui.activity.movie.PersonMoviesActivity" />
+        <activity android:name=".ui.activity.SetupBirthdayActivity" />
+        <activity android:name=".ui.activity.PersonMoviesActivity" />
         <activity
-            android:name=".ui.activity.other.NoConnectionActivity"
+            android:name=".ui.activity.NoConnectionActivity"
             android:theme="@style/Fullscreen" />
-        <activity android:name=".ui.activity.setup.IntroActivity" />
-        <activity android:name=".ui.activity.setup.ApplicationSetupActivity" />
-        <activity android:name=".ui.activity.settings.SavedMoviesFragment" />
+        <activity android:name=".ui.activity.IntroActivity" />
+        <activity android:name=".ui.activity.ApplicationSetupActivity" />
+        <activity android:name=".ui.activity.SavedMoviesFragment" />
         <activity
-            android:name=".ui.activity.settings.SettingsActivity"
+            android:name=".ui.activity.SettingsActivity"
             android:configChanges="layoutDirection|locale|orientation|screenSize" />
         <activity
-            android:name=".ui.activity.movie.WatchActivity"
+            android:name=".ui.activity.WatchActivity"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Fullscreen" />
         <activity
-            android:name=".ui.activity.movie.MovieActivity"
+            android:name=".ui.activity.MovieActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ui.activity.main.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:configChanges="locale"
             android:theme="@style/Splash">
             <intent-filter>
@@ -94,9 +94,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.auth.LoginActivity" />
+        <activity android:name=".ui.activity.LoginActivity" />
         <activity
-            android:name=".ui.activity.other.SplashActivity"
+            android:name=".ui.activity.SplashActivity"
             android:theme="@style/Fullscreen" />
 
         <meta-data

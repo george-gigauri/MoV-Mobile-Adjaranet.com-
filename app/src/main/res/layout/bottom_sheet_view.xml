@@ -9,7 +9,7 @@
     app:behavior_hideable="true"
     app:behavior_peekHeight="0dp"
     app:layout_behavior="@string/bottom_sheet_behavior"
-    tools:context=".ui.fragment.movie.bottom.BottomFragment">
+    tools:context=".ui.fragment.BottomFragment">
 
     <View
         android:layout_width="@dimen/_64sdp"

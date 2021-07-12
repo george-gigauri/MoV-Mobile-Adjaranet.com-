@@ -5,7 +5,7 @@
     android:id="@+id/rootMovie"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.movie.MovieActivity">
+    tools:context=".ui.activity.MovieActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/relativeLayout"

@@ -11,7 +11,7 @@ import coil.load
 import coil.request.CachePolicy
 import ge.mov.mobile.R
 import ge.mov.mobile.data.model.Series.PersonModel
-import ge.mov.mobile.ui.activity.movie.PersonMoviesActivity
+import ge.mov.mobile.ui.activity.PersonMoviesActivity
 import ge.mov.mobile.util.Utils
 import kotlinx.android.synthetic.main.cast_model.view.*
 

@@ -1,6 +1,5 @@
 package ge.mov.mobile.data.repository
 
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -9,48 +8,48 @@ import ge.mov.mobile.util.Constants.Firebase.USERS_COLLECTION
 import ge.mov.mobile.util.Role
 import ge.mov.mobile.util.State
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor() {
 
-    val state = MutableLiveData(State.empty())
+    fun login(email: String, password: String) = flow {
+        emit(State.loading())
 
-    suspend fun login(email: String, password: String) = withContext(Dispatchers.IO) {
-        state.postValue(State.loading())
+        val result = Firebase.auth.signInWithEmailAndPassword(email, password).await()
 
-        Firebase.auth.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener { state.postValue(State.success("LOGIN_SUCCESS")) }
-            .addOnFailureListener { state.postValue(State.failure(it.message)) }
-    }
+        emit(State.success("LOGIN_SUCCESS"))
+    }.catch { emit(State.failure(it.message)) }.flowOn(Dispatchers.IO)
 
-    suspend fun register(
+    fun register(
         email: String,
         password: String,
         firstName: String,
         lastName: String,
         birthDate: Long,
         role: Role
-    ) = withContext(Dispatchers.IO) {
-        state.postValue(State.loading())
+    ) = flow {
+        emit(State.loading())
 
-        Firebase.auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                createUserDatabase(it.user!!.uid, email, firstName, lastName, birthDate, role)
-            }.addOnFailureListener {
-                state.postValue(State.failure(it.message))
-            }
-    }
+        val result = Firebase.auth.createUserWithEmailAndPassword(email, password).await()
+        createUserDatabase(result.user!!.uid, email, firstName, lastName, birthDate, role)
 
-    suspend fun sendResetPassword(email: String) = withContext(Dispatchers.IO) {
-        state.postValue(State.loading())
+        emit(State.success())
+    }.catch { emit(State.failure(it.message)) }.flowOn(Dispatchers.IO)
 
-        Firebase.auth.sendPasswordResetEmail(email).addOnSuccessListener {
-            state.postValue(State.success("SIGN_UP_SUCCESS"))
-        }.addOnFailureListener { state.postValue(State.failure(it.message)) }
-    }
+    fun sendResetPassword(email: String) = flow {
+        emit(State.loading())
 
-    private fun createUserDatabase(
+        Firebase.auth.sendPasswordResetEmail(email).await()
+
+        emit(State.success("SIGN_UP_SUCCESS"))
+    }.catch { emit(State.failure(it.message)) }.flowOn(Dispatchers.IO)
+
+    private suspend fun createUserDatabase(
         id: String,
         email: String,
         firstName: String,
@@ -70,7 +69,6 @@ class AuthRepository @Inject constructor() {
         Firebase.firestore.collection(USERS_COLLECTION)
             .document(id)
             .set(user)
-            .addOnSuccessListener { state.postValue(State.success("SIGN_UP_SUCCESS")) }
-            .addOnFailureListener { state.postValue(State.failure(it.message)) }
+            .await()
     }
 }

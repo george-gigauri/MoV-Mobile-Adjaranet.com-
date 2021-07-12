@@ -11,6 +11,9 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg movie: MovieEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(movies: List<MovieEntity>)
+
     @Query("DELETE FROM SAVED_MOVIES WHERE id = :id AND adjaraId = :adjaraId")
     suspend fun delete(id: Int, adjaraId: Int)
 
