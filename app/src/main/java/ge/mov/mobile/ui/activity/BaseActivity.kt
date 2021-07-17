@@ -29,6 +29,7 @@ import ge.mov.mobile.analytics.FirebaseCustomAnalytics
 import ge.mov.mobile.analytics.FirebaseLogger
 import ge.mov.mobile.data.database.DBService
 import ge.mov.mobile.di.module.AppModule
+import ge.mov.mobile.ui.MyProgressDialog
 import ge.mov.mobile.util.*
 import ge.mov.mobile.util.Constants.AVAILABLE_LANGUAGES
 import ge.mov.mobile.util.Utils.loadLanguage
@@ -55,6 +56,8 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     @Suppress("UNCHECKED_CAST")
     private var _binding: VB? = null
+
+    private val dialogFragment by lazy { MyProgressDialog() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         loadLanguage()
@@ -170,6 +173,17 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 //        newConfig.uiMode = uiMode
 //        super.applyOverrideConfiguration(updateConfigurationIfSupported(newConfig))
 //    }
+
+
+    open fun showProgress() {
+        if (!dialogFragment.isAdded)
+            dialogFragment.show(supportFragmentManager, "ProgressDialog")
+    }
+
+    open fun hideProgress() {
+        if (dialogFragment.isAdded)
+            dialogFragment.dismiss()
+    }
 
     open fun updateConfigurationIfSupported(config: Configuration): Configuration? {
         if (Build.VERSION.SDK_INT >= 24) {

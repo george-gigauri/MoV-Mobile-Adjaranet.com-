@@ -62,31 +62,28 @@
                         android:layout_margin="@dimen/_5sdp"
                         android:fontFamily="@font/ptsansnarrow_regular" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings"
-                        android:id="@+id/btn_profile_pic"
-                        android:focusable="true"
-                        android:layout_margin="@dimen/_5sdp"
-                        android:textColor="@color/colorAccent"
-                        android:background="@drawable/accent_bg_transparent"
-                        android:paddingStart="@dimen/_10sdp"
-                        android:paddingEnd="@dimen/_10sdp"
-                        android:paddingTop="@dimen/_5sdp"
-                        android:paddingBottom="@dimen/_5sdp"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/ptsansnarrow_regular" />
+                <ImageView
+                    android:id="@+id/btn_profile_pic"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:focusable="true"
+                    android:fontFamily="@font/ptsansnarrow_regular"
+                    android:text="@string/settings"
+                    android:textColor="@color/colorAccent"
+                    android:textStyle="bold"
+                    app:srcCompat="@drawable/ic_settings"
+                    app:tint="@color/exo_white" />
 
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="@dimen/_32sdp"
-                    android:layout_height="@dimen/_32sdp"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:id="@+id/ivAvatar"
                     android:background="@drawable/movie_hover"
                     android:src="@drawable/ic_person"
                     android:tint="#fff" />
-                </LinearLayout>
+            </LinearLayout>
                 <!-- END TOP BAR -->
 
                 <!-- Slider -->

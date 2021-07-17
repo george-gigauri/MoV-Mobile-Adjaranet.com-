@@ -7,9 +7,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
+import coil.load
 import coil.request.CachePolicy
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.material.tabs.TabLayoutMediator

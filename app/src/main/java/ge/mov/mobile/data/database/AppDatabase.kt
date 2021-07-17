@@ -17,7 +17,7 @@ import ge.mov.mobile.data.database.entity.ReminderMovieEntity
         MovieEntity::class,
         MovieSubscriptionEntity::class,
         OfflineMovieEntity::class,
-        ReminderMovieEntity::class], version = 6, exportSchema = true
+        ReminderMovieEntity::class], version = 6, exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

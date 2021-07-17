@@ -18,9 +18,10 @@ import kotlinx.coroutines.*
 
 class SavedMoviesAdapter(
     private val context: Context,
-    private val arr: ArrayList<MovieEntity>,
+    private val arr: List<MovieEntity>,
     private val listener: MovieAdapter.OnClickListener
 ) : RecyclerView.Adapter<SavedMoviesAdapter.ViewHolder>() {
+
     class ViewHolder(private val i: View) : RecyclerView.ViewHolder(i) {
         fun bind() {
             /* i.movie_hover.setOnFocusChangeListener { _, hasFocus ->
@@ -91,11 +92,5 @@ class SavedMoviesAdapter(
 
     private fun setMoviePoster(holder: ViewHolder, poster: String) {
         holder.itemView.poster.loadWithProgressBar(holder.itemView.progress, poster)
-    }
-
-    fun addAll(list: List<MovieEntity>) {
-        val count = arr.size
-        arr.addAll(list)
-        notifyItemInserted(count)
     }
 }

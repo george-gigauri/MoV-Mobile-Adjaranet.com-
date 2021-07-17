@@ -7,22 +7,27 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.ads.InterstitialAd
 import dagger.hilt.android.AndroidEntryPoint
+import ge.mov.mobile.data.model.MainActivityDto
 import ge.mov.mobile.data.model.basic.Data
 import ge.mov.mobile.data.model.featured.FeaturedModel
 import ge.mov.mobile.data.model.movie.Genre
 import ge.mov.mobile.databinding.ActivityMainBinding
 import ge.mov.mobile.extension.loadAd
 import ge.mov.mobile.extension.setPreferredColor
-import ge.mov.mobile.ui.adapter.*
-import ge.mov.mobile.util.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import ge.mov.mobile.extension.toast
+import ge.mov.mobile.ui.adapter.GenreAdapter
+import ge.mov.mobile.ui.adapter.MovieAdapter
+import ge.mov.mobile.ui.adapter.SavedMoviesAdapter
+import ge.mov.mobile.ui.adapter.SliderAdapter
+import ge.mov.mobile.util.State
+import ge.mov.mobile.viewmodel.MainViewModel
+import kotlinx.coroutines.flow.collect
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -32,7 +37,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), MovieAdapter.OnClickLi
     lateinit var viewPager: ViewPager
     lateinit var sliderAdapter: SliderAdapter
     private lateinit var timer: Timer
-    private val vm: MainActivityViewModel by viewModels()
+    private val vm: MainViewModel by viewModels()
     private lateinit var ad: InterstitialAd
 
     override val bindingFactory: (LayoutInflater) -> ActivityMainBinding
@@ -50,22 +55,59 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), MovieAdapter.OnClickLi
 
         forwardUser()
 
-        vm.updateSavedMovies(this)
+        setOnClickListeners()
+        initObservers()
 
+        binding.rootMain.setOnRefreshListener {
+            if (binding.rootMain.isRefreshing) {
+                vm.getData()
+                binding.rootMain.isRefreshing = false
+            }
+        }
+    }
+
+    private fun initObservers() {
+        lifecycleScope.launchWhenStarted {
+            vm.data.collect {
+                when (it.status) {
+                    State.Status.LOADING -> showProgress()
+                    State.Status.EMPTY -> hideProgress()
+                    State.Status.SUCCESS -> {
+                        val data = (it.data as MainActivityDto)
+                        onSuccessLoadData(data)
+                        hideProgress()
+                    }
+                    State.Status.FAILURE -> {
+                        hideProgress()
+                        toast(it.message ?: "Unknown Error")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onSuccessLoadData(data: MainActivityDto) {
+        binding.apply {
+            slider.adapter = SliderAdapter(this@MainActivity, data.featured, this@MainActivity)
+            savedMovies.adapter =
+                SavedMoviesAdapter(this@MainActivity, data.saved, this@MainActivity)
+            topMovies.adapter = MovieAdapter(this@MainActivity, data.top, 1, this@MainActivity)
+            movies.adapter = MovieAdapter(this@MainActivity, data.movies, 1, this@MainActivity)
+            series.adapter = MovieAdapter(this@MainActivity, data.series, 1, this@MainActivity)
+
+            txtSavedMovies.isVisible = !data.saved.isNullOrEmpty()
+            txtAllSavedMovies.isVisible = !data.saved.isNullOrEmpty()
+            savedMovies.isVisible = !data.saved.isNullOrEmpty()
+        }
+    }
+
+    private fun setOnClickListeners() {
         binding.ivAvatar.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
-        binding.rootMain.setOnRefreshListener {
-            if (binding.rootMain.isRefreshing) {
-                vm.updateSavedMovies(this)
-                binding.rootMain.isRefreshing = false
-            }
-        }
-
         binding.txtMovies.setOnClickListener {
-            val intent = Intent(applicationContext, AllMoviesActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, AllMoviesActivity::class.java))
         }
 
         binding.txtAllPopularMovies.setOnClickListener {
@@ -75,8 +117,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), MovieAdapter.OnClickLi
         }
 
         binding.txtAllMovies.setOnClickListener {
-            val intent = Intent(applicationContext, AllMoviesActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, AllMoviesActivity::class.java))
         }
 
         binding.txtAllSeriess.setOnClickListener {
@@ -86,108 +127,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), MovieAdapter.OnClickLi
         }
 
         binding.btnProfilePic.setOnClickListener {
-            val intent = Intent(applicationContext, SettingsActivity::class.java)
-            startActivity(intent)
-            this.finish()
+            startActivity(Intent(applicationContext, SettingsActivity::class.java))
+            finish()
         }
 
         binding.btnSearchMovie.setOnClickListener {
-            val intent = Intent(applicationContext, SearchActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(applicationContext, SearchActivity::class.java))
             logger.logSearchOpened()
         }
 
         binding.txtAllSavedMovies.setOnClickListener {
             startActivity(Intent(this, SavedMoviesFragment::class.java))
-        }
-
-        vm.savedMovies.observe(this) {
-            binding.txtSavedMovies.isVisible = !it.isNullOrEmpty()
-            binding.savedMovies.isVisible = !it.isNullOrEmpty()
-            binding.txtAllSavedMovies.isVisible = !it.isNullOrEmpty()
-            binding.savedMovies.adapter = SavedMoviesAdapter(this, ArrayList(it), this)
-        }
-
-        lifecycleScope.launchWhenStarted {
-            withContext(Dispatchers.Main) { binding.progress.visible(true) }
-            val slides = withContext(Dispatchers.Main) { vm.getSlides() }
-            val genres = withContext(Dispatchers.IO) { vm.getGenresFull() }
-            val top = withContext(Dispatchers.IO) { vm.getTopMovies() }
-            val movies = withContext(Dispatchers.IO) { vm.getMovies() }
-            val series = withContext(Dispatchers.IO) { vm.getSeries() }
-
-            withContext(Dispatchers.Main) {
-
-                if (!slides.isNullOrEmpty()) {
-                    sliderAdapter = SliderAdapter(this@MainActivity, slides, this@MainActivity)
-                    binding.slider.pageMargin = 85
-
-                    if (!slides.isNullOrEmpty())
-                        binding.slider.adapter = sliderAdapter
-
-                    timer = Timer()
-                    timer.scheduleAtFixedRate(SliderTimerTask(), 3500, 4000)
-                }
-
-                if (!genres?.data.isNullOrEmpty()) {
-                    binding.categories.adapter = GenreAdapter(
-                        genres!!.data,
-                        this@MainActivity,
-                        1,
-                        this@MainActivity
-                    )
-                }
-
-                if (!top?.data.isNullOrEmpty()) {
-                    binding.topMovies.adapter = if (!Constants.showAdultContent) {
-                        MovieAdapter(
-                            this@MainActivity,
-                            (top?.data as ArrayList<Data>).filter { m -> !m.adult },
-                            listener = this@MainActivity
-                        )
-                    } else {
-                        MovieAdapter(
-                            this@MainActivity,
-                            top?.data as ArrayList<Data>,
-                            listener = this@MainActivity
-                        )
-                    }
-                }
-
-                if (!movies.isNullOrEmpty()) {
-                    binding.movies.adapter = if (!Constants.showAdultContent) {
-                        MovieAdapter(
-                            this@MainActivity,
-                            (movies as ArrayList<Data>).filter { m -> !m.adult },
-                            listener = this@MainActivity
-                        )
-                    } else {
-                        MovieAdapter(
-                            this@MainActivity,
-                            movies as ArrayList<Data>,
-                            listener = this@MainActivity
-                        )
-                    }
-                }
-
-                if (!series.isNullOrEmpty()) {
-                    binding.series.adapter = if (!Constants.showAdultContent) {
-                        MovieAdapter(
-                            this@MainActivity,
-                            (series as ArrayList<Data>).filter { m -> !m.adult },
-                            listener = this@MainActivity
-                        )
-                    } else {
-                        MovieAdapter(
-                            this@MainActivity,
-                            series as ArrayList<Data>,
-                            listener = this@MainActivity
-                        )
-                    }
-                }
-
-                binding.series.post { binding.progress.visible(false) }
-            }
         }
     }
 

@@ -5,9 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ge.mov.mobile.data.model.basic.BasicMovie
+import javax.inject.Inject
 
 @HiltViewModel
-class FragmentMoviesViewModel : ViewModel() {
+class FragmentMoviesViewModel @Inject constructor() : ViewModel() {
     private val movies: MutableLiveData<BasicMovie> = MutableLiveData()
     private var isLoading = MutableLiveData<Boolean>()
     var page = 0

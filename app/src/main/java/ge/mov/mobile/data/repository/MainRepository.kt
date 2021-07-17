@@ -1,23 +1,22 @@
 package ge.mov.mobile.data.repository
 
-import android.content.Context
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.liveData
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import ge.mov.mobile.data.database.DBService
 import ge.mov.mobile.data.database.dao.MovieDao
 import ge.mov.mobile.data.database.entity.MovieEntity
-import ge.mov.mobile.data.model.basic.BasicMovie
+import ge.mov.mobile.data.model.MainActivityDto
 import ge.mov.mobile.data.network.APIService
 import ge.mov.mobile.paging.search.SearchMoviePagingSource
+import ge.mov.mobile.util.State
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,8 +37,34 @@ class MainRepository @Inject constructor(
         )
     }
 
-    fun getSavedMovies(context: Context, limit: Int) = flow {
-        if (fuser != null) {
+    fun retrieveAll() = flow {
+        emit(State.loading())
+
+        val slides = getSlides()
+        val saved = getSavedMovies()
+        val popular = getPopularMovies()
+        val genres = getGenres()
+        val movies = getMovies()
+        val series = getMovies("series")
+
+        emit(
+            State.success(
+                MainActivityDto(
+                    slides!!,
+                    genres!!,
+                    saved,
+                    popular!!,
+                    movies!!,
+                    series!!
+                )
+            )
+        )
+    }.catch {
+        emit(State.failure(it.message))
+    }.flowOn(Dispatchers.IO)
+
+    private suspend fun getSavedMovies(limit: Int = 10): List<MovieEntity> {
+        return if (fuser != null) {
             val result = Firebase.firestore.collection("users")
                 .document(fuser.uid)
                 .collection("saved")
@@ -48,35 +73,20 @@ class MainRepository @Inject constructor(
                 .get()
                 .await()
 
-            val list = result.toObjects(MovieEntity::class.java)
-            emit(list)
+            result.toObjects(MovieEntity::class.java)
         } else {
-            val m = DBService.getInstance(context)
-                .movieDao()
-                .getMovies(limit)
-            emit(m)
+            db.getMovies(limit)
         }
-    }.flowOn(Dispatchers.IO)
-
-    suspend fun getSlides() = withContext(Dispatchers.IO) {
-        val response = api.getFeatured()
-        return@withContext response.body()
     }
 
-    suspend fun getGenres() = withContext(Dispatchers.IO) {
-        val genres = api.getGenres()
-        return@withContext genres.body()
-    }
+    private suspend fun getSlides() = api.getFeatured().body()?.data
 
-    suspend fun getPopularMovies(): BasicMovie? = withContext(Dispatchers.IO) {
-        val response = api.getTop()
-        return@withContext response.body()
-    }
+    private suspend fun getGenres() = api.getGenres().body()?.data
 
-    suspend fun getMovies(type: String = "movie") = withContext(Dispatchers.IO) {
-        val response = api.getMovies(page = 1, type = type)
-        return@withContext response.body()
-    }
+    private suspend fun getPopularMovies() = api.getTop().body()?.data
+
+    private suspend fun getMovies(type: String = "movie") =
+        api.getMovies(page = 1, type = type).body()?.data
 
     fun search(keyword: String) =
         Pager(

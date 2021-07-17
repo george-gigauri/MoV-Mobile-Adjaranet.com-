@@ -4,8 +4,8 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import ge.mov.mobile.BuildConfig
 import ge.mov.mobile.data.database.AppDatabase
 import ge.mov.mobile.data.database.DBService
@@ -21,7 +21,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Singleton
 
 @Module
-@InstallIn( value = [ApplicationComponent::class])
+@InstallIn(SingletonComponent::class)
 object AppModule {
     val client = okhttp3.OkHttpClient.Builder()
         .addInterceptor(CustomInterceptor())
